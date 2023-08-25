@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>주소로 장소 표시하기</title>
+
+</head>
+<body>
+<p style="margin-top:-12px"></p>
+<div id="map" style="width:100%;height:350px;"></div>
+
+<script type="text/javascript"
+        src="//dapi.kakao.com/v2/maps/sdk.js?appkey=820d01b1cce59185ed776419691dab39&libraries=services"></script>
+
+    <!-- Kakao Map API 사용자적용(현재위치 + 커스텀이미지마커)-->
+    <script src="/js/kakao_mymap.js"></script>
+    <script>
+        var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+            mapOption = {
+            center: new kakao.maps.LatLng(37.498004414546934, 127.02770621963765), // 지도의 중심좌표
+            level: 3 // 지도의 확대 레벨
+            };
+
+        // 지도를 생성합니다
+        var map = new kakao.maps.Map(mapContainer, mapOption);
+
+        // 마커를 표시할 위치와 title 객체 배열입니다
+        var positions = [
+            {
+                title: '카카오',
+                latlng: new kakao.maps.LatLng(33.450705, 126.570677)
+            },
+            {
+                title: '생태연못',
+                latlng: new kakao.maps.LatLng(33.450936, 126.569477)
+            },
+            {
+                title: '텃밭',
+                latlng: new kakao.maps.LatLng(33.450879, 126.569940)
+            },
+            {
+                title: '근린공원',
+                latlng: new kakao.maps.LatLng(33.451393, 126.570738)
+            }
+        ];
+
+    // 마커 이미지의 이미지 주소입니다
+    var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
+
+    for (var i = 0; i < positions.length; i ++) {
+        // 마커 이미지의 이미지 크기 입니다
+        var imageSize = new kakao.maps.Size(24, 35);
+
+        // 마커 이미지를 생성합니다
+        var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+
+        // 마커를 생성합니다
+            var marker = new kakao.maps.Marker({
+            map: map, // 마커를 표시할 지도
+            position: positions[i].latlng, // 마커를 표시할 위치
+            title : positions[i].title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩
+            });
+
+    function gps_tracking(){
+    if (gps_use) {
+    map.panTo(new kakao.maps.LatLng(gps_lat,gps_lng));
+    var gps_content = '<div><img class="pulse" draggable="false" unselectable="on" src="https://ssl.pstatic.net/static/maps/m/pin_rd.png" alt=""></div>';
+    var currentOverlay = new kakao.maps.CustomOverlay({
+    position: new kakao.maps.LatLng(gps_lat,gps_lng),
+    content: gps_content,
+    map: map
+    });
+    currentOverlay.setMap(map);
+    } else {
+    alert("접근차단하신 경우 새로고침, 아닌 경우 잠시만 기다려주세요.");
+    gps_check();
+    }
+    }
+
+</script>
+</body>
+</html>

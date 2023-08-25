@@ -1,4 +1,4 @@
-package hello.hellospring;
+package com.yumpro.ddogo.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +9,6 @@ public class mapController {
     @GetMapping("/map")
     public String showMap(){
 
-        return "kakaoMap";
+        return "myMap/kakaoMap2";
     }
 }
