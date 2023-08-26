@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class SearchMapController {
     @GetMapping("/search")
     public String showMap(){
-        return "searchmap/testSearchMap";
+        return "searchmap/testSearchMap3";
     }
 }
