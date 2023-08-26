@@ -4,57 +4,69 @@
 <mapper namespace="statistics">
 
     <!-- 이용자통계 -->
-    <!-- (나이-성별 별) 총 회원수 조회 -->
-    <select id="totalUser" resultType="int" parameterType="map">
+    <!-- 유저수 조회 -->
+    <select id="userCnt" resultType="int" parameterType="map">
         <![CDATA[
             select count(user_no)
             from ddogo.user
+            where 1=1
 		]]>
         <if test="map!=null">
-            <if test="gender!=null and gender!=''">
-                where gender=#{gender} and timestampdiff(month,birth,now()) between #{fAge} and #{cAge}
+            <if test="year!=null">
+                <![CDATA[
+                    and year(joinDate)=#{year}
+                ]]>
+            </if>
+            <if test="month!=null">
+                <![CDATA[
+                    and month(joinDate)=#{month}
+                ]]>
+            </if>
+            <if test="gender!=null">
+                and gender=#{gender} and timestampdiff(month,birth,now()) between #{fAge} and #{cAge}
             </if>
         </if>
     </select>
 
-    <!-- (나이-성별 별) 최근 한달 가입 회원수 조회 -->
-    <select id="recentUser" resultType="int" parameterType="map">
-        <![CDATA[
-            select count(user_no)
-            from ddogo.user
-            where timestampdiff(month,joinDate,now()) <=1;
-		]]>
-        <if test="map!=null">
-            <if test="gender!=null and gender!=''">
-                where gender=#{gender} and timestampdiff(month,birth,now()) between #{fAge} and #{cAge}
-            </if>
-        </if>
-    </select>
-
-    <!-- 이용자 활동 통계 -->
-    <!-- 한달 액티브 유저 수 -->
-    <select id="activeUser" resultType="int" parameterType="map">
+    <!-- 액티브 유저 수 -->
+    <select id="activeUserCnt" resultType="int" parameterType="map">
         <![CDATA[
             select count(distinct user_no)
-            from ddogo.mymap
-            where timestampdiff(month,recom_date,now()) <=1
+            from ddogo.mymap m, ddogo.user u
+            where 1=1
 		]]>
         <if test="map!=null">
-            <if test="gender!=null and gender!=''">
-                where gender=#{gender} and timestampdiff(month,birth,now()) between #{fAge} and #{cAge}
+            <if test="year!=null">
+                <![CDATA[
+                    and year(m.recom_date)=#{year}
+                ]]>
+            </if>
+            <if test="month!=null">
+                <![CDATA[
+                    and month(m.recom_date)=#{month}
+                ]]>
+            </if>
+            <if test="gender!=null">
+                where u.gender=#{gender} and timestampdiff(month,u.birth,now()) between #{fAge} and #{cAge}
             </if>
         </if>
     </select>
 
     <!-- 맛집 통계 -->
-    <!-- 맛집 월별 지역별 (카테고리별 나이-성별별) 랭킹 -->
-    <select id="ranking" resultType="int" parameterType="map">
+    <!-- 맛집 월별 지역별 카테고리별 나이-성별별 랭킹 -->
+    <select id="hotplaceRank" resultType="com.yumpro.ddogo.admin.domain.HotplaceDTO" parameterType="map">
         <![CDATA[
-            select h.hatplace_name
+            select h.hotplace_no,h.sido,h.gugun,h.hotplace_name,h.address,h.hotplace_cate_no
             from ddogo.hotplace h, ddogo.mymap m, ddogo.user u
-            where m.recom_date between #{startDate} and #{lastDate} and h.sido=#{sido} and h.gugun=#{gugun}
+            where m.recom_date between #{startDate} and #{lastDate}
 		]]>
-        <if test="gender!=null and gender!=''">
+        <if test="sido!=null">
+            and h.sido=#{sido}
+        </if>
+        <if test="sido!=null">
+            and h.gugun=#{gugun}
+        </if>
+        <if test="gender!=null">
             and u.gender=#{gender} and timestampdiff(month,u.birth,now()) between #{fAge} and #{cAge}
         </if>
         <if test="cate!=null and cate!=''">
@@ -64,26 +76,47 @@
     </select>
 
     <!-- (카테고리별) 지역별 맛집 개수 -->
-    <select id="hotplaceCntByloc" resultType="int" parameterType="map">
+    <select id="hotplaceCnt" resultType="int" parameterType="map">
         <![CDATA[
             select count(h.hatplace_name)
             where 1=1
 		]]>
-        <if test="cate!=null and cate!=''">
-            and h.sido=#{sido} and h.gugun=#{gugun}
+        <if test="sido!=null">
+            and h.sido=#{sido}
         </if>
-        <if test="cate!=null and cate!=''">
+        <if test="gugun!=null">
+            and h.gugun=#{gugun}
+        </if>
+        <if test="cate!=null">
             and h.hatplace_cate_no=#{cate}
         </if>
     </select>
 
-    <!-- -->
-    <!-- -->
-    <!-- -->
-    <!-- -->
-    <!-- -->
-    <!-- -->
-    <!-- -->
-    <!-- -->
-
+    <!-- 감정통계 -->
+    <!-- 감정 평균 -->
+    <select id="imoAvg" resultType="double" parameterType="map">
+        <![CDATA[
+            select avg(e.emo_result)
+            from ddogo.emoreview e, ddogo.mymap m, ddogo.user u, ddogo.hatplace
+            where timestampdiff(month,m.recom_date,now()) <=1
+		]]>
+        <if test="map!=null">
+            <if test="year!=null">
+                <![CDATA[
+                    and year(m.recom_date)=#{year}
+                ]]>
+            </if>
+            <if test="month!=null">
+                <![CDATA[
+                    and month(m.recom_date)=#{month}
+                ]]>
+            </if>
+            <if test="gender!=null">
+                and u.gender=#{gender} and timestampdiff(month,u.birth,now()) between #{fAge} and #{cAge}
+            </if>
+            <if test="sido!=null">
+                and h.sido=#{sido}
+            </if>
+        </if>
+    </select>
 </mapper>
