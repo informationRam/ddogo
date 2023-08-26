@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 public class StatisticsRepositoryImpl implements StatisticsRepository{
     @Autowired
     private SqlSession sqlSession;
+    @Override
     public int getUserTotal(){
         return  sqlSession.selectOne("statistics.userCnt");
     }
