@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>geoloTEST</title>
+</head>
+<body>
+<H2> 현재위치 반환</H2>
+<div id="myLocationInfo"></div>
+
+<script>
+
+    //geolocation으로 현재 위치 얻어오기
+    navigator.geolocation.getCurrentPosition(function(pos) {
+        console.log(pos);
+        let lat = pos.coords.latitude; //위도
+        let lon = pos.coords.longitude; //경도
+        alert("현재 위치는 : " + latitude + ", "+ longitude);
+
+        // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
+        let locPosition = new kakao.maps.LatLng(lat, lon);
+    });
+
+
+
+
+
+</script>
+</body>
+</html>
