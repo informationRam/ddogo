@@ -1,15 +1,22 @@
 package com.yumpro.ddogo.user.controller;
 
 import com.yumpro.ddogo.user.entity.User;
+import com.yumpro.ddogo.user.service.UserService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/user")
+@RequiredArgsConstructor
 public class UserController {
+
+    private UserService userService;
+
+
 
     //회원가입 폼
     @GetMapping("/joinForm")
@@ -17,14 +24,23 @@ public class UserController {
         model.addAttribute("data","jointest");
         return "/user/joinForm";
     }
-    //회원등록 폼
+
+    //로그인 폼(post)
     @PostMapping("/join")
-    public String userJoin(User user, Model model){
-        model.addAttribute("data","jointest");
-        return "redirect:/loginFrom";
+    public String userJoin(User user) {
+        System.out.println("user:"+user);
+        userService.userJoin(user);
+        return "/user/loginForm";
     }
 
-    @GetMapping("/loginFrom")
+    //로그인 폼(get)
+    @GetMapping("/join")
+    public String userJoin2() {
+        return "/user/loginForm";
+    }
+
+
+    @PostMapping("/login")
     public String loginForm(User user, Model model){
         model.addAttribute("data","jointest");
         return "/user/join";

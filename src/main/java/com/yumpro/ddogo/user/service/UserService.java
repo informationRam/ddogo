@@ -15,10 +15,9 @@ public class UserService {
     private final UserReprository userReprository;
 
     //회원가입처리
-    public void userJoin(String user_name, String user_id, Date birth,
-                         String gender,String email,String pwd){
+    public void userJoin(User user){
         User user = new User();
-        user.setUser_name(user_name);
+        user.setUser_name(user..);
         user.setUser_id(user_id);
         user.setBirth(birth);
         user.setGender(gender);

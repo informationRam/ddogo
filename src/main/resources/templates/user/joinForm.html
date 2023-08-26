@@ -5,23 +5,23 @@
 
 
   <!-- <form id="/user/join" class="my-3" th:object="${user}" th:action="@{|/user/join}|}"  method="post"> -->
-    <form id="/user/join" class="my-3" th:object="${user}" th:action="@{|{/user/join}|}"  method="post">
-    <div>
 
+    <div>
+        <form id="join" class="my-3" th:object="${user}" th:action="@{/user/join}"  method="post">
             <!-- 1. 이름 -->
             <div class="field">
                 <b>이름</b>
-                <input type="text" name="user_name">
+                <input type="text" th:field="*{user_name}">
             </div>
             <!--  2. 아이디-->
             <div class="field">
                 <b>아이디</b>
-                <input type="text" name="user_id">
+                <input type="text" th:field="*{user_id}">
             </div>
             <!--  3. 생년월일-->
             <div class="field">
                 <b>생년월일</b>
-                <input type="text" name="birth">
+                <input type="date" th:field="*{birth}">
             </div>
             <!-- 4. 성별 -->
             <div class="field gender">
@@ -34,20 +34,26 @@
             <!-- 5. 이메일 -->
             <div class="field">
                 <b>본인 확인 이메일<small>(선택)</small></b>
-                <input type="email" placeholder="ex>eeee@naver.com">
+                <input type="email" th:field="*{email}" placeholder="ex>eeee@naver.com">
             </div>
            <!-- 6. 비밀번호 -->
             <div class="field">
                 <b>비밀번호</b>
-                <input class="userpw-confirm" type="pwd">
+                <input class="userpw-confirm" type="password" name="pwd">
             </div>
            <!-- 6. 비밀번호확인 -->
             <div class="field">
                 <b>비밀번호 재확인</b>
-                <input class="userpw-confirm" type="pwd2">
+                <input class="userpw-confirm" type="password" name="pwd2">
             </div>
+            <!-- 7. 가입하기 버튼 -->
+            <div>
+                <input type="submit" value="가입하기">
+            </div>
+        </form>
+    </div>
 
-        </div>
 
-    <!-- 7. 가입하기 버튼 -->
-    <input type="submit" value="가입하기">
+
+
+</div>
