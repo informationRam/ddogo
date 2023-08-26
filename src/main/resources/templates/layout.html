@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App</title>
+    <link rel="stylesheet" type="text/css"
+          href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
+</head>
+<body>
+<!-- navigation부분 -->
+<nav><a th:href="@{/}">HOME</a>
+    navigation부분예정
+</nav>
+<hr/>
+<!--  baseTemplate안에 포함될 내용 시작  -->
+<th:block layout:fragment="content"></th:block>
+<!-- baseTemplate안에 포함될 내용 끝 -->
+<script src="/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}" ></script>
+</body>
+</html>
