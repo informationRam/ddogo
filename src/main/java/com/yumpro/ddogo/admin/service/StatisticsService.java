@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 public class StatisticsService {
     StatisticsRepository statisticsRepository;
     public int getUserTotal() {
-        return statisticsRepository.getUserTotal();
+        int total = statisticsRepository.getUserTotal();
+        return total;
     }
 }
