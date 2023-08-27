@@ -9,10 +9,12 @@ import java.util.Date;
 
 @Entity
 @Data
+@Table(name = "USER")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_no")
     private int user_no;            //'회원 번호'
 
     @Column(length = 200)
@@ -26,6 +28,7 @@ public class User {
 
     private String gender;             //'성별'
 
+    @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime joinDate;    //'가입일'
 
     private String email;              //'회원 이메일'
