@@ -2,21 +2,24 @@
 <div layout:fragment="content" class="container my-3">
     <h1>로그인</h1>
         <div>
-           <!-- <form id="login" class="my-3" th:object="${user}" th:action="@{/user/login}"  method="post">-->
+
+           <form id="login" class="my-3" th:object="${loginVaildation}" th:action="@{/user/login}"  method="post">
+               <!-- 오류시 보여주는 문구-->
+               <div th:replace="~{form_errors::formErrorsFragment}"></div>
                 <!--  1. 아이디-->
                 <div class="field">
                     <b>아이디</b>
-                    <input type="text" name="user_id">
+                    <input type="text" th:field="*{user_id}">
                 </div>
                 <!-- 2. 비밀번호 -->
                 <div class="field">
                     <b>비밀번호</b>
-                    <input class="" type="password" name="pwd">
+                    <input class="" type="password" th:field="*{pwd}">
                 </div>
                 <div>
                     <input type="submit" value="로그인">
                 </div>
-            <!--</form>-->
+            </form>
         </div>
 
 
