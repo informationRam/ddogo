@@ -12,8 +12,10 @@ import java.util.Date;
 @RequiredArgsConstructor
 @ToString
 public class MymapDTO {
-    private int noti_no;
-    private String noti_title;
-    private String noti_content;
-    private Date noti_date;
+    private int map_no;
+    private int hotplace_no;
+    private int user_no;
+    private String recom;
+    private String map_memo;
+    private Date recom_date;
 }

@@ -26,7 +26,7 @@ public class Hotplace {
     @Column
     private String address;
 
-    @Column
+    @ManyToOne
     private int hotplace_cate_no;
 }
 

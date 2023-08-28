@@ -14,10 +14,10 @@ public class Emoreview {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private int review_no;
 
-    @Column
+    @OneToOne
     private int map_no;
 
-    @Column
+    @ManyToOne
     private int hotplace_no;
 
     @Column

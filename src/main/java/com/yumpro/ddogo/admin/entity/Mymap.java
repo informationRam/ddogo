@@ -14,14 +14,20 @@ import java.util.Date;
 public class Mymap {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private int noti_no;
+    private int map_no;
+
+    @ManyToOne
+    private int hotplace_no;
+
+    @ManyToOne
+    private int user_no;
 
     @Column
-    private String noti_title;
+    private String recom;
 
     @Column
-    private String noti_content;
+    private String map_memo;
 
     @Column
-    private Date noti_date;
+    private Date recom_date;
 }

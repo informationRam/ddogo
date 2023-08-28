@@ -6,6 +6,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Controller
 @RequestMapping("/admin")
 @RequiredArgsConstructor
@@ -14,7 +17,7 @@ public class StatisticsController {
     @GetMapping("/dashboard")
     //총회원수 구하기
     public String userStatics(){
-        int userTotal =statisticsService.getUserTotal();
+        Integer userTotal =statisticsService.getUserTotal();
         System.out.println(userTotal);
         return "";
     }
