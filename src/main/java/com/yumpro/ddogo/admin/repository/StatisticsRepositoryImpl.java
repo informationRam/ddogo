@@ -10,6 +10,6 @@ public class StatisticsRepositoryImpl implements StatisticsRepository{
     private SqlSession sqlSession;
     @Override
     public int getUserTotal(){
-        return  sqlSession.selectOne("statistics.userCnt");
+        return sqlSession.selectOne("statistics.userCnt");
     }
 }
