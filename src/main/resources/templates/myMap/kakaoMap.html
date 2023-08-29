@@ -44,7 +44,13 @@
         }
         // 마커가 지도 위에 표시되도록 설정합니다
         marker.setMap(map);
+    </script>
+ <!------------- 현위치 표시 api------- -->
 
+<div id="MapControlView">
+    <button id="gpsButton" onclick="gps_check(map)"> 내 위치</button>
+</div>
+<script>
       // gps가 이용가능한지 체크하는 함수이며, 이용가능하다면 show location 함수를 불러온다.
         // 만약 작동되지 않는다면 경고창을 띄우고, 에러가 있다면 errorHandler 함수를 불러온다.
         // timeout을 통해 시간제한을 둔다.
@@ -54,6 +60,10 @@
         var gps_lng = null; // 경도
         var gps_position; // gps 위치 객체
 
+
+
+
+    //gps로 위치 불러오기
         gps_check();
         function gps_check(){
             if (navigator.geolocation) {
@@ -85,6 +95,8 @@
                 }
                 gps_use = false;
             }
+
+      //현재위치 마커 표시
        function gps_tracking(){
             if (gps_use) {
                 map.panTo(new kakao.maps.LatLng(gps_lat,gps_lng));  //카카오api 사용자 좌표로 부드럽게 이동
@@ -102,8 +114,7 @@
               gps_check();
             }
         }
-
-
     </script>
+
     </div>
     </html>

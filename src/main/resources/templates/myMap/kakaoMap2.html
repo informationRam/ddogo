@@ -1,147 +1,44 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>현재위치 표시하기</title>
-
-</head>
+<html layout:decorate="~{layout}" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<div layout:fragment="content" class="container my-3">
+    <head>
+        <title>현재위치 표시하기</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css"
+              href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
+    </head>
 <body>
-<p style="margin-top:-12px"></p>
-<div id="map" style="width:100%;height:350px;"></div>
+    <p style="margin-top:10px"></p>
+    <!-- 지도 사이즈 정하기 -->
+    <div id="map" style="width:90%;height:500px;"></div>
 
-<script type="text/javascript"
-        src="//dapi.kakao.com/v2/maps/sdk.js?appkey=820d01b1cce59185ed776419691dab39&libraries=services"></script>
+    <!-- 지도 api 연동 -->
+    <script type="text/javascript"
+            src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=820d01b1cce59185ed776419691dab39&libraries=services"></script>
 
-    <!-- Kakao Map API 사용자적용(현재위치 + 커스텀이미지마커)-->
-  <!--  <script type="text/javascript" src="js/kakao_mymap.js"></script>-->
-    <script>
-        var mapContainer = document.getElementById('map'), // 지도를 표시할 div
-            mapOption = {
-            center: new kakao.maps.LatLng(37.506016526623334, 127.10691218161601), // 지도의 중심좌표(석촌역)
-            level: 2 // 지도의 확대 레벨
-            };
 
-        // 지도를 생성합니다
-        var map = new kakao.maps.Map(mapContainer, mapOption);
-
-       //마커 푯할 위치와 title 객체 배열. db에서 불러오기
+    <!--db로 마커값 받아오기 -->
+    <script th:inline="javascript">
+        /*<![CDATA[*/
         var positions = [
-
-           /* 서버에서 받아온 데이터를 반복해서 positions 배열에 추가 */
-            th:each="hotplace : ${hotplaces}"
+            /*[# th:each="hotplace : ${hotplaces}"]*/
             {
-                title: '${hotplace.hotplaceName}',
-                latlng: new kakao.maps.LatLng(${hotplace.lat}, ${hotplace.lng})
+                title: /*[[${hotplace.hotplaceName}]]*/,
+                latlng: new kakao.maps.LatLng(/*[[${hotplace.lat}]]*/, /*[[${hotplace.lng}]]*/)
             },
+            /*[/]*/
         ];
+        /*]]>*/
+    </script>
+    <script type="text/javascript" src="/js/mymap.js"></script>
 
+    <!------------- 현위치 표시 api------- -->
 
-<!--       // 마커를 표시할 위치와 title 객체 배열입니다 (석촌) : 임의입력-->
-<!--        var positions = [-->
-<!--            {-->
-<!--                title: '사운드온',-->
-<!--                latlng: new kakao.maps.LatLng(37.507788961381905, 127.10723422057539)-->
-<!--            },-->
-<!--            {-->
-<!--                title: '신라샤브칼국수',-->
-<!--                latlng: new kakao.maps.LatLng(37.509222478811054, 127.10621551231283)-->
-<!--            },-->
-<!--            {-->
-<!--                title: '피제리아라고',-->
-<!--                latlng: new kakao.maps.LatLng(37.508956984953805, 127.10587865445542)-->
-<!--            },-->
-<!--            {-->
-<!--                title: '박복순쭈꾸미',-->
-<!--                latlng: new kakao.maps.LatLng(37.509927282085485, 127.10647382384012)-->
-<!--            }-->
-<!--        ];-->
-
-    // 마커 이미지의 이미지 주소입니다
-    var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
-
-    for (var i = 0; i < positions.length; i ++) {
-
-        // 마커 이미지의 이미지 크기 입니다
-        var imageSize = new kakao.maps.Size(24, 35);
-        // 마커 이미지를 생성합니다
-        var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
-
-        // 마커를 생성합니다
-            var marker = new kakao.maps.Marker({
-            map: map, // 마커를 표시할 지도
-            position: positions[i].latlng, // 마커를 표시할 위치
-            title : positions[i].title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩
-            });
-          }
-
-        // 마커가 지도 위에 표시되도록 설정합니다
-        marker.setMap(map);
-
-
-        // gps가 이용가능한지 체크하는 함수이며, 이용가능하다면 show location 함수를 불러온다.
-        // 만약 작동되지 않는다면 경고창을 띄우고, 에러가 있다면 errorHandler 함수를 불러온다.
-        // timeout을 통해 시간제한을 둔다.
-
-        var gps_use = null; //gps의 사용가능 여부
-        var gps_lat = null; // 위도
-        var gps_lng = null; // 경도
-        var gps_position; // gps 위치 객체
-
-        gps_check();
-        function gps_check(){
-            if (navigator.geolocation) {
-                var options = {timeout:60000};
-                navigator.geolocation.getCurrentPosition(showLocation, errorHandler, options);
-            } else {
-                alert("GPS_추적이 불가합니다.");
-                gps_use = false;
-            }
-        }
-
-            // gps 이용 가능 시, 위도와 경도를 반환하는 showlocation함수.
-            function showLocation(pos) {
-                console.log(pos);
-                gps_use = true;
-                gps_lat = pos.coords.latitude;
-                gps_lng = pos.coords.longitude;
-
-
-                 // 위치 정보가 확인되었으므로 이제 gps_tracking 함수 호출 가능
-                    gps_tracking();
-            }
-            // error발생 시 에러의 종류를 알려주는 함수.
-            function errorHandler(error) {
-                if(error.code == 1) {
-                    alert("접근차단");
-                } else if( err.code == 2) {
-                    alert("위치를 반환할 수 없습니다.");
-                }
-                gps_use = false;
-            }
-       function gps_tracking(){
-            if (gps_use) {
-                map.panTo(new kakao.maps.LatLng(gps_lat,gps_lng));  //카카오api 사용자 좌표로 부드럽게 이동
-                 // 마커 이미지의 이미지 크기 입니다
-                //var gps_content = new kakao.maps.Size(20, 20);
-                var gps_content = '<div><img class="pulse" draggable="false" unselectable="on" src="https://ssl.pstatic.net/static/maps/m/pin_rd.png" alt="" style="width: 20px; height: 20px;"></div>';
-                var currentOverlay = new kakao.maps.CustomOverlay({   //마커를 사용자의 위도와 경도 좌표에 찍어준다.
-                    position: new kakao.maps.LatLng(gps_lat,gps_lng),
-                    content: gps_content,
-                    map: map
-                });
-                currentOverlay.setMap(map);
-            } else {
-              alert("접근차단하신 경우 새로고침, 아닌 경우 잠시만 기다려주세요.");
-              gps_check();
-            }
-        }
+    <div id="MapControlView">
+        <button id="gpsButton" onclick="gps_check()"> 내 주변</button>
+    </div>
 
 
 
-
-
-
-
-</script>
 </body>
+</div>
 </html>
