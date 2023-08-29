@@ -18,6 +18,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder PasswordEncoder;
 
+
+
     //회원가입처리
     public void userJoin(UserCreateForm userCreateForm){
 
@@ -29,7 +31,7 @@ public class UserService {
         user.setGender(userCreateForm.getGender());
         user.setJoinDate(LocalDateTime.now());
         user.setEmail(userCreateForm.getEmail());
-       /* user.setPwd(userCreateForm.getPwd1());*/
+        user.setPwd(userCreateForm.getPwd1());
         user.setPwd(PasswordEncoder.encode(userCreateForm.getPwd1()));
         userRepository.save(user);
     }

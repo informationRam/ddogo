@@ -27,7 +27,7 @@ public class SecurityConfig {
                         XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)))
                 .formLogin((formLogin)->formLogin.loginPage("/user/login").usernameParameter("user_id")
                         .passwordParameter("pwd")
-                        .defaultSuccessUrl("/"))
+                .defaultSuccessUrl("/"))
                 .logout((logout) -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
                         .logoutSuccessUrl("/")

@@ -1,11 +1,15 @@
 package com.yumpro.ddogo.user.controller;
 
 import com.yumpro.ddogo.user.entity.User;
+import com.yumpro.ddogo.user.service.UserSecurityService;
 import com.yumpro.ddogo.user.service.UserService;
 import com.yumpro.ddogo.user.validation.LoginVaildation;
 import com.yumpro.ddogo.user.validation.UserCreateForm;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,6 +23,8 @@ import java.time.LocalDateTime;
 public class UserController {
 
     private final UserService userService;
+    //세션값 담기(1)
+    private final UserSecurityService userSecurityService;
 
     //회원가입 폼
     @GetMapping("/joinForm")
@@ -72,9 +78,17 @@ public class UserController {
         }
     }
 
+    //id찾기
+    @GetMapping()
+    public String search_id(){
+
+    }
+
+
+    // index
   @GetMapping("/")
-    public String home(Model model,User user){
-        model.addAttribute("user",user);
+    public String home(Model model, HttpSession session){
+        //세션값을 가져올거야....
         return "/index";
   }
 
