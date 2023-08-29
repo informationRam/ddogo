@@ -49,12 +49,14 @@ public class UserService {
 
 
     //아이디 찾기
-    public String searchId(String email){
-        Optional<User> byEmail = userRepository.findByEmail(email);
-        if(!byEmail.isPresent()){
-            return "null";
-        }else {
-            return byEmail.get().getEmail();
+    public String searchId(String email) {
+
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            return user.getUserId();
+        } else {
+            return null; // 해당 이메일을 가진 사용자가 없을 경우
         }
     }
 

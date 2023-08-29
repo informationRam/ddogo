@@ -85,12 +85,14 @@ public class UserController {
     }
 
     @PostMapping("/searchid")
-    public String searchId(Model model,User user){
-        String email = userService.searchId(user.getEmail());
-        if(email == null){
-            return "/user/searchid_Form";
-        }else {
-            return "/login";
+    public String searchId(Model model, User user) {
+        String foundUserId = userService.searchId(user.getEmail());
+
+        if (foundUserId != null) {
+            model.addAttribute("userId", foundUserId);
+            return "redirect:/"; // 아이디를 찾았을 경우 홈으로 리다이렉트
+        } else {
+            return "/user/searchid_Form"; // 사용자를 찾지 못했을 경우 다시 아이디 찾기 폼으로
         }
     }
 
@@ -110,8 +112,12 @@ public class UserController {
 
     // index
   @GetMapping("/")
-    public String home(Model model, HttpSession session){
+    public String home(Model model, HttpSession session,@RequestParam(name = "userId", required = false) String userId){
         //세션값을 가져올거야....
+
+      model.addAttribute
+              ("userId", userId);
+
         return "/index";
   }
 
