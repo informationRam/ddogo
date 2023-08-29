@@ -20,17 +20,20 @@ public class User {
     private String user_id;
 
     @Column
-    private Date birth;
+    private Date BIRTH;
 
     @Column
     private String gender;
 
     @Column
-    private Date joinDate;
+    private Date join_date;
 
     @Column
     private String email;
 
     @Column
     private String pwd;
+
+    @Column(name="isShow")
+    private String isShow;
 }
