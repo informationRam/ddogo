@@ -1,6 +1,7 @@
 package com.yumpro.ddogo.user.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -9,7 +10,7 @@ import java.util.Date;
 
 @Entity
 @Data
-@Table(name = "USER")
+@Table(name = "user")
 public class User {
 
     @Id
@@ -20,8 +21,8 @@ public class User {
     @Column(length = 200)
     private String user_name;          //'회원 이름'
 
-    @Column(length = 200)
-    private String user_id;            //'회원 아이디'
+    @Column(unique = true , name ="user_id")
+    private String userid;            //'회원 아이디'
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date birth;
@@ -31,8 +32,10 @@ public class User {
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime joinDate;    //'가입일'
 
+    @Column(unique = true)
     private String email;              //'회원 이메일'
 
+    @NotNull
     private String pwd;                //'비밀번호'
 
 
