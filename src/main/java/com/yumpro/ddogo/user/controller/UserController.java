@@ -63,7 +63,6 @@ public class UserController {
 
 
     //로그인 처리
-
     @PostMapping("/login")
     public String login(@Valid LoginVaildation loginVaildation, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -71,19 +70,13 @@ public class UserController {
         }else {
             return "redirect:/";
         }
-
     }
 
-   /* @PostMapping("/login")
-    public String login(@Valid LoginVaildation loginVaildation, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "user/loginForm";
-        }else {
-            userService.userlogin(loginVaildation.getUser_id(),loginVaildation.getPwd());
-            return "redirect:/";
-        }
-
-    }*/
+  @GetMapping("/")
+    public String home(Model model,User user){
+        model.addAttribute("user",user);
+        return "/index";
+  }
 
 
 }

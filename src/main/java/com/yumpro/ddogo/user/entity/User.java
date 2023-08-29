@@ -22,7 +22,7 @@ public class User {
     private String user_name;          //'회원 이름'
 
     @Column(unique = true , name ="user_id")
-    private String userid;            //'회원 아이디'
+    private String userId;            //'회원 아이디'
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date birth;

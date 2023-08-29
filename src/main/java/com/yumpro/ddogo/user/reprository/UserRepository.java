@@ -9,15 +9,13 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
 
-    boolean existsByUserid(String userid);
+    //회원가입시 중복값 아이디 확인
+    boolean existsByUserId(String userId);
 
-
-
-    //중복값 확인
+    //회원가입시 중복값 이메일 확인
     boolean existsByEmail(String email);
 
-
-    //이메일주소
-   /* Optional<User> findByuser_id(String user_id);*/
+    //아이디로 값 찾기
+   Optional<User> findByUserId(String userId);
 
 }
