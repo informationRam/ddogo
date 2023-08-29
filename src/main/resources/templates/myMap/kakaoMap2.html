@@ -18,31 +18,43 @@
         var mapContainer = document.getElementById('map'), // 지도를 표시할 div
             mapOption = {
             center: new kakao.maps.LatLng(37.506016526623334, 127.10691218161601), // 지도의 중심좌표(석촌역)
-            level: 3 // 지도의 확대 레벨
+            level: 2 // 지도의 확대 레벨
             };
 
         // 지도를 생성합니다
         var map = new kakao.maps.Map(mapContainer, mapOption);
 
-        // 마커를 표시할 위치와 title 객체 배열입니다 (석촌)
+       //마커 푯할 위치와 title 객체 배열. db에서 불러오기
         var positions = [
+
+           /* 서버에서 받아온 데이터를 반복해서 positions 배열에 추가 */
+            th:each="hotplace : ${hotplaces}"
             {
-                title: '사운드온',
-                latlng: new kakao.maps.LatLng(37.507788961381905, 127.10723422057539)
+                title: '${hotplace.hotplaceName}',
+                latlng: new kakao.maps.LatLng(${hotplace.lat}, ${hotplace.lng})
             },
-            {
-                title: '신라샤브칼국수',
-                latlng: new kakao.maps.LatLng(37.509222478811054, 127.10621551231283)
-            },
-            {
-                title: '피제리아라고',
-                latlng: new kakao.maps.LatLng(37.508956984953805, 127.10587865445542)
-            },
-            {
-                title: '박복순쭈꾸미',
-                latlng: new kakao.maps.LatLng(37.509927282085485, 127.10647382384012)
-            }
         ];
+
+
+<!--       // 마커를 표시할 위치와 title 객체 배열입니다 (석촌) : 임의입력-->
+<!--        var positions = [-->
+<!--            {-->
+<!--                title: '사운드온',-->
+<!--                latlng: new kakao.maps.LatLng(37.507788961381905, 127.10723422057539)-->
+<!--            },-->
+<!--            {-->
+<!--                title: '신라샤브칼국수',-->
+<!--                latlng: new kakao.maps.LatLng(37.509222478811054, 127.10621551231283)-->
+<!--            },-->
+<!--            {-->
+<!--                title: '피제리아라고',-->
+<!--                latlng: new kakao.maps.LatLng(37.508956984953805, 127.10587865445542)-->
+<!--            },-->
+<!--            {-->
+<!--                title: '박복순쭈꾸미',-->
+<!--                latlng: new kakao.maps.LatLng(37.509927282085485, 127.10647382384012)-->
+<!--            }-->
+<!--        ];-->
 
     // 마커 이미지의 이미지 주소입니다
     var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
