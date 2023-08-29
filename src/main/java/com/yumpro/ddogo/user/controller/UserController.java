@@ -85,16 +85,30 @@ public class UserController {
     }
 
     @PostMapping("/searchid")
-    public String searchId(Model model, User user) {
-        String foundUserId = userService.searchId(user.getEmail());
+    public String searchId(Model model, User user, HttpSession session) {
+        String userId = userService.searchId(user.getEmail());
 
-        if (foundUserId != null) {
-            model.addAttribute("userId", foundUserId);
-            return "redirect:/"; // 아이디를 찾았을 경우 홈으로 리다이렉트
+        if (userId != null) {
+            //세션으로 값 담기
+           /* session.setAttribute("foundUserId", userId);
+           * String foundUserId = (String) session.getAttribute("foundUserId");*/
+
+          model.addAttribute("userId",userId);
+
+            return "/user/id"; // 아이디를 찾았을경우 아이디를 보여주는 폼으로 이동
         } else {
-            return "/user/searchid_Form"; // 사용자를 찾지 못했을 경우 다시 아이디 찾기 폼으로
+            return "user/searchid_Form"; // 사용자를 찾지 못했을 경우 다시 아이디 찾기 폼으로
         }
     }
+
+
+    @GetMapping("id")
+    public String id(Model model, User user, @RequestParam String userId) {
+        model.addAttribute("userId",userId);
+        return "/user/id";
+    }
+
+
 
     //비밀번호 찾기 폼 pwdsearch_Form
     @GetMapping("/pwdsearch")
@@ -110,16 +124,8 @@ public class UserController {
 
 
 
-    // index
-  @GetMapping("/")
-    public String home(Model model, HttpSession session,@RequestParam(name = "userId", required = false) String userId){
-        //세션값을 가져올거야....
 
-      model.addAttribute
-              ("userId", userId);
 
-        return "/index";
-  }
 
 
 }

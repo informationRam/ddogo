@@ -1,29 +1,29 @@
 <html layout:decorate="~{layout}" xmlns:th="http://www.thymeleaf.org">
 <div layout:fragment="content" class="container my-3">
-
-    <div>
-        <h3>ID찾기</h3>
-        <form id="login" class="my-3" th:object="${loginVaildation}" th:action="@{/user/searchid}" method="post">
-            <!-- 오류시 보여주는 문구-->
-            <!-- 에러출력 영역-->
-            <div th:if="${param.error}">
-                <div class="alert alert-danger">
-                    사용자ID 또는 비밀번호를 확인해주세요.
-                </div>
-            </div>
-            <!--  이메일입력 -->
-            <div class="field">
-                <label for="email">Email</label>
-                <input type="text" name="email" id="email">
-            </div>
-            <div>
-                <!-- 비밀번호 찾으러가기 -->
-                <li> <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/login}">비밀번호 찾기</a></li>
-            </div>
-            <div>
+      <div>
+          <h3>ID찾기</h3>
+          <form id="login" class="my-3" th:object="${loginVaildation}" th:action="@{/user/searchid}" method="post">
+              <!-- 오류시 보여주는 문구-->
+              <!-- 에러출력 영역-->
+              <div th:if="${param.error}">
+                  <div class="alert alert-danger">
+                      사용자ID 또는 비밀번호를 확인해주세요.
+                  </div>
+              </div>
+              <!--  이메일입력 -->
+              <div class="field">
+                  <label for="email">Email</label>
+                  <input type="text" name="email" id="email">
+              </div>
+              <div>
+                  <!--  비밀번호 찾으러가기 -->
+                  <li> <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/login}">비밀번호 찾기</a></li>
+              </div>
+              <div>
                 <input type="submit" value="아이디 찾기">
-            </div>
-        </form>
-    </div>
+
+              </div>
+          </form>
+      </div>
 </div>
 </html>

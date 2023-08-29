@@ -21,6 +21,9 @@
                     <label for="pwd">비밀번호</label>
                     <input class="" type="password" name="pwd" id="pwd">
                 </div>
+                <span><a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/searchid}">아이디찾기</a>
+                <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/pwdsearch}">비밀번호찾기</a></span>
+
                 <div>
                     <input type="submit" value="로그인">
                 </div>
