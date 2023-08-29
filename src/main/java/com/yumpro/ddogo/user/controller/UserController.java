@@ -78,11 +78,34 @@ public class UserController {
         }
     }
 
-    //id찾기
-    @GetMapping()
-    public String search_id(){
-
+    //id찾기 폼
+    @GetMapping("/searchid")
+    public String searchidForm(){
+        return "/user/searchid_Form";
     }
+
+    @PostMapping("/searchid")
+    public String searchId(Model model,User user){
+        String email = userService.searchId(user.getEmail());
+        if(email == null){
+            return "/user/searchid_Form";
+        }else {
+            return "/login";
+        }
+    }
+
+    //비밀번호 찾기 폼 pwdsearch_Form
+    @GetMapping("/pwdsearch")
+    public String pwdsearchForm(){
+        return "/user/pwdsearch_Form";
+    }
+
+    @PostMapping("/pwdsearch")
+    public String pwdsearch(){
+        return "/login";
+    }
+
+
 
 
     // index

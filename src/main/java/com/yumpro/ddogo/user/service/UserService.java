@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -18,11 +19,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder PasswordEncoder;
 
-
-
     //회원가입처리
     public void userJoin(UserCreateForm userCreateForm){
-
         User user = new User();
         System.out.println("userjoin서비스진입!");
         user.setUser_name(userCreateForm.getUser_name());
@@ -36,16 +34,6 @@ public class UserService {
         userRepository.save(user);
     }
 
-    //로그인
-   /* public void userlogin(String user_id, String pwd) {
-        Optional<User> byUserId = userReprository.findByUser_id(user_id);
-        System.out.println("userlogin :"+byUserId);
-        Optional<User> byPwd = userReprository.findByPwd(pwd);
-        System.out.println("byPwd :"+byPwd);
-
-    }*/
-
-
   // 회원 가입시 아이디, 이메일 중복 여부 확인
     @Transactional(readOnly = true)
     public boolean checkUserIdDuplication(String user_id) {
@@ -58,6 +46,19 @@ public class UserService {
         boolean emailDuplicate = userRepository.existsByEmail(email);
         return emailDuplicate;
     }
+
+
+    //아이디 찾기
+    public String searchId(String email){
+        Optional<User> byEmail = userRepository.findByEmail(email);
+        if(!byEmail.isPresent()){
+            return "null";
+        }else {
+            return byEmail.get().getEmail();
+        }
+    }
+
+
 
 
 }
