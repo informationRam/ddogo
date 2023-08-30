@@ -73,24 +73,11 @@ public class UserService {
         }
     }
 
-    //DTO -> Entity로 변경
-    public User toEntity(UserDTO userDTO){
-        User user = new User();
-        user.setUserId(userDTO.getUser_id());
-        user.setUser_name(userDTO.getUser_name());
-        user.setBirth(userDTO.getBirth());
-        user.setGender(userDTO.getGender());
-        user.setJoinDate(userDTO.getJoinDate());
-        user.setEmail(userDTO.getEmail());
-        user.setPwd(user.getPwd());
-        return user;
-
-    }
 
     //아이디값 넣어서 회원정보 가져오기
-    public Optional<User> getUser(String user_id){
+    public User getUser(String user_id){
         Optional<User> user = userRepository.findByUserId(user_id);
-        return user;
+        return user.get();
     }
 
     // 비번 변경
@@ -106,6 +93,46 @@ public class UserService {
             user.setIsshow("Y");
             userRepository.save(user);
     }
+
+    // 회원 정보 변경
+    public void userModify(UserCreateForm userCreateForm, String email, String pwd) {
+        User user = new User();
+        user.setUser_no(userCreateForm.getUser_no());
+        user.setUser_name(userCreateForm.getUser_name());
+        user.setUserId(userCreateForm.getUser_id());
+        user.setBirth(userCreateForm.getBirth());
+        user.setGender(userCreateForm.getGender());
+        user.setEmail(email);
+        user.setPwd(PasswordEncoder.encode(pwd));
+        user.setIsshow("Y");
+        userRepository.save(user);
+    }
+
+    //DTO -> Entity로 변경
+    public User toEntity(UserDTO userDTO){
+        User user = new User();
+        user.setUserId(userDTO.getUser_id());
+        user.setUser_name(userDTO.getUser_name());
+        user.setBirth(userDTO.getBirth());
+        user.setGender(userDTO.getGender());
+        user.setJoinDate(userDTO.getJoinDate());
+        user.setEmail(userDTO.getEmail());
+        user.setPwd(user.getPwd());
+        return user;
+
+    }
+    // user -> UserCreateForm 변경
+    public UserCreateForm toUserCreateForm(String user_id){
+        Optional<User> user = userRepository.findByUserId(user_id);
+        UserCreateForm userCreateForm = new UserCreateForm();
+        userCreateForm.setUser_name(user.get().getUser_name());
+        userCreateForm.setUser_id(user.get().getUserId());
+        userCreateForm.setBirth(user.get().getBirth());
+        userCreateForm.setGender(user.get().getGender());
+        userCreateForm.setEmail(user.get().getEmail());
+        return userCreateForm;
+    }
+
 
 
 }

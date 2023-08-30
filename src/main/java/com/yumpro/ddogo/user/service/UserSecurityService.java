@@ -1,14 +1,10 @@
 package com.yumpro.ddogo.user.service;
 
-import com.sun.security.auth.UserPrincipal;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import com.yumpro.ddogo.user.reprository.UserRepository;
-import com.yumpro.ddogo.user.validation.UserRole;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -42,10 +38,8 @@ public class UserSecurityService implements UserDetailsService {
         List<GrantedAuthority> authorities = new ArrayList<>();
         System.out.println(user1.getPwd());
         if ("admin".equals(user_id)) {
-            System.out.println("요기까지11??");
             authorities.add(new SimpleGrantedAuthority(UserRole.ADMIN.getValue()));
         } else {
-            System.out.println("요기까지?");
             authorities.add(new SimpleGrantedAuthority(UserRole.USER.getValue()));
 
             // 세션에 user_id 저장

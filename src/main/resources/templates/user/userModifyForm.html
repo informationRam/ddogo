@@ -2,25 +2,25 @@
 <div layout:fragment="content" class="container my-3">
     <h1>회원 정보 변경 </h1>
     <div>
-        <form id="join" class="my-3" th:object="${user}" th:action="@{/user/modify}"  method="post">
+        <form id="join" class="my-3" th:object="${userCreateForm}" th:action="@{/user/modify}"  method="post">
             <!-- 오류시 보여주는 문구-->
             <div th:replace="~{form_errors::formErrorsFragment}"></div>
             <!-- 1. 이름 -->
             <div class="field">
                 <label for="user_name">이름</label>
-                <input type="text" th:field="*{user_name}" value="${user1.user_name}" disabled/>
+                <input type="text" th:field="*{user_name}" value="${userCreateForm.user_name}" disabled/>
             </div>
-          <!--  &lt;!&ndash;  2. 아이디&ndash;&gt;
+            <!--  2. 아이디 -->
             <div class="field">
                 <label for="user_id">ID</label>
-                <input type="text" name="user_id" id="user_id">
+                <input type="text" th:field="*{user_id}" value="${userCreateForm.user_id}" disabled/>
             </div>
-            &lt;!&ndash;  3. 생년월일&ndash;&gt;
+            <!--  3. 생년월일-->
             <div class="field">
                 <label for="birth">생년월일</label>
-                <input type="date" th:field="*{birth}" th:format="'yyyy-MM-dd'" disabled/>
+                <input type="date" th:field="*{birth}" value="${userCreateForm.birth}" disabled/>
             </div>
-            &lt;!&ndash; 4. 성별 &ndash;&gt;
+            <!-- 4. 성별 -->
             <div class="field gender">
                 <label for="gender">성별</label>
                 <div>
@@ -28,17 +28,17 @@
                     <label><input type="radio" th:field="*{gender}" value="F">여자</label>
                 </div>
             </div>
-            &lt;!&ndash; 5. 이메일 &ndash;&gt;
+            <!-- 5. 이메일 -->
             <div class="field">
                 <label for="email">이메일</label>
-                <input type="email" th:field="*{email}" placeholder="ex)eeee@naver.com">
+                <input type="email" th:field="*{email}" value="${userCreateForm.email}" placeholder="ex)eeee@naver.com">
             </div>
-           &lt;!&ndash; 6. 비밀번호 &ndash;&gt;
+           <!-- 6. 비밀번호 -->
             <div class="field">
                 <label for="pwd1">비밀번호</label>
                 <input class="userpw-confirm" type="password" th:field="*{pwd1}">
             </div>
-           &lt;!&ndash; 6. 비밀번호 확인 &ndash;&gt;
+           <!-- 6. 비밀번호 확인 -->
             <div class="field">
                 <label for="pwd2">비밀번호확인</label>
                 <input class="userpw-confirm" type="password" th:field="*{pwd2}">
@@ -58,7 +58,7 @@
                     <a href="#" id="termForChild" class="link_guide" target="_blank">🧒🏻 어린이용 안내</a>
                 </div>
                 <div class="terms_box" tabindex="0">
-                    &lt;!&ndash; 개인정보 수집 및 이용에 대한 안내 &ndash;&gt;
+                    <!-- 개인정보 수집 및 이용에 대한 안내 -->
                     <div class="article">
                         <p class="article_text">
                             개인정보보호법에 따라 네이버에 회원가입 신청하시는 분께 수집하는 개인정보의 항목, 개인정보의 수집 및
@@ -210,13 +210,12 @@
                     </div>                                </div>
 
             </div>
-            &lt;!&ndash; 7. 가입하기 버튼 &ndash;&gt;
+            <!-- 7. 가입하기 버튼 -->
             <div>
                 <input type="submit" value="가입하기">
             </div>
         </form>
     </div>
--->
 
 
 

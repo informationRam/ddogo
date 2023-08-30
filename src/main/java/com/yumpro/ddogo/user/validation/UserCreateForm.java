@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -13,6 +14,8 @@ import java.util.Date;
 @Getter
 @Setter
 public class UserCreateForm {
+
+    private int user_no;
 
    @Size(min = 2, max = 5)
    @NotEmpty(message = "이름은 필수입력입니다.")
@@ -32,12 +35,14 @@ public class UserCreateForm {
     @Email(message = "이메일 형식이 올바르지 않습니다.")
     private String email;              //'회원 이메일'
 
- @NotEmpty(message = "비밀번호를 입력해주세요.")
- @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[$@$!%*#?&])[A-Za-z\\d$@$!%*#?&]{8,}$",
-         message = "비밀번호는 최소 8자리 이상 숫자, 문자, 특수문자 각각 1개 이상 포함 되어야 합니다.")
- private String pwd1; //'비밀번호'
+    private LocalDateTime joinDate;    //'가입일'
 
- @NotEmpty(message = "비밀번호확인은 필수입력입니다.")
-    private String pwd2;                //'비밀번호'
+   @NotEmpty(message = "비밀번호를 입력해주세요.")
+   @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[$@$!%*#?&])[A-Za-z\\d$@$!%*#?&]{8,}$",
+          message = "비밀번호는 최소 8자리 이상 숫자, 문자, 특수문자 각각 1개 이상 포함 되어야 합니다.")
+   private String pwd1; //'비밀번호'
+
+   @NotEmpty(message = "비밀번호확인은 필수입력입니다.")
+   private String pwd2;                //'비밀번호'
 
 }

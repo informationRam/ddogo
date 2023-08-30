@@ -23,6 +23,10 @@ import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+    //시큐리티 저장 값 가져오기 세션대용
+   /* Optional<User> user = userService.getUser(principal.getName());
+        model.addAttribute("user", user.get().getUser_no());        ==> 유저의 no를 가져옴    */
+
 @Controller
 @RequestMapping("/user")
 @RequiredArgsConstructor
@@ -77,11 +81,13 @@ public class UserController {
 
     //로그인 처리
     @PostMapping("/login")
-    public String login(@Valid LoginVaildation loginVaildation, BindingResult bindingResult, Model model) {
+    public String login(@Valid LoginVaildation loginVaildation, BindingResult bindingResult, Model model,HttpSession session,Principal principal) {
         if (bindingResult.hasErrors()) {
             return "user/loginForm";
         }else {
-
+            User user = userService.getUser(principal.getName());
+            System.out.println("login-user:"+user);
+            session.setAttribute("user",user);   //로그인성공시 값을 세션에 저장
             return "redirect:/";
         }
     }
@@ -168,8 +174,7 @@ public class UserController {
         System.out.println("user_id: "+user_id);
         String result = "N";
         if(tempPassword.equals(userEnteredPassword)){           //인증번호가 맞으면
-            Optional<User> optionaluser = userService.getUser(user_id);
-            User user = optionaluser.get();
+            User user = userService.getUser(user_id);
             userService.userpwdModify(user,tempPassword);
             return "redirect:/";        //임시 번호로 패스워드변경.
         }else {
@@ -178,56 +183,69 @@ public class UserController {
     }
 
     //정보수정 폼
-    @GetMapping("/modifyForm")
+   /* @GetMapping("/modifyForm/{user_id}")
     public String userUpdateForm(Principal principal, Model model,@Valid UserCreateForm userCreateForm, BindingResult bindingResult) {
-        model.addAttribute("user", "Hello " + principal.getName());
-        Optional<User> user = userService.getUser(principal.getName());
-        model.addAttribute("message2", "Hello " +  user.get().getUser_no());
+        userCreateForm = userService.toUserCreateForm(principal.getName());
+        model.addAttribute("userCreateForm",userCreateForm);
+        return "user/userModifyForm";
+    }*/
+
+    @GetMapping("/modifyForm/{user_id}")
+    public String userUpdateForm(Principal principal, Model model) {
+        UserCreateForm userCreateForm = userService.toUserCreateForm(principal.getName());
+        model.addAttribute("userCreateForm", userCreateForm);
         return "user/userModifyForm";
     }
 
+
     // 정보수정
     @PostMapping("/modify")
-    public String userUpdate(@PathVariable String user_id,Model model,@Valid UserCreateForm userCreateForm, BindingResult bindingResult){
-        model.addAttribute("user_id",user_id);
-        if (bindingResult.hasErrors()) {
-            return "user/joinForm";
-        }
-        //아이디 중복여부체크
-        if (userService.checkUserIdDuplication(userCreateForm.getUser_id())) {
-            bindingResult.rejectValue("user_id", "User_idInCorrect", "이미 사용중인 아이디입니다.");
-            return "user/joinForm";
-        }
 
+    public String userUpdate(Model model, @Valid UserCreateForm userCreateForm, BindingResult bindingResult) {
+        model.addAttribute("userCreateForm", userCreateForm);
+        if (bindingResult.hasErrors()) {
+            return "user/userModifyForm";
+        }
         //이메일 중복여부체크
         if (userService.checkEmailDuplication(userCreateForm.getEmail())) {
             bindingResult.rejectValue("email", "EmailInCorrect", "이미 사용중인 이메일 입니다.");
-            return "user/joinForm";
+            return "user/userModifyForm";
         }
-
 
         //비밀번호, 비밀번호 확인 동일 체크
         if (!userCreateForm.getPwd1().equals(userCreateForm.getPwd2())) {
             bindingResult.rejectValue("pwd2", "pwdInCorrect", "비밀번호와 비밀번호확인이 불일치합니다.");
-            return "user/joinForm";
+            return "user/userModifyForm";
         }else{
-            userService.userJoin(userCreateForm);
+            userService.userModify(userCreateForm,userCreateForm.getEmail(),userCreateForm.getPwd1());
             return "redirect:/";
         }
+
     }
 
 
 
     // 시큐리티 값 가져오기
-    @GetMapping("/dashboard")
+
+    @GetMapping("/dashboard/{user_id}")
     public String dashboard(Model model, Principal principal,@Valid UserCreateForm userCreateForm, BindingResult bindingResult) {
         model.addAttribute("message", "Hello " + principal.getName());
         model.addAttribute("userCreateForm",userCreateForm);
-        Optional<User> user = userService.getUser(principal.getName());
-        User user1 = user.get();
-        model.addAttribute("user", user1);
+
+        userCreateForm = userService.toUserCreateForm(principal.getName());
+        model.addAttribute("userCreateForm",userCreateForm);
+
         return "/user/test";
     }
+/*
+    @GetMapping("/dashboard")
+    public String dashboard(Model model, Principal principal,HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        System.out.println("dashboard - user="+user);
+        model.addAttribute("user", user);
+        return "/user/test";
+    }*/
+
 
 
 
