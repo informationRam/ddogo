@@ -2,10 +2,19 @@
 <div layout:fragment="content" class="container my-3">
 
 
+
+
+
+    <span><p class="nav-link" sec:authorize="isAuthenticated()" sec:authentication="name">회원</span>
+
+
     <ul>
         <li> <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/joinForm}">회원가입</a></li>
         <li> <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/login}">로그인</a></li>
         <li><a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/user/logout}">로그아웃(기능구현x)</a></li>
+        <li><a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/user/dashboard}">정보수정</a></li>
+        <!--<li><a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/user/modifyForm/{user_id}(user_id=${#authentication.principal.user_id})}">
+            회원정보수정</a></li>-->
     </ul>
 
 

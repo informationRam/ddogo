@@ -16,8 +16,6 @@ import java.util.Date;
 @Setter
 public class UserDTO {
 
-    private int user_no;            //'회원 번호'
-
     private String user_name;          //'회원 이름'
 
     private String user_id;            //'회원 아이디'
@@ -25,7 +23,6 @@ public class UserDTO {
     private Date birth;
 
     private String gender;             //'성별'
-
 
     private LocalDateTime joinDate;    //'가입일'
 

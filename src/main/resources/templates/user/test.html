@@ -1,0 +1,18 @@
+<html layout:decorate="~{layout}" xmlns:th="http://www.thymeleaf.org">
+<div layout:fragment="content" class="container my-3">
+  <div>
+    회원님의 아이디는 <p th:text="${message}"></p> 입니다.
+
+  </div>
+
+  <div>
+    <form id="join" class="my-3" th:object="${user1}" th:action="@{/user/modify}"  method="post">
+      <!-- 오류시 보여주는 문구-->
+      <div th:replace="~{form_errors::formErrorsFragment}"></div>
+      <!-- 1. 이름 -->
+      <div class="field">
+        <label for="user_name">이름</label>
+        <input type="text" th:field="*{user_name}" value="${user1.user_name}" disabled/>
+      </div>
+</div>
+</html>

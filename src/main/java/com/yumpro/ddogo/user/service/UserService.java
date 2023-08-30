@@ -1,6 +1,5 @@
 package com.yumpro.ddogo.user.service;
 
-import com.yumpro.ddogo.mail.service.EmailService;
 import com.yumpro.ddogo.user.DTO.UserDTO;
 import com.yumpro.ddogo.user.entity.User;
 import com.yumpro.ddogo.user.reprository.UserRepository;
@@ -34,6 +33,7 @@ public class UserService {
         user.setEmail(userCreateForm.getEmail());
         user.setPwd(userCreateForm.getPwd1());
         user.setPwd(PasswordEncoder.encode(userCreateForm.getPwd1()));
+        user.setIsshow("Y");
         userRepository.save(user);
     }
 
@@ -65,7 +65,6 @@ public class UserService {
 
 //비밀번호찾기
     public boolean pwdsearch(User user){
-        System.out.println("오니?");
         Optional<User> byUserIdAndEmail = userRepository.findByUserIdAndEmail(user.getUserId(), user.getEmail());
         if(byUserIdAndEmail.isPresent()){
             return true;
@@ -74,10 +73,38 @@ public class UserService {
         }
     }
 
+    //DTO -> Entity로 변경
     public User toEntity(UserDTO userDTO){
         User user = new User();
-        user.set
+        user.setUserId(userDTO.getUser_id());
+        user.setUser_name(userDTO.getUser_name());
+        user.setBirth(userDTO.getBirth());
+        user.setGender(userDTO.getGender());
+        user.setJoinDate(userDTO.getJoinDate());
+        user.setEmail(userDTO.getEmail());
+        user.setPwd(user.getPwd());
+        return user;
 
+    }
+
+    //아이디값 넣어서 회원정보 가져오기
+    public Optional<User> getUser(String user_id){
+        Optional<User> user = userRepository.findByUserId(user_id);
+        return user;
+    }
+
+    // 비번 변경
+        public void userpwdModify(User user,String tempPassword){
+            user.setUser_no(user.getUser_no());
+            user.setUser_name(user.getUser_name());
+            user.setUserId(user.getUserId());
+            user.setBirth(user.getBirth());
+            user.setGender(user.getGender());
+            user.setJoinDate(user.getJoinDate());
+            user.setEmail(user.getEmail());
+            user.setPwd(PasswordEncoder.encode(tempPassword));
+            user.setIsshow("Y");
+            userRepository.save(user);
     }
 
 

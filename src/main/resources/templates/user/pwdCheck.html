@@ -1,0 +1,18 @@
+<html layout:decorate="~{layout}" xmlns:th="http://www.thymeleaf.org">
+<div layout:fragment="content" class="container my-3">
+      <h2>비밀번호 찾기 임시창</h2>
+  <div>
+    <h4>가입된 메일로 발송된 인증번호를 입력해주세요.</h4>
+  </div>
+  <div>
+    <form id="tempPassword" class="my-3" th:action="@{/user/tempPassword}" method="post">
+    <input type="text" name="userEnteredPassword" id="userEnteredPassword">
+      <div th:if="${tempPassword == 'N'}" class="alert alert-danger">
+        이메일을 확인해주세요.
+      </div>
+      <input type="submit" value="전송">
+  </div>
+
+
+</div>
+</html>

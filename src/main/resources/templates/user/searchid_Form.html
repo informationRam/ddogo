@@ -2,28 +2,75 @@
 <div layout:fragment="content" class="container my-3">
       <div>
           <h3>ID찾기</h3>
-          <form id="login" class="my-3" th:object="${loginVaildation}" th:action="@{/user/searchid}" method="post">
+          <form id="login" class="my-3" th:object="${userDTO}" th:action="@{/user/searchid}" method="post">
               <!-- 오류시 보여주는 문구-->
               <!-- 에러출력 영역-->
-              <div th:if="${param.error}">
-                  <div class="alert alert-danger">
-                      사용자ID 또는 비밀번호를 확인해주세요.
-                  </div>
+              <div th:if="${user_id == 'N'}" class="alert alert-danger">
+                  이메일을 확인해주세요.
               </div>
+
               <!--  이메일입력 -->
               <div class="field">
                   <label for="email">Email</label>
-                  <input type="text" name="email" id="email">
+                  <input type="text" th:field="*{email}">
               </div>
               <div>
                   <!--  비밀번호 찾으러가기 -->
-                  <li> <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/login}">비밀번호 찾기</a></li>
+                  <li> <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/pwdsearch}">비밀번호 찾기</a></li>
               </div>
+              <!-- 아이디 찾기 submit -->
               <div>
-                <input type="submit" value="아이디 찾기">
-
+                  <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#searchIdModal">아이디 찾기</button>
               </div>
           </form>
       </div>
+
+    <!-- Search ID Modal -->
+    <div class="modal fade" id="searchIdModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="searchIdModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="searchIdModalLabel">ID 찾기</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- 이메일 값이 있을 경우 창을 띄움 -->
+                    <p th:text="${user_id}" id="userIdPlaceholder"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                    <a href="/user/login"><button type="button" class="btn btn-primary" id="modalLoginButton">로그인</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+<script th:inline="javascript">
+    $(document).ready(function () {
+        $('#searchIdModal').on('show.bs.modal', function () {
+            var userId = $('#userIdPlaceholder').text(); // Get the userId value from the placeholder
+            $('#userIdPlaceholder').text(userId);
+        });
+
+        // Handle form submission
+        $('#login').submit(function (event) {
+            event.preventDefault(); // Prevent the form from submitting normally
+
+            // Perform the form submission via AJAX or as needed
+            $.ajax({
+                type: 'POST',
+                url: '/user/searchid', // Use the correct URL for your backend endpoint
+                data: $('#login').serialize(),
+                success: function (response) {
+                    $('#userIdPlaceholder').text(response);
+                    $('#searchIdModal').modal('show'); // Show the modal with the updated value
+                },
+                error: function () {
+                    // Handle error
+                }
+            });
+        });
+    });
+</script>
+
 </html>

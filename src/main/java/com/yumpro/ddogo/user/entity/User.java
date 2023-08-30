@@ -38,5 +38,6 @@ public class User {
     @NotNull
     private String pwd;                //'비밀번호'
 
+    private String isshow;              //isshow
 
 }
