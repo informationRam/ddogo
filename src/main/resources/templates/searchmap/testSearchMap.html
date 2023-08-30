@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<!--인포윈도우 대신 오버레이를 띄우는 걸로 바꾸려고 했는데 안되네..-->
+<!--1. mouseover 이벤트 핸들러를 참고해서 마커와 itemEl에 클릭 이벤트를 등록해주세요.
+    2. 마커, itemEl 이벤트를 등록하는 클로저에서 places[i].place_name처럼 특정 값을 전달하지 않고
+       응답받은 i번째 장소 정보인 places[i]로 값을 전달하면 장소명 외 많은 정보를 이벤트 핸들러에서 활용할 수 있습니다.
+       이를 활용해서 커스텀 오버레이에 표시해주세요.-->
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -45,6 +48,20 @@
         #pagination a {display:inline-block;margin-right:10px;}
         #pagination .on {font-weight: bold; cursor: default;color:#777;}
 
+        .wrap {position: absolute;left: 0;bottom: 40px;width: 288px;height: 132px;margin-left: -144px;text-align: left;overflow: hidden;font-size: 12px;font-family: 'Malgun Gothic', dotum, '돋움', sans-serif;line-height: 1.5;}
+        .wrap * {padding: 0;margin: 0;}
+        .wrap .info {width: 286px;height: 120px;border-radius: 5px;border-bottom: 2px solid #ccc;border-right: 1px solid #ccc;overflow: hidden;background: #fff;}
+        .wrap .info:nth-child(1) {border: 0;box-shadow: 0px 1px 2px #888;}
+        .info .title {padding: 5px 0 0 10px;height: 30px;background: #eee;border-bottom: 1px solid #ddd;font-size: 18px;font-weight: bold;}
+        .info .close {position: absolute;top: 10px;right: 10px;color: #888;width: 17px;height: 17px;background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/overlay_close.png');}
+        .info .close:hover {cursor: pointer;}
+        .info .body {position: relative;overflow: hidden;}
+        .info .desc {position: relative;margin: 13px 0 0 90px;height: 75px;}
+        .desc .ellipsis {overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
+        .desc .jibun {font-size: 11px;color: #888;margin-top: -2px;}
+        .info .img {position: absolute;top: 6px;left: 5px;width: 73px;height: 71px;border: 1px solid #ddd;color: #888;overflow: hidden;}
+        .info:after {content: '';position: absolute;margin-left: -12px;left: 50%;bottom: 0;width: 22px;height: 12px;background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')}
+        .info .link {color: #5085BB;}
     </style>
 </head>
 <body>
@@ -156,43 +173,38 @@
                 marker = addMarker(placePosition, i), /*마커에 값이 들어감.*/
                 itemEl = getListItem(i, places[i]); // 검색 결과 항목 Element를 생성합니다
 
-
-
             // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
             // LatLngBounds 객체에 좌표를 추가합니다
             bounds.extend(placePosition);
 
+
             // 마커와 검색결과 항목에 mouseover 했을때
             // 해당 장소에 인포윈도우에 장소명을 표시합니다
             // mouseout 했을 때는 인포윈도우를 닫습니다
-            (function(marker, title) {
-
-                kakao.maps.event.addListener(marker, 'click', function() {
-                    confirm('marker click!');
-                    var markerPosition = marker.getPosition();
-                    console.log(markerPosition);
-                });
-                kakao.maps.event.addListener(marker, 'rightclick', function(){
-                    alert('marker right click!');
+            function closeOverlay() {
+                overlay.setMap(null);
+            }
+            (function(marker, places) {
+                kakao.maps.event.addListener(marker, 'click', function(){
+                    displayMyOverlay(marker, places.place_name, places.road_address_name, places.address_name, places.phone);
                 });
 
                 kakao.maps.event.addListener(marker, 'mouseover', function() {
-                    displayInfowindow(marker, title);
+                    displayInfowindow(marker, places.place_name);
                 });
 
                 kakao.maps.event.addListener(marker, 'mouseout', function() {
                     infowindow.close();
                 });
                 itemEl.onmouseover =  function () {
-                    displayInfowindow(marker, title);
+                    displayInfowindow(marker, places.place_name);
                 };
 
                 itemEl.onmouseout =  function () {
                     infowindow.close();
                 };
 
-
-            })(marker, places[i].place_name);
+            })(marker, places[i]);
 
             fragment.appendChild(itemEl);
 
@@ -206,7 +218,7 @@
         map.setBounds(bounds);
     }
 
-    // 검색결과 항목을 Element로 반환하는 함수입니다
+    // 검색결과 항목을 Element로 반환하는 함수입니다 <li>태그로 반환. <li class="item"> <span~
     function getListItem(index, places) {
 
         var el = document.createElement('li'),
@@ -291,12 +303,58 @@
     }
 
     // 검색결과 목록 또는 마커를 마우스오버했을 때 호출되는 함수입니다
-    // 인포윈도우에 장소명을 표시합니다
+    /* 인포윈도우에 장소명을 표시합니다
     function displayInfowindow(marker, title) {
-        var content = '<div style="padding:5px;z-index:1;">' + title + '</div>';
+        var content = '<div style="padding:5px; z-index:1; ">'+
+                          title +
+                      '</div>';
 
         infowindow.setContent(content);
         infowindow.open(map, marker);
+    }*/
+    // 검색결과 목록 또는 마커를 마우스오버했을 때 호출되는 함수입니다
+    // 인포윈도우에 장소명을 표시합니다
+    function displayInfowindow(marker, place_name) {
+        var content = '<div style="padding:5px; z-index:1; ">'+
+                          place_name +
+                      '</div>';
+
+        infowindow.setContent(content);
+        infowindow.open(map, marker);
+    }
+
+    function displayMyOverlay(marker, place_name, road_address_name, address_name, phone){
+        var overlay = new kakao.maps.CustomOverlay({
+            content: '<div class="wrap">' +
+            '    <div class="info">' +
+            '        <div class="title">' +
+            place_name +
+            '            <button id="closeButton">닫기</button>' +
+            '        </div>' +
+            '        <div class="body">' +
+            '            <div class="img">' +
+            '                <img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/thumnail.png" width="73" height="70">' +
+            '           </div>' +
+            '            <div class="desc">' +
+            '                <div class="ellipsis">'+road_address_name+'</div>' +
+            '                <div class="jibun ellipsis">'+address_name+'</div>' +
+            '                <div class="jibun ellipsis">'+phone+'</div>' +
+            '                <div><a href="https://www.kakaocorp.com/main" target="_blank" class="link">홈페이지</a></div>' +
+            '            </div>' +
+            '        </div>' +
+            '    </div>' +
+            '</div>',
+            map: map,
+            position: marker.getPosition()
+        });
+        var closeButton = document.getElementById('closeButton');
+        closeButton.addEventListener('click', function() {
+            overlay.setMap(null);
+        });
+        overlay.setMap(map);
+        console.log(marker.getPosition());
+        console.log(place_name);
+        console.log(road_address_name);
     }
 
      // 검색결과 목록의 자식 Element를 제거하는 함수입니다

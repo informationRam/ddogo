@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>커스텀오버레이 만들기</title>
+<style>
+    .co-wrap {
+        position: relative;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 10px;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+        width: 300px; /* 말풍선 너비 설정 */
+    }
+
+    .co-content {
+        position: relative;
+    }
+
+    .co-title {
+        font-weight: bold;
+        font-size: 16px;
+        border-bottom: 1px solid #ccc;
+        padding-bottom: 5px;
+        margin-bottom: 10px;
+        position: relative;
+    }
+
+    .co-close {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 20px;
+        height: 20px;
+        background-color: #f1f1f1;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .co-close:before {
+        content: "✖";
+        font-size: 12px;
+    }
+
+    .co-body {
+        line-height: 1.5;
+        font-size: 14px;
+    }
+
+    .ellipsis {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .jibun {
+        color: #888;
+    }
+
+    .link {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    .link:hover {
+        text-decoration: underline;
+    }
+</style>
+</head>
+<body>
+
+<div>
+
+</div>
+
+<div class="co-wrap">
+    <div class="co-content">
+        <div class="co-title">
+            카카오 스페이스닷원
+            <div class="co-close" onclick="closeOverlay()" title="닫기"></div>
+        </div>
+        <div class="co-body">
+            <div class="ellipsis">제주특별자치도 제주시 첨단로 242</div>
+            <div class="jibun ellipsis">(우) 63309 (지번) 영평동 2181</div>
+            <div>
+                <a href="https://www.kakaocorp.com/main" target="_blank" class="link">카카오의 상세페이지</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>
