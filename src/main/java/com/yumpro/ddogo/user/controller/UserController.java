@@ -1,5 +1,6 @@
 package com.yumpro.ddogo.user.controller;
 
+import com.yumpro.ddogo.mail.service.EmailService;
 import com.yumpro.ddogo.user.entity.User;
 import com.yumpro.ddogo.user.service.UserSecurityService;
 import com.yumpro.ddogo.user.service.UserService;
@@ -23,6 +24,8 @@ import java.time.LocalDateTime;
 public class UserController {
 
     private final UserService userService;
+    // 메일발송 서비스
+    private final EmailService emailService;
     //세션값 담기(1)
     private final UserSecurityService userSecurityService;
 
@@ -101,24 +104,32 @@ public class UserController {
         }
     }
 
-
     @GetMapping("id")
     public String id(Model model, User user, @RequestParam String userId) {
         model.addAttribute("userId",userId);
         return "/user/id";
     }
 
-
-
     //비밀번호 찾기 폼 pwdsearch_Form
     @GetMapping("/pwdsearch")
-    public String pwdsearchForm(){
+    public String pwdsearchForm(UserCreateForm userCreateForm, Model model){
+        model.addAttribute("userCreateForm",userCreateForm);
         return "/user/pwdsearch_Form";
     }
 
     @PostMapping("/pwdsearch")
-    public String pwdsearch(){
-        return "/login";
+    public String pwdsearch(UserCreateForm userCreateForm, Model model){
+        model.addAttribute("UserCreateForm",userCreateForm);
+        System.out.println("user="+userCreateForm.getUser_id());
+        User user = new User();
+
+        if(userService.pwdsearch(userCreateForm)){
+            System.out.println("ㅐㅏ");
+            emailService.sendSimpleMessage(user.getEmail());
+            return "/";          //메일전송성공
+        }else {
+            return "/login";
+        }
     }
 
 

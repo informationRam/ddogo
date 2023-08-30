@@ -1,5 +1,7 @@
 package com.yumpro.ddogo.user.service;
 
+import com.yumpro.ddogo.mail.service.EmailService;
+import com.yumpro.ddogo.user.DTO.UserDTO;
 import com.yumpro.ddogo.user.entity.User;
 import com.yumpro.ddogo.user.reprository.UserRepository;
 import com.yumpro.ddogo.user.validation.UserCreateForm;
@@ -18,6 +20,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder PasswordEncoder;
+
 
     //회원가입처리
     public void userJoin(UserCreateForm userCreateForm){
@@ -60,7 +63,22 @@ public class UserService {
         }
     }
 
+//비밀번호찾기
+    public boolean pwdsearch(User user){
+        System.out.println("오니?");
+        Optional<User> byUserIdAndEmail = userRepository.findByUserIdAndEmail(user.getUserId(), user.getEmail());
+        if(byUserIdAndEmail.isPresent()){
+            return true;
+        }else {
+            return false;
+        }
+    }
 
+    public User toEntity(UserDTO userDTO){
+        User user = new User();
+        user.set
+
+    }
 
 
 }

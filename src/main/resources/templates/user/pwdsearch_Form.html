@@ -3,7 +3,7 @@
 
     <div>
         <h3>비밀번호 찾기</h3>
-        <form id="login" class="my-3" th:object="${loginVaildation}" th:action="@{/user/searchid}" method="post">
+        <form id="login" class="my-3" th:object="${userCreateForm}" th:action="@{/user/pwdsearch}" method="post">
             <!-- 오류시 보여주는 문구-->
             <!-- 에러출력 영역-->
             <div th:if="${param.error}">
@@ -14,16 +14,15 @@
             <!--  아이디 입력 -->
             <div class="field">
                 <label for="user_id">ID</label>
-                <input type="text" name="user_id" id="user_id">
+                <input type="text" name="user_id">
             </div>
             <!--  이메일입력 -->
             <div class="field">
                 <label for="email">Email</label>
-                <input type="text" name="email" id="email">
+                <input type="text" th:field="*{email}">
             </div>
-
             <div>
-                <input type="submit" value="아이디 찾기">
+                <input type="submit" value="패스워드 찾기">
             </div>
         </form>
     </div>
