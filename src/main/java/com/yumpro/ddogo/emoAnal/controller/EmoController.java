@@ -28,6 +28,7 @@ public class EmoController {
     //리뷰 폼 보여주기
     @GetMapping("/reviewadd")
     public String add(ReviewForm ReviewForm) {
+
         return "emoAnal/emoReviewForm";
     }
 
@@ -45,6 +46,7 @@ public class EmoController {
         //2-2.리뷰등록
         emoService.updateReview(reviewForm.getReview(), reviewForm.getHotplace_no(), reviewForm.getMap_no(), emo_result);
 
+        //3.Model //4.View
         return "emoAnal/imsi"; //리뷰등록 성공하면
     }
 
