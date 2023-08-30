@@ -35,11 +35,12 @@ public class EmoController {
 
     //리뷰 등록 처리(감정분석과 함께)
     @PostMapping("/reviewadd")
-    public String emoreview(@Valid ReviewForm reviewForm, BindingResult bindingResult, Emoreview emoreview) {
+    public String emoreview(@Valid ReviewForm reviewForm, BindingResult bindingResult) {
         //1.파라미터받기
         //2.비지니스로직수행
         //2-1.감정분석 수행
-        double emo_result = emoService.emoAnal(emoreview);
+        System.out.println("review="+reviewForm.getReview());
+        double emo_result = emoService.emoAnal(reviewForm.getReview());
         if (bindingResult.hasErrors()) { //에러가 존재하면
             return "emoAnal/emoReviewForm";  //emoReviewForm.html문서로 이동
         }

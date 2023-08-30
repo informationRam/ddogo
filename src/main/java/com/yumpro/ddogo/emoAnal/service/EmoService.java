@@ -27,7 +27,7 @@ public class EmoService {
     }
 
     //감정분석
-    public double emoAnal(Emoreview emoreview){
+    public double emoAnal(String reveiw){
         double emo_result = 0;
         try {
             // API 엔드포인트 URL
@@ -39,7 +39,7 @@ public class EmoService {
 
             // 요청 데이터 생성
             JSONObject data = new JSONObject();
-            data.put("content", emoreview);
+            data.put("content",reveiw);
 
             // POST 요청 설정
             URL apiUrl = new URL(url);
