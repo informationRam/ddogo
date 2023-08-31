@@ -23,4 +23,11 @@ public class DashboardService {
     public List<HashMap<String,Object>> hotplaceRank() {
         return dashboardRepository.hotplaceRank();
     }
+
+    public int newPlaceCnt() {
+        return dashboardRepository.newPlaceCnt();
+    }
+    public int hotplaceTotal() {
+        return dashboardRepository.hotplaceTotal();
+    }
 }

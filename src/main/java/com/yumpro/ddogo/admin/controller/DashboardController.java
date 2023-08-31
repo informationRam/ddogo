@@ -22,11 +22,14 @@ public class DashboardController {
         int userTotal =dashboardService.getUserTotal();
         int recentUser=dashboardService.getRecentUser();
         List<HashMap<String,Object>> hotplaceRanking=dashboardService.hotplaceRank();
+        int newPlaceCnt=dashboardService.newPlaceCnt();
+        int hotplaceTotal=dashboardService.hotplaceTotal();
 
         //3.model
         model.addAttribute("userTotal",userTotal);
         model.addAttribute("recentUser",recentUser);
         model.addAttribute("hotplaceRanking",hotplaceRanking);
+        model.addAttribute("newPlaceCnt",newPlaceCnt);
 
         //4.view
         return "admin/dashboard";

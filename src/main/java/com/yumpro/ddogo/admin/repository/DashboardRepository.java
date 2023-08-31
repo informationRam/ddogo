@@ -11,4 +11,8 @@ public interface DashboardRepository {
     public int getRecentUser() throws DataAccessException;
 
     public List<HashMap<String,Object>> hotplaceRank() throws DataAccessException;
+
+    public int newPlaceCnt() throws DataAccessException;
+
+    public int hotplaceTotal() throws DataAccessException;
 }

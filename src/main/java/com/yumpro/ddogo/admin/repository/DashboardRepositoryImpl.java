@@ -27,4 +27,13 @@ public class DashboardRepositoryImpl implements DashboardRepository{
         return sqlSession.selectList("admin.hotplaceRank");
     }
 
+    @Override
+    public int newPlaceCnt() throws DataAccessException{
+        return sqlSession.selectOne("admin.newPlaceCnt");
+    }
+    @Override
+    public int hotplaceTotal() throws DataAccessException{
+        return sqlSession.selectOne("admin.hotplaceTotal");
+    }
+
 }
