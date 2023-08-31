@@ -176,7 +176,7 @@
                         연도별 액티브 유저수
                     </div>
                     <div class="card-body">
-                        <canvas class="chart" width="400" height="200"></canvas>
+                        <canvas class="chart year" width="400" height="200"></canvas>
                     </div>
                 </div>
             </div>
@@ -196,7 +196,7 @@
             <div class="col-md-12 mb-3">
                 <div class="card">
                     <div class="card-header">
-                        <span><i class="bi bi-table me-2"></i></span> Data Table
+                        <span><i class="bi bi-table me-2"></i></span> 맛집 리스트
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -212,7 +212,7 @@
                                     <th>구/군</th>
                                     <th>상호명</th>
                                     <th>카테고리</th>
-                                    <th>추천성비</th>
+                                    <th>추천수</th>
                                     <th>감정후기</th>
                                 </tr>
                                 </thead>
@@ -222,7 +222,9 @@
                                     <td th:text="${hotplace.sido}"></td>
                                     <td th:text="${hotplace.gugun}"></td>
                                     <td th:text="${hotplace.hotplace_name}"></td>
-                                    <td th:text="${hotplace.hotplace_cate_no}"></td>
+                                    <td th:text="${hotplace.hotplace_cate_name}"></td>
+                                    <td th:text="${hotplace.recom_count}"></td>
+                                    <td th:text="${hotplace.emo_result}"></td>
                                 </tr>
                                 </tbody>
                             </table>

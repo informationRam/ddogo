@@ -17,11 +17,28 @@
       ]]>
     </select>
 
-    <select id="hotplaceRank" resultType="com.yumpro.ddogo.admin.domain.HotplaceDTO">
+    <select id="hotplaceRank" resultType="com.yumpro.ddogo.admin.domain.RankingDTO">
         <![CDATA[
-        select hotplace_no,sido,gugun,hotplace_name,address,hotplace_cate_no,lat,lng
-        from hotplace
-        where hotplace_no in (select hotplace_no from mymap where recom='Y' group by hotplace_no order by count(recom) desc)
+        SELECT
+            MAX(hp.hotplace_no) AS hotplace_no,
+            hp.sido,
+            hp.gugun,
+            hp.hotplace_name,
+            hc.hotplace_cate_name,
+            SUM(CASE WHEN mm.recom = 'Y' THEN 1 ELSE 0 END) AS recom_count,
+            AVG(COALESCE(er.emo_result, 0)) AS emo_result
+        FROM
+            hotplace hp
+        JOIN
+            hotplace_cate hc ON hp.hotplace_cate_no = hc.hotplace_cate_no
+        LEFT JOIN
+            mymap mm ON hp.hotplace_no = mm.hotplace_no
+        LEFT JOIN
+            emoreview er ON mm.map_no = er.map_no AND mm.hotplace_no = er.hotplace_no
+        GROUP BY
+            hp.sido, hp.gugun, hp.hotplace_name, hc.hotplace_cate_name
       ]]>
     </select>
+
+
 </mapper>
