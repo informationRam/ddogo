@@ -152,7 +152,7 @@
                 <div class="card mb-3 bd-yellow" style="max-width: 30rem; border">
                     <div class="card-header bd-yellow">등록된 맛집 수</div>
                     <div class="card-body">
-                        <h5 class="card-title">1234개</h5>
+                        <h5 class="card-title" th:text="'총 '+${hotplaceTotal}+'곳'"></h5>
                         <p class="card-text" th:text="'이번달 신규 맛집수 ' + ${newPlaceCnt} + '곳'"></p>
                     </div>
                 </div>

@@ -30,6 +30,7 @@ public class DashboardController {
         model.addAttribute("recentUser",recentUser);
         model.addAttribute("hotplaceRanking",hotplaceRanking);
         model.addAttribute("newPlaceCnt",newPlaceCnt);
+        model.addAttribute("hotplaceTotal",hotplaceTotal);
 
         //4.view
         return "admin/dashboard";
