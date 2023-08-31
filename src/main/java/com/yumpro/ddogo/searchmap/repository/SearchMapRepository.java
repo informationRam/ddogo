@@ -5,6 +5,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class SearchMapRepository {
+    public void testInsert(SearchMapDTO searchMapDTO){
+
+    }
 //    public void addMyMap(SearchMapDTO searchMapDTO){
 //
 //    }
