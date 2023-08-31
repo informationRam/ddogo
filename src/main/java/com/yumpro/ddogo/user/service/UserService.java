@@ -21,7 +21,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder PasswordEncoder;
 
-
     //회원가입처리
     public void userJoin(UserCreateForm userCreateForm){
         User user = new User();
@@ -38,13 +37,13 @@ public class UserService {
         userRepository.save(user);
     }
 
-  // 회원 가입시 아이디, 이메일 중복 여부 확인
+  // 회원 가입시 아이디 중복 여부 확인
     @Transactional(readOnly = true)
     public boolean checkUserIdDuplication(String user_id) {
         boolean usernameDuplicate = userRepository.existsByUserId(user_id);
         return usernameDuplicate;
     }
-
+    // 회원 가입시 이메일 중복 여부 확인
     @Transactional(readOnly = true)
     public boolean checkEmailDuplication(String email) {
         boolean emailDuplicate = userRepository.existsByEmail(email);
@@ -61,8 +60,6 @@ public class UserService {
         return emailDuplicate;
     }
 
-
-
     //아이디 찾기
     public String searchId(String email) {
 
@@ -75,16 +72,20 @@ public class UserService {
         }
     }
 
-//비밀번호찾기
-    public boolean pwdsearch(User user){
-        Optional<User> byUserIdAndEmail = userRepository.findByUserIdAndEmail(user.getUserId(), user.getEmail());
+//비밀번호찾기 - id && email값 동시에 일치하는 회원이 있는지
+    public boolean pwdsearch(UserDTO userDTO){
+        boolean result = false;
+        System.out.println("pwdsearch 서비스옴!");
+        System.out.println("userDTO.getUser_id() :"+ userDTO.getUser_id());
+        System.out.println(" userDTO.getEmail() :"+  userDTO.getEmail());
+        Optional<User> byUserIdAndEmail = userRepository.findByUserIdAndEmail(userDTO.getUser_id(), userDTO.getEmail());
         if(byUserIdAndEmail.isPresent()){
-            return true;
+            return result;
         }else {
-            return false;
+            result = true;
+            return result;
         }
     }
-
 
     //아이디값 넣어서 회원정보 가져오기
     public User getUser(String user_id){
@@ -93,27 +94,13 @@ public class UserService {
     }
 
     // 비번 변경
-        public void userpwdModify(User user,String tempPassword){
-            user.setUser_no(user.getUser_no());
-            user.setUser_name(user.getUser_name());
-            user.setUserId(user.getUserId());
-            user.setBirth(user.getBirth());
-            user.setGender(user.getGender());
-            user.setJoinDate(user.getJoinDate());
-            user.setEmail(user.getEmail());
+        public void userpwdModify(User user, String tempPassword){
             user.setPwd(PasswordEncoder.encode(tempPassword));
-            user.setIsshow("Y");
             userRepository.save(user);
     }
 
-    // 회원 정보 변경
+    // 회원 정보 변경 -> email,pwd
     public void userModify(User user, UserModifyForm userModifyForm) {
-        /*if(!email.equals(user.getEmail())){
-            user.setEmail(email);
-            user.setPwd(PasswordEncoder.encode(pwd));
-            user.setIsshow("Y");
-            userRepository.save(user);
-        }*/
             user.setEmail(userModifyForm.getEmail());
             user.setPwd(PasswordEncoder.encode(userModifyForm.getPwd1()));
             user.setIsshow("Y");
@@ -134,7 +121,6 @@ public class UserService {
 
     }
 
-
     //user -> userDTO
     public UserDTO toDTO(User user){
         UserDTO userDTO = new UserDTO();
@@ -146,8 +132,8 @@ public class UserService {
         userDTO.setEmail(user.getEmail());
         userDTO.setPwd(user.getPwd());
         return userDTO;
-
     }
+
     // user -> UserCreateForm 변경
     public UserCreateForm toUserCreateForm(String user_id){
         Optional<User> user = userRepository.findByUserId(user_id);
@@ -160,7 +146,6 @@ public class UserService {
         return userCreateForm;
     }
 
-
     //정보수정을 위한 인증 user -> touserModifyForm로 변경
     public UserModifyForm touserModifyForm(User user) {
         UserModifyForm userModifyForm = new UserModifyForm();
@@ -171,7 +156,6 @@ public class UserService {
         userModifyForm.setEmail(user.getEmail());
         return userModifyForm;
     }
-
 
     //인증값 확인, pwd1,pwd2 전달
     public UserModifyForm touserModifyForm(User user,String pwd1,String pwd2,String email) {

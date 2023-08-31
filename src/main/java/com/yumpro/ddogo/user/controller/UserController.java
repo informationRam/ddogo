@@ -63,7 +63,7 @@ public class UserController {
         }
         //비밀번호, 비밀번호 확인 동일 체크
         if (!userCreateForm.getPwd1().equals(userCreateForm.getPwd2())) {
-            bindingResult.rejectValue("pwd2", "pwdInCorrect", "비밀번호와 비밀번호확인이 불일치합니다.");
+            bindingResult.rejectValue("pwd2", "pwdInCorrect", "비밀번호확인 값이 다릅니다.");
             return "user/joinForm";
         }else{
             userService.userJoin(userCreateForm);
@@ -105,8 +105,7 @@ public class UserController {
 
         if (user_id != null && !user_id.isEmpty()) {
             //세션으로 값 담기
-           */
-/* session.setAttribute("foundUserId", userId);
+            /* session.setAttribute("foundUserId", userId);
            * String foundUserId = (String) session.getAttribute("foundUserId");*//*
 
 
@@ -119,26 +118,23 @@ public class UserController {
         }
     }
 */
-
+// 아이디 찾기
     @PostMapping("/searchid")
-    public ResponseEntity<?> searchId(@ModelAttribute("userDTO") UserDTO userDTO) {
-        User user = userService.toEntity(userDTO);
-        String user_id = userService.searchId(user.getEmail());
+    public String searchId(@ModelAttribute("userDTO") UserDTO userDTO,Model model, BindingResult bindingResult) {
 
-        if (user_id != null && !user_id.isEmpty()) {
-            return ResponseEntity.ok(user_id);
-        } else {
-            return ResponseEntity.notFound().build();
+        System.out.println("userD:"+userDTO.getEmail());
+        //회원정보에 사용자가 입력한 이메일이 있는지 확인
+        if (!userService.checkEmailDuplication(userDTO.getEmail())) {
+            bindingResult.rejectValue("email", "EmailInCorrect", "사용자 정보를 찾을 수 없습니다.");
+            return "user/searchid_Form";
         }
-    }
-
-    @GetMapping("id")
-    public String id(Model model, User user, @RequestParam String user_id) {
+        String user_id = userService.searchId(userDTO.getEmail());
+        System.out.println("user_id:"+user_id);
         model.addAttribute("user_id",user_id);
         return "/user/id";
     }
 
-    //비밀번호 찾기 폼 pwdsearch_Form
+    // 비밀번호 찾기 폼 pwdsearch_Form
     @GetMapping("/pwdsearch")
     public String pwdsearchForm(UserDTO userDTO, Model model){
         model.addAttribute("userDTO",userDTO);
@@ -147,36 +143,17 @@ public class UserController {
 
     // 비밀번호 찾기
     @PostMapping("/pwdsearch")
-    public String pwdsearch(UserDTO userDTO, Model model,HttpSession session){
+    public String pwdsearch(UserDTO userDTO, Model model,HttpSession session, BindingResult bindingResult){
+        User user = userService.getUser(userDTO.getUser_id());
         model.addAttribute("userDTO",userDTO);
-        User user = userService.toEntity(userDTO);
-        System.out.println("userService.pwdsearch(user)"+userService.pwdsearch(user));
-        if(userService.pwdsearch(user)){
-            session.setAttribute("user_id",user.getUserId());      //user_id :세션에 값저장
-            String tempPassword = emailService.sendSimpleMessage(user.getEmail());
-            session.setAttribute("tempPassword",tempPassword);      //tempPassword :세션에 값저장
-            System.out.println("tempPassword: "+tempPassword);
-            return "/user/pwdCheck";          //메일전송성공
+        //이메일 중복여부체크
+        if (userService.pwdsearch(userDTO)) {
+            bindingResult.rejectValue("email", "EmailInCorrect", "사용자 정보를 찾을 수 없습니다.");
+            return "user/pwdsearch_Form";
         }else {
-            String result = "N";
-            return result;
-        }
-    }
-
-    //인증번호 체크
-    @PostMapping("/tempPassword")
-    public String tempPassword(@RequestParam String userEnteredPassword,Model model,HttpSession session,Principal principal){
-        String tempPassword = (String) session.getAttribute("tempPassword");
-        String user_id = (String) session.getAttribute("user_id");
-        System.out.println("tempPassword2: "+tempPassword);
-        System.out.println("user_id: "+user_id);
-        String result = "N";
-        if(tempPassword.equals(userEnteredPassword)){           //인증번호가 맞으면
-            User user = userService.getUser(user_id);
-            userService.userpwdModify(user,tempPassword);
-            return "redirect:/";        //임시 번호로 패스워드변경.
-        }else {
-            return result;          //  창에 그대로 머무른다.
+            String tempPassword = emailService.sendSimpleMessage(userDTO.getEmail());   //메일발송 후 임시비밀번호값저장
+            userService.userpwdModify(user,tempPassword);                //임시 패스워드로 변경
+            return "/user/loginForm";                                   //메일전송성공 -> 로그인창으로이동
         }
     }
 

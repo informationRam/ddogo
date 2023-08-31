@@ -20,8 +20,8 @@ public class EmailService {
         String str = getTempPassword();
 
         mailDto.setTo("lry9478@gmail.com");
-        mailDto.setTitle("[또 갈지도] 인증번호 메일 발송 안내");
-        mailDto.setContent("비밀번호 찾기 [인증번호]는 " + str + "입니다. 홈페이지로 돌아가 번호를 입력해주세요.");
+        mailDto.setTitle("[또 갈지도] 임시비밀번호 메일 발송 안내");
+        mailDto.setContent("임시비밀번호 안내 [" + str + "] 홈페이지로 돌아가 번호를 입력해주세요.");
         mailDto.setAddress(mailAddress);
 
         message.setFrom(mailDto.getTo());

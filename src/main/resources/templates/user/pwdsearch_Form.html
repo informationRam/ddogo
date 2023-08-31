@@ -3,13 +3,8 @@
     <div>
         <h3>비밀번호 찾기</h3>
         <form id="login" class="my-3" th:object="${userDTO}" th:action="@{/user/pwdsearch}" method="post">
-            <!-- 오류시 보여주는 문구-->
-
-
             <!-- 에러출력 영역-->
-            <div th:if="${user_id == 'N'}" class="alert alert-danger">
-                    사용자ID 또는 이메일을 확인해주세요.
-            </div>
+            <div th:replace="~{form_errors::formErrorsFragment}"></div>
             <!--  아이디 입력 -->
             <div class="field">
                 <label for="user_id">ID</label>
