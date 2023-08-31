@@ -9,5 +9,4 @@ public class DdogoApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(DdogoApplication.class, args);
 	}
-
 }

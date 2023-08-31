@@ -2,11 +2,34 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="admin">
-    <select id="mapno" resultType="int">
+    <select id="userTotal" resultType="int">
         <![CDATA[
-      select map_no
-        from mymap
-        where map_no=1
+        select count(user_no)
+        from user
       ]]>
+    </select>
+
+    <!-- 액티브 유저 수 -->
+    <select id="activeUserCnt" resultType="int" parameterType="map">
+        <![CDATA[
+            select count(distinct user_no)
+            from ddogo.mymap m, ddogo.user u
+            where 1=1
+		]]>
+        <if test="map!=null">
+            <if test="year!=null">
+                <![CDATA[
+                    and year(m.recom_date)=#{year}
+                ]]>
+            </if>
+            <if test="month!=null">
+                <![CDATA[
+                    and month(m.recom_date)=#{month}
+                ]]>
+            </if>
+            <if test="gender!=null">
+                where u.gender=#{gender} and timestampdiff(month,u.birth,now()) between #{fAge} and #{cAge}
+            </if>
+        </if>
     </select>
 </mapper>
