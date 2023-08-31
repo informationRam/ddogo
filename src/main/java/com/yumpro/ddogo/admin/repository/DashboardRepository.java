@@ -15,4 +15,10 @@ public interface DashboardRepository {
     public int newPlaceCnt() throws DataAccessException;
 
     public int hotplaceTotal() throws DataAccessException;
+
+    public double emoAvg() throws DataAccessException;
+
+    public double RecentEmoAvg() throws DataAccessException;
+
+    public int monthlyActiveUser(int monthlyGab) throws DataAccessException;
 }

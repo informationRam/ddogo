@@ -2,13 +2,17 @@ package com.yumpro.ddogo.admin.controller;
 
 import com.yumpro.ddogo.admin.service.DashboardService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.relational.core.sql.In;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -19,18 +23,52 @@ public class DashboardController {
         //1.get param
 
         //2.business logic
-        int userTotal =dashboardService.getUserTotal();
+        //카드
+        int userTotal=dashboardService.getUserTotal();
         int recentUser=dashboardService.getRecentUser();
-        List<HashMap<String,Object>> hotplaceRanking=dashboardService.hotplaceRank();
         int newPlaceCnt=dashboardService.newPlaceCnt();
         int hotplaceTotal=dashboardService.hotplaceTotal();
+        double emoAvg=dashboardService.emoAvg();
+        double RecentEmoAvg=dashboardService.RecentEmoAvg();
+
+        //그래프
+        HashMap<Integer,Integer> activeUserMap = new HashMap<>();
+        HashMap<Integer,Integer> month = new HashMap<>();
+        List<HashMap> activeUserList = new ArrayList<>();
+        int nowMonth = LocalDate.now().getMonthValue();
+
+        for(int i=0;i<13;i++){
+            if(nowMonth-i>0){
+                nowMonth=-i;
+            }else if(nowMonth-i==0){
+                nowMonth=12;
+            }else{
+                i=i-nowMonth;
+                nowMonth=12-i;
+            }
+            int cnt = dashboardService.monthlyActiveUser(i);
+            activeUserMap.put(i,cnt);
+            month.put(i,nowMonth);
+        }
+            activeUserList.add(activeUserMap);
+            activeUserList.add(month);
+
+
+        //랭크
+        List<HashMap<String,Object>> hotplaceRanking=dashboardService.hotplaceRank();
 
         //3.model
+        //카드
         model.addAttribute("userTotal",userTotal);
         model.addAttribute("recentUser",recentUser);
-        model.addAttribute("hotplaceRanking",hotplaceRanking);
-        model.addAttribute("newPlaceCnt",newPlaceCnt);
         model.addAttribute("hotplaceTotal",hotplaceTotal);
+        model.addAttribute("newPlaceCnt",newPlaceCnt);
+        model.addAttribute("emoAvg",emoAvg);
+        model.addAttribute("RecentEmoAvg",RecentEmoAvg);
+        //그래프
+        model.addAttribute("activeUserList",activeUserList);
+        //리스트
+        model.addAttribute("hotplaceRanking",hotplaceRanking);
 
         //4.view
         return "admin/dashboard";

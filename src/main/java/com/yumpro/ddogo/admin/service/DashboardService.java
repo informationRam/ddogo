@@ -30,4 +30,16 @@ public class DashboardService {
     public int hotplaceTotal() {
         return dashboardRepository.hotplaceTotal();
     }
+
+    public double emoAvg() {
+        return dashboardRepository.emoAvg();
+    }
+
+    public double RecentEmoAvg() {
+        return dashboardRepository.RecentEmoAvg();
+    }
+
+    public int monthlyActiveUser(int monthlyGab) {
+        return dashboardRepository.monthlyActiveUser(monthlyGab);
+    }
 }

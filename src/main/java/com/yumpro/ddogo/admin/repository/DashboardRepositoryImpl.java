@@ -36,4 +36,17 @@ public class DashboardRepositoryImpl implements DashboardRepository{
         return sqlSession.selectOne("admin.hotplaceTotal");
     }
 
+    @Override
+    public double emoAvg() throws DataAccessException{
+        return sqlSession.selectOne("admin.emoAvg");
+    }
+    @Override
+    public double RecentEmoAvg() throws DataAccessException{
+        return sqlSession.selectOne("admin.RecentEmoAvg");
+    }
+
+    public int monthlyActiveUser(int monthlyGab) throws DataAccessException{
+        return sqlSession.selectOne("admin.monthlyActiveUser");
+    }
+
 }

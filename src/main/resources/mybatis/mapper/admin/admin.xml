@@ -45,7 +45,7 @@
         <![CDATA[
         select COUNT(hp.hotplace_no)
         from hotplace hp
-        where exists ( select 1 from mymap mm where mm.hotplace_no = hp.hotplace_no and timestampdiff(month, mm.recom_date,now()) <=1)
+        where exists ( select 1 from mymap mm where mm.hotplace_no = hp.hotplace_no and timestampdiff(month, mm.recom_date,now()) <1)
       ]]>
     </select>
 
@@ -53,6 +53,29 @@
         <![CDATA[
         select COUNT(hotplace_no)
         from hotplace
+      ]]>
+    </select>
+
+    <select id="emoAvg" resultType="double">
+        <![CDATA[
+        select round(avg(emo_result),2)
+        from emoreview
+      ]]>
+    </select>
+
+    <select id="RecentEmoAvg" resultType="double">
+        <![CDATA[
+        select round(avg(er.emo_result),2)
+        from emoreview er
+        where exists (select 1 from mymap mm where mm.map_no = er.map_no and timestampdiff(month, mm.recom_date,now()) <1)
+      ]]>
+    </select>
+
+    <select id="monthlyActiveUser" resultType="int" parameterType="int">
+        <![CDATA[
+        select count(distinct user_no)
+        from ddogo.mymap
+        where timestampdiff(month,recom_date,now()) in(#{monthlyGab})
       ]]>
     </select>
 </mapper>
