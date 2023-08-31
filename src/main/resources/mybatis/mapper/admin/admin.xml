@@ -2,34 +2,26 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="admin">
-    <select id="userTotal" resultType="int">
+    <select id="getUserTotal" resultType="int">
         <![CDATA[
         select count(user_no)
         from user
       ]]>
     </select>
 
-    <!-- 액티브 유저 수 -->
-    <select id="activeUserCnt" resultType="int" parameterType="map">
+    <select id="getRecentUser" resultType="int">
         <![CDATA[
-            select count(distinct user_no)
-            from ddogo.mymap m, ddogo.user u
-            where 1=1
-		]]>
-        <if test="map!=null">
-            <if test="year!=null">
-                <![CDATA[
-                    and year(m.recom_date)=#{year}
-                ]]>
-            </if>
-            <if test="month!=null">
-                <![CDATA[
-                    and month(m.recom_date)=#{month}
-                ]]>
-            </if>
-            <if test="gender!=null">
-                where u.gender=#{gender} and timestampdiff(month,u.birth,now()) between #{fAge} and #{cAge}
-            </if>
-        </if>
+        select count(user_no)
+        from user
+        where timestampdiff(month,join_date,now())<1
+      ]]>
+    </select>
+
+    <select id="hotplaceRank" resultType="com.yumpro.ddogo.admin.domain.HotplaceDTO">
+        <![CDATA[
+        select hotplace_no,sido,gugun,hotplace_name,address,hotplace_cate_no,lat,lng
+        from hotplace
+        where hotplace_no in (select hotplace_no from mymap where recom='Y' group by hotplace_no order by count(recom) desc)
+      ]]>
     </select>
 </mapper>

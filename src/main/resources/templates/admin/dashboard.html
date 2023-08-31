@@ -142,8 +142,8 @@
                 <div class="card mb-3 bd-red" style="max-width: 30rem; border">
                     <div class="card-header bd-red">회원수</div>
                     <div class="card-body">
-                        <h5 class="card-title">134명</h5>
-                        <p class="card-text">이번달 가입자 수: 12명</p>
+                        <h5 class="card-title" th:text="'총 '+${userTotal}+'명'"></h5>
+                        <p class="card-text" th:text="'이번달 신규 가입자수 ' + ${recentUser} + '명'"></p>
                     </div>
                 </div>
             </div>
@@ -217,14 +217,12 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td>PK</td>
-                                    <td>시/도</td>
-                                    <td>구/군</td>
-                                    <td>상호명</td>
-                                    <td>카테고리</td>
-                                    <td>추천성비(남:여)</td>
-                                    <td>감정후기</td>
+                                <tr th:each="hotplace, loop : ${hotplaceRanking}">
+                                    <td th:text="${hotplace.hotplace_no}"></td>
+                                    <td th:text="${hotplace.sido}"></td>
+                                    <td th:text="${hotplace.gugun}"></td>
+                                    <td th:text="${hotplace.hotplace_name}"></td>
+                                    <td th:text="${hotplace.hotplace_cate_no}"></td>
                                 </tr>
                                 </tbody>
                             </table>
