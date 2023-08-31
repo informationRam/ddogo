@@ -193,19 +193,14 @@ public class UserController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{user_id}")
     public String userUpdate(Model model, @Valid UserModifyForm userModifyForm,
-                             BindingResult bindingResult, Principal principal,
-                             @RequestParam String pwd1,
-                             @RequestParam String pwd2, @RequestParam String email) {
+                             BindingResult bindingResult, Principal principal) {
 
         User user = userService.getUser(principal.getName());
-       /* userModifyForm = userService.touserModifyForm(user,userModifyForm.getPwd1(), userModifyForm.getPwd2(),email);*/
-
         model.addAttribute("userModifyForm",userModifyForm);
 
         if (bindingResult.hasErrors()) {
             return "/user/userModifyForm";
         }
-
         //이메일 중복여부체크
         if (userService.checkEmailDuplication(user,userModifyForm)) {
             bindingResult.rejectValue("email", "EmailInCorrect", "이미 사용중인 이메일 입니다.");
