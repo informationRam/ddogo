@@ -33,25 +33,13 @@ public class DashboardController {
 
         //그래프
         HashMap<Integer,Integer> activeUserMap = new HashMap<>();
-        HashMap<Integer,Integer> month = new HashMap<>();
         List<HashMap> activeUserList = new ArrayList<>();
-        int nowMonth = LocalDate.now().getMonthValue();
 
-        for(int i=0;i<13;i++){
-            if(nowMonth-i>0){
-                nowMonth=-i;
-            }else if(nowMonth-i==0){
-                nowMonth=12;
-            }else{
-                i=i-nowMonth;
-                nowMonth=12-i;
-            }
+        for(int i=0;i<12;i++){
             int cnt = dashboardService.monthlyActiveUser(i);
             activeUserMap.put(i,cnt);
-            month.put(i,nowMonth);
         }
             activeUserList.add(activeUserMap);
-            activeUserList.add(month);
 
 
         //랭크

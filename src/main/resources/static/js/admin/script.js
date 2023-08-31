@@ -1,12 +1,9 @@
-    var activeUserList = ????
+var Labels = [];
+var Data = [];
 
-    var Labels = [];
-    var Data = [];
-
-    for (var i = 11; i >= 0; i--) {
-        Labels.push(activeUserList[1][i]); // month
-        Data.push(activeUserList[0][i]); // activeUserMap
-    }
+for (var i = 11; i >= 0; i--) {
+    Data.push(activeUserListData[i]['0']); // activeUserMap
+}
 
     var charts = document.querySelectorAll(".month");
 
