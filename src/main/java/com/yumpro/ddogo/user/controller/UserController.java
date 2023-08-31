@@ -7,21 +7,20 @@ import com.yumpro.ddogo.user.service.UserSecurityService;
 import com.yumpro.ddogo.user.service.UserService;
 import com.yumpro.ddogo.user.validation.LoginVaildation;
 import com.yumpro.ddogo.user.validation.UserCreateForm;
+import com.yumpro.ddogo.user.validation.UserModifyForm;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.time.LocalDateTime;
-import java.util.Optional;
+
 
     //시큐리티 저장 값 가져오기 세션대용
    /* Optional<User> user = userService.getUser(principal.getName());
@@ -70,7 +69,6 @@ public class UserController {
             userService.userJoin(userCreateForm);
             return "redirect:/user/login";
         }
-
     }
 
     //로그인 화면(get)
@@ -182,48 +180,50 @@ public class UserController {
         }
     }
 
-    //정보수정 폼
-   /* @GetMapping("/modifyForm/{user_id}")
-    public String userUpdateForm(Principal principal, Model model,@Valid UserCreateForm userCreateForm, BindingResult bindingResult) {
-        userCreateForm = userService.toUserCreateForm(principal.getName());
-        model.addAttribute("userCreateForm",userCreateForm);
-        return "user/userModifyForm";
-    }*/
-
+    //정보 수정 폼
     @GetMapping("/modifyForm/{user_id}")
     public String userUpdateForm(Principal principal, Model model) {
-        UserCreateForm userCreateForm = userService.toUserCreateForm(principal.getName());
-        model.addAttribute("userCreateForm", userCreateForm);
-        return "user/userModifyForm";
+        User user =  userService.getUser(principal.getName());
+        UserModifyForm userModifyForm = userService.touserModifyForm(user); // 인증을위한 userModifyForm값으로 변경
+        model.addAttribute("userModifyForm", userModifyForm);
+        return "/user/userModifyForm";
     }
 
+    // 정보수정 실행
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/modify/{user_id}")
+    public String userUpdate(Model model, @Valid UserModifyForm userModifyForm,
+                             BindingResult bindingResult, Principal principal,
+                             @RequestParam String pwd1,
+                             @RequestParam String pwd2, @RequestParam String email) {
 
-    // 정보수정
-    @PostMapping("/modify")
+        User user = userService.getUser(principal.getName());
+       /* userModifyForm = userService.touserModifyForm(user,userModifyForm.getPwd1(), userModifyForm.getPwd2(),email);*/
 
-    public String userUpdate(Model model, @Valid UserCreateForm userCreateForm, BindingResult bindingResult) {
-        model.addAttribute("userCreateForm", userCreateForm);
+        model.addAttribute("userModifyForm",userModifyForm);
+
         if (bindingResult.hasErrors()) {
-            return "user/userModifyForm";
+            return "/user/userModifyForm";
         }
+
         //이메일 중복여부체크
-        if (userService.checkEmailDuplication(userCreateForm.getEmail())) {
+        if (userService.checkEmailDuplication(user,userModifyForm)) {
             bindingResult.rejectValue("email", "EmailInCorrect", "이미 사용중인 이메일 입니다.");
             return "user/userModifyForm";
         }
-
         //비밀번호, 비밀번호 확인 동일 체크
-        if (!userCreateForm.getPwd1().equals(userCreateForm.getPwd2())) {
+        if (!userModifyForm.getPwd1().equals(userModifyForm.getPwd2())) {
             bindingResult.rejectValue("pwd2", "pwdInCorrect", "비밀번호와 비밀번호확인이 불일치합니다.");
-            return "user/userModifyForm";
-        }else{
-            userService.userModify(userCreateForm,userCreateForm.getEmail(),userCreateForm.getPwd1());
-            return "redirect:/";
+            return "/user/userModifyForm";
+        }try{
+            userService.userModify(user,userModifyForm);
+        }catch (DataIntegrityViolationException e){
+            e.printStackTrace();
+            bindingResult.reject("modifyFailed","정보를 확인해주세요.");
+            return "/user/userModifyForm";
         }
-
+     return "redirect:/";
     }
-
-
 
     // 시큐리티 값 가져오기
 

@@ -1,40 +1,38 @@
 <html layout:decorate="~{layout}" xmlns:th="http://www.thymeleaf.org">
 <div layout:fragment="content" class="container my-3">
-    <h1>로그인</h1>
-        <div>
 
-           <form id="login" class="my-3" th:object="${loginVaildation}" th:action="@{/user/login}" method="post">
-               <!-- 오류시 보여주는 문구-->
-               <!-- 에러출력 영역-->
-               <div th:if="${param.error}">
-                   <div class="alert alert-danger">
-                       사용자ID 또는 비밀번호를 확인해주세요.
-                   </div>
-               </div>
-                <!--  1. 아이디-->
-                <div class="field">
-                    <label for="user_id">ID</label>
-                    <input type="text" name="user_id" id="user_id">
-                </div>
-                <!-- 2. 비밀번호 -->
-                <div class="field">
-                    <label for="pwd">비밀번호</label>
-                    <input class="" type="password" name="pwd" id="pwd">
-                </div>
-                <span><a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/searchid}">아이디찾기</a>
-                <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/pwdsearch}">비밀번호찾기</a></span>
+    <div class="container my-3">
+        <div class="my-3 border-bottom">
+            <div class="d-flex justify-content-center align-items-center flex-column">
+                <img src="/image/logo.png">
+                <h1>로그인</h1>
+                <form id="login" class="my-3" th:object="${loginVaildation}" th:action="@{/user/login}" method="post">
 
-                <div>
-                    <input type="submit" value="로그인">
-                </div>
-            </form>
+                    <!-- 1. 아이디 -->
+                    <div class="mb-3">
+                        <label for="user_id">ID</label>
+                        <input type="text" name="user_id" id="user_id" class="form-control">
+                    </div>
+                    <!-- 2. 비밀번호 -->
+                    <div class="mb-3">
+                        <label for="pwd">비밀번호</label>
+                        <input type="password" name="pwd" id="pwd" class="form-control">
+                    </div>
+                    <!-- 오류시 보여주는 문구 -->
+                    <div th:if="${param.error}">
+                        <div class="alert alert-danger">
+                            사용자ID 또는 비밀번호를 확인해주세요.
+                        </div>
+                    </div>
+                    <span><a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/searchid}">아이디찾기</a>
+                    <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/pwdsearch}">비밀번호찾기</a></span>
+                    <div class="d-flex justify-content-center">
+                        <input type="submit" value="로그인" class="btn btn-primary">
+                    </div>
+                </form>
+            </div>
         </div>
-
-
-
-
+    </div>
 
 </div>
 </html>
-
-

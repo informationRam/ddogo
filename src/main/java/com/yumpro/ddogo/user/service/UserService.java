@@ -5,6 +5,7 @@ import com.yumpro.ddogo.user.entity.User;
 import com.yumpro.ddogo.user.reprository.UserRepository;
 import com.yumpro.ddogo.user.validation.UserCreateForm;
 
+import com.yumpro.ddogo.user.validation.UserModifyForm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -49,6 +50,17 @@ public class UserService {
         boolean emailDuplicate = userRepository.existsByEmail(email);
         return emailDuplicate;
     }
+
+    //정보 수정시 사용
+    @Transactional(readOnly = true)
+    public boolean checkEmailDuplication(User user,UserModifyForm userModifyForm) {
+        boolean emailDuplicate = false;
+        if(!user.getEmail().equals(userModifyForm.getEmail())){     //기존 이메일값, 변경한 이메일값이 다르면
+            emailDuplicate = userRepository.existsByEmail(userModifyForm.getEmail());   //회원의 이메일값과 비교를 한다.
+        }
+        return emailDuplicate;
+    }
+
 
 
     //아이디 찾기
@@ -95,17 +107,17 @@ public class UserService {
     }
 
     // 회원 정보 변경
-    public void userModify(UserCreateForm userCreateForm, String email, String pwd) {
-        User user = new User();
-        user.setUser_no(userCreateForm.getUser_no());
-        user.setUser_name(userCreateForm.getUser_name());
-        user.setUserId(userCreateForm.getUser_id());
-        user.setBirth(userCreateForm.getBirth());
-        user.setGender(userCreateForm.getGender());
-        user.setEmail(email);
-        user.setPwd(PasswordEncoder.encode(pwd));
-        user.setIsshow("Y");
-        userRepository.save(user);
+    public void userModify(User user, UserModifyForm userModifyForm) {
+        /*if(!email.equals(user.getEmail())){
+            user.setEmail(email);
+            user.setPwd(PasswordEncoder.encode(pwd));
+            user.setIsshow("Y");
+            userRepository.save(user);
+        }*/
+            user.setEmail(userModifyForm.getEmail());
+            user.setPwd(PasswordEncoder.encode(userModifyForm.getPwd1()));
+            user.setIsshow("Y");
+            userRepository.save(user);
     }
 
     //DTO -> Entity로 변경
@@ -121,6 +133,21 @@ public class UserService {
         return user;
 
     }
+
+
+    //user -> userDTO
+    public UserDTO toDTO(User user){
+        UserDTO userDTO = new UserDTO();
+        userDTO.setUser_id(user.getUserId());
+        userDTO.setUser_name(user.getUser_name());
+        userDTO.setBirth(user.getBirth());
+        userDTO.setGender(user.getGender());
+        userDTO.setJoinDate(user.getJoinDate());
+        userDTO.setEmail(user.getEmail());
+        userDTO.setPwd(user.getPwd());
+        return userDTO;
+
+    }
     // user -> UserCreateForm 변경
     public UserCreateForm toUserCreateForm(String user_id){
         Optional<User> user = userRepository.findByUserId(user_id);
@@ -134,5 +161,28 @@ public class UserService {
     }
 
 
+    //정보수정을 위한 인증 user -> touserModifyForm로 변경
+    public UserModifyForm touserModifyForm(User user) {
+        UserModifyForm userModifyForm = new UserModifyForm();
+        userModifyForm.setUser_name(user.getUser_name());
+        userModifyForm.setUser_id(user.getUserId());
+        userModifyForm.setBirth(user.getBirth());
+        userModifyForm.setGender(user.getGender());
+        userModifyForm.setEmail(user.getEmail());
+        return userModifyForm;
+    }
 
+
+    //인증값 확인, pwd1,pwd2 전달
+    public UserModifyForm touserModifyForm(User user,String pwd1,String pwd2,String email) {
+        UserModifyForm userModifyForm = new UserModifyForm();
+        userModifyForm.setUser_name(user.getUser_name());
+        userModifyForm.setUser_id(user.getUserId());
+        userModifyForm.setBirth(user.getBirth());
+        userModifyForm.setGender(user.getGender());
+        userModifyForm.setEmail(email);
+        userModifyForm.setPwd1(pwd1);
+        userModifyForm.setPwd2(pwd2);
+        return userModifyForm;
+    }
 }
