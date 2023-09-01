@@ -287,24 +287,9 @@ public class UserController {
         }
      return "redirect:/";
     }
-/*
-
-    // 시큐리티 값 가져오기
-
-    @GetMapping("/dashboard/{user_id}")
-    public String dashboard(Model model, Principal principal,@Valid UserCreateForm userCreateForm, BindingResult bindingResult) {
-        model.addAttribute("message", "Hello " + principal.getName());
-        model.addAttribute("userCreateForm",userCreateForm);
-
-        userCreateForm = userService.toUserCreateForm(principal.getName());
-        model.addAttribute("userCreateForm",userCreateForm);
-
-        return "/user/test";
-    }
-*/
 
 //  탈퇴하기
-    @GetMapping("/delete/{id}")
+    @GetMapping("/delete/{user_id}")
     public String questionDelete(@PathVariable("user_id") String user_id,
                                  Principal principal){
         User user = userService.getUser(user_id); //회원상세
@@ -312,7 +297,7 @@ public class UserController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"삭제권한이 없습니다.");
         }
         userService.userDelete(user);
-        return "redirect:/";    //목록으로이동
+        return "redirect:/user/logout";    //목록으로이동
 
     }
 

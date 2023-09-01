@@ -1,16 +1,15 @@
-package com.yumpro.ddogo.admin;
+package com.yumpro.ddogo.test;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/admin")
-public class adminController {
+@RequestMapping("/test")
+public class TestController {
 
     @GetMapping("/go")
-    public String ss(){
-        return "/admin2/adminForm";
-
+    public String tt(){
+        return "/test/test/";
     }
 }

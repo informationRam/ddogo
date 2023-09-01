@@ -49,41 +49,32 @@
                     <input type="submit" value="정보수정">
                 </div>
             </form>
-            <!-- 회원 탈퇴 -->
-            <div>
-                <a href="javascript:void(0);" th:data-uri="@{|/user/delete/${userModifyForm.user_id}|}"
-                   class="delete btn btn-sm btn-outline-secondary"
-                   sec:authorize="isAuthenticated()"
-                   th:if="${userModifyForm.user_id!=null and #authentication.getPrincipal().getUsername()==userModifyForm.user_id}"
-                   th:text="삭제"></a>
-            </div>
-
+        <!-- 회원 탈퇴 -->
+        <div>
+            <a href="javascript:void(0);" th:data-uri="@{|/user/delete/${userModifyForm.user_id}|}"
+               class="delete btn btn-sm btn-outline-secondary"
+               sec:authorize="isAuthenticated()"
+               th:text="삭제"></a>
         </div>
+
+    </div>
     </div>
 </div>
-<script>
+<script layout:fragment="script">
+    //탈퇴버튼클릭시 호출
     const delElements = document.getElementsByClassName("delete");
-    Array.from(delElements).forEach(function(element) {
-     element.addEventListener("click", function() {
-         if (confirm("정말로 탈퇴하시겠습니까?")) {
-             // Get the data-uri attribute
-             const deleteUri = this.getAttribute("th:data-uri");
+    Array.from(delElements).forEach(function(element){
 
-             // Create a hidden form for the DELETE request
-             const deleteForm = document.createElement("form");
-             deleteForm.method = "POST"; // 변경: DELETE 대신 POST 요청을 사용합니다.
-             deleteForm.action = deleteUri;
-
-             // Create a CSRF token input (if needed) and append it to the form
-             // Replace 'csrfToken' with your actual CSRF token attribute
-             // deleteForm.innerHTML = '<input type="hidden" name="_csrf" value="' + csrfToken + '">';
-
-             // Append the form to the body and submit it
-             document.body.appendChild(deleteForm);
-             deleteForm.submit();
-         }
-     });
- });
-
+        element.addEventListener("click",function(){
+            if(confirm("탈퇴하시겠습니까?")){//확인버튼을 클릭하면
+                //click이벤트가 발생한 a요소의  data-uri속성의 값을 가져와
+                //location객체의 href속성의 값으로 적용해라
+                //=>현재 browser의 URL주소를 변경해라
+                location.href=this.dataset.uri;
+                //location.href="/question/delete/${question.id}";//질문삭제요청
+                //location.href="/answer/delete/${answer.id}";//답변삭제요청
+            };
+        });
+    });
 </script>
 </html>
