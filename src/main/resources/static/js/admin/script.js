@@ -25,10 +25,10 @@ for (var i = 11; i >= 0; i--) {
                         label: "명",
                         data: Data,
                         backgroundColor: [
-                            "#FF8CA1"
+                            "#E5E5E5"
                         ],
                         borderColor: [
-                            "#FF0841"
+                            "#B0B0B0"
                         ],
                         borderWidth: 1,
                     },
@@ -55,10 +55,10 @@ for (var i = 11; i >= 0; i--) {
                         label: "명",
                         data: YData,
                         backgroundColor: [
-                            "#FF8CA1"
+                            "#E5E5E5"
                         ],
                         borderColor: [
-                            "#FF0841"
+                            "#B0B0B0"
                         ],
                         borderWidth: 1,
                     },
