@@ -1,0 +1,9 @@
+<html layout:decorate="~{layout}" xmlns:th="http://www.thymeleaf.org">
+<div layout:fragment="content" class="container my-3">
+  <h2>아이디 찾기 임시페이지</h2>
+  <div>
+    회원님의 아이디는 <p th:text="${user_id}"></p> 입니다.
+  </div>
+  <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/login}">로그인</a></li>
+</div>
+</html>
