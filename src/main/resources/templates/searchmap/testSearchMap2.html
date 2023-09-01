@@ -1,7 +1,7 @@
 <!DOCTYPE html>
+<!--오버레이에 띄운 정보를 모달창에서도 이어받게 하기 위한 테스트 중-->
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <!--닫기 가능! 근데 인포윈도우인게 문제... testSearchMap4에서 커스텀오버레이로 바꿔보자-->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Title</title>
@@ -20,11 +20,11 @@
         #placesList li {list-style: none;}
         #placesList .item {position:relative;border-bottom:1px solid #888;overflow: hidden;cursor: pointer;min-height: 65px;}
         #placesList .item span {display: block;margin-top:4px;}
-        #placesList .item h5, #placesList .item .info {text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
-        #placesList .item .info{padding:10px 0 10px 55px;}
-        #placesList .info .gray {color:#8a8a8a;}
-        #placesList .info .jibun {padding-left:26px;background:url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png) no-repeat;}
-        #placesList .info .tel {color:#009900;}
+        #placesList .item h5, #placesList .item .pinfo {text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
+        #placesList .item .pinfo{padding:10px 0 10px 55px;}
+        #placesList .pinfo .gray {color:#8a8a8a;}
+        #placesList .pinfo .jibun {padding-left:26px;background:url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png) no-repeat;}
+        #placesList .pinfo .tel {color:#009900;}
         #placesList .item .markerbg {float:left;position:absolute;width:36px; height:37px;margin:10px 0 0 10px;background:url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png) no-repeat;}
         #placesList .item .marker_1 {background-position: 0 -10px;}
         #placesList .item .marker_2 {background-position: 0 -56px;}
@@ -45,20 +45,89 @@
         #pagination a {display:inline-block;margin-right:10px;}
         #pagination .on {font-weight: bold; cursor: default;color:#777;}
 
-        .wrap {position: absolute;left: 0;bottom: 40px;width: 288px;height: 132px;margin-left: -144px;text-align: left;overflow: hidden;font-size: 12px;font-family: 'Malgun Gothic', dotum, '돋움', sans-serif;line-height: 1.5;}
-        .wrap * {padding: 0;margin: 0;}
-        .wrap .info {width: 286px;height: 120px;border-radius: 5px;border-bottom: 2px solid #ccc;border-right: 1px solid #ccc;overflow: hidden;background: #fff;}
-        .wrap .info:nth-child(1) {border: 0;box-shadow: 0px 1px 2px #888;}
-        .info .title {padding: 5px 0 0 10px;height: 30px;background: #eee;border-bottom: 1px solid #ddd;font-size: 18px;font-weight: bold;}
-        .info .close {position: absolute;top: 10px;right: 10px;color: #888;width: 17px;height: 17px;background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/overlay_close.png');}
-        .info .close:hover {cursor: pointer;}
-        .info .body {position: relative;overflow: hidden;}
-        .info .desc {position: relative;margin: 13px 0 0 90px;height: 75px;}
-        .desc .ellipsis {overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
-        .desc .jibun {font-size: 11px;color: #888;margin-top: -2px;}
-        .info .img {position: absolute;top: 6px;left: 5px;width: 73px;height: 71px;border: 1px solid #ddd;color: #888;overflow: hidden;}
-        .info:after {content: '';position: absolute;margin-left: -12px;left: 50%;bottom: 0;width: 22px;height: 12px;background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')}
-        .info .link {color: #5085BB;}
+        .co-wrap {
+            /*대부분 마커 가운데 위로 띄워줌
+            position: relative;
+            left: 0;bottom: 40px;
+            margin-left: -120px;
+            border-radius: 10px;*/
+            position: absolute;
+            border-top-right-radius: 20px;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            padding: 15px 10px 10px 10px;
+            background-color: #fff;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            max-width: 375px; /* 말풍선 최대 너비 설정 */
+        }
+
+        .co-close {
+            position: absolute;
+            top: 5px;
+            right: 15px;
+            background-color: transparent;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #888;
+        }
+        .co-close:before {
+            content: "✖";
+            font-size: 12px;
+        }
+        .co-content {
+            margin-left: 10px;
+            margin-right: 10px;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .co-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0 10 10 0;
+        }
+
+        .co-body {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-middle;
+            margin-top: 10px;
+        }
+
+        .co-desc {
+            max-width: 270px;
+            flex: 1;
+            padding-right: 10px; /* 오른쪽 패딩 추가 */
+        }
+        .co-desc .ellipsis {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .jibun .ellipsis {
+            font-size: 11px;
+            color: #888;
+            margin-top: -2px;
+        }
+
+        .phone {
+            color: olive;
+        }
+
+        .co-button {
+            width: 45px;
+            height: 45px;
+            padding: auto;
+        }
+        .co-desc .link {
+            color: #5085BB;
+            text-decoration:none;
+        }
     </style>
 </head>
 <body>
@@ -67,8 +136,11 @@
 </nav>
 <hr/>
 <!-- --------------------------------------------------------- -->
-<div class="map_wrap" style="width:100%;height:100vh;">
-    <div id="map" style="width:100%;height:100vh;"></div>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=820d01b1cce59185ed776419691dab39&libraries=services"></script>
+
+<div class="map_wrap" style="width:100%;height:90vh;">
+    <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
+
     <div id="menu_wrap" class="bg_white">
         <div class="option">
             <div>
@@ -83,8 +155,100 @@
         <div id="pagination"></div>
     </div>
 </div>
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=820d01b1cce59185ed776419691dab39&libraries=services"></script>
+
+
+
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">나만의 또갈지도?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="/search/add" method="post">
+                <input type="hidden" id="markerLat" name="markerLat" value="">
+                <input type="hidden" id="markerLng" name="markerLng" value="">
+                <input type="hidden" id="placesName" name="placesName" value="">
+                <input type="hidden" id="placesAddress" name="placesAddress" value="">
+
+                <div class="modal-body">
+                    <div class="alert-danger">~유효성 검사 실패시 출력 메시지 영역~</div>
+                    <div class="mb-3">
+                        <label for="inputReview" class="form-label">Review</label> <!-- 유효성검사 메시지 출력해줘야함-->
+                        <textarea class="form-control" id="inputReview" name="inputReview" placeholder="나만의 후기를 남겨주세요!" rows="6"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputMemo" class="form-label">Memo</label>
+                        <textarea class="form-control" id="inputMemo" name="inputMemo" placeholder="해당 장소와 관련한 메모를 적어보세요!" rows="6"></textarea>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <div class="btn-group" role="group" aria-label="Radio buttons">
+                            <input type="radio" class="btn-check" name="myRecommend" id="myRecommendY" value="Y" autocomplete="off">
+                            <label class="btn btn-outline-primary mx-1" for="myRecommendY">또갈지도</label>
+
+                            <input type="radio" class="btn-check" name="myRecommend" id="myRecommendN" value="N" autocomplete="off">
+                            <label class="btn btn-outline-danger mx-1" for="myRecommendN">안갈지도</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" class="btn btn-primary" data-bs-dismiss="modal"/>
+                    <!--<span><button onclick="sendController()" class="btn btn-primary" data-bs-dismiss="modal"/></span>-->
+                    <input type="reset" class="btn btn-secondary"/>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
 <script>
+    var marker;
+
+    // 객체에다가 저장할 수 있는지 테스트를 위한 js객체 변수 선언
+    var testObj = new Object();
+
+
+
+    //클릭한 마커의 좌표와 해당 점포의 정보를 파라미터로 받아야함
+    //동시에 모달창의 정보도 받아야함
+    /*function sendController(){
+        // 모달에서 입력받은 데이터 수집
+        var inputReview = document.getElementById('inputReview').value;
+        var inputMemo = document.getElementById('inputMemo').value;
+        var myRecommend = document.querySelector('input[name="myRecommend"]:checked').value;
+        var markerLat = document.getElementById('markerLat').value;
+        var markerLng = document.getElementById('markerLng').value;
+        var placesName = document.getElementById('placesName').value;
+        var placesAddress = document.getElementById('placesAddress').value;
+
+
+        // 서버로 데이터를 전송 JSON.stringify()
+        $.ajax({
+            type: "POST", // HTTP 요청 방식 (POST로 변경)
+            url: "http://localhost/search/add", // 데이터를 보낼 서버의 URL
+            data: JSON.stringify({
+            placesName: placesName,
+            placesAddress: placesAddress,
+            markerLat: markerLat,
+            markerLng: markerLng,
+            inputReview: inputReview,
+            inputMemo: inputMemo,
+            myRecommend: myRecommend
+        }), // JSON 데이터로 변환
+            contentType: "json", // 전송 데이터 타입 설정
+            success: function(response) {
+                // 성공 시 처리할 내용
+                console.log(response);
+            },
+            error: function(error) {
+                // 오류 시 처리할 내용
+                console.error(error);
+            }
+        });
+    }*/
+
+
     // 마커를 담을 배열입니다
     var markers = [];
 
@@ -108,14 +272,11 @@
 
     // 키워드 검색을 요청하는 함수입니다
     function searchPlaces() {
-
         var keyword = document.getElementById('keyword').value;
-
         if (!keyword.replace(/^\s+|\s+$/g, '')) {
             alert('키워드를 입력해주세요!');
             return false;
         }
-
         // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
         ps.keywordSearch( keyword, placesSearchCB);
     }
@@ -123,105 +284,88 @@
     // 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
     function placesSearchCB(data, status, pagination) {
         if (status === kakao.maps.services.Status.OK) {
-
             // 정상적으로 검색이 완료됐으면
             // 검색 목록과 마커를 표출합니다
             displayPlaces(data);
-
             // 페이지 번호를 표출합니다
             displayPagination(pagination);
-
         } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-
             alert('검색 결과가 존재하지 않습니다.');
             return;
-
         } else if (status === kakao.maps.services.Status.ERROR) {
-
             alert('검색 결과 중 오류가 발생했습니다.');
             return;
-
         }
     }
 
     // 검색 결과 목록과 마커를 표출하는 함수입니다
     function displayPlaces(places) {
-
         var listEl = document.getElementById('placesList'),
         menuEl = document.getElementById('menu_wrap'),
         fragment = document.createDocumentFragment(),
         bounds = new kakao.maps.LatLngBounds(),
         listStr = '';
-
         // 검색 결과 목록에 추가된 항목들을 제거합니다
         removeAllChildNods(listEl);
-
         // 지도에 표시되고 있는 마커를 제거합니다
         removeMarker();
-
         for ( var i=0; i<places.length; i++ ) {
-
             // 마커를 생성하고 지도에 표시합니다
             var placePosition = new kakao.maps.LatLng(places[i].y, places[i].x),
-                marker = addMarker(placePosition, i),
+                marker = addMarker(placePosition, i), /*마커에 값이 들어감.*/
                 itemEl = getListItem(i, places[i]); // 검색 결과 항목 Element를 생성합니다
-
             // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
             // LatLngBounds 객체에 좌표를 추가합니다
             bounds.extend(placePosition);
-
             // 마커와 검색결과 항목에 mouseover 했을때
             // 해당 장소에 인포윈도우에 장소명을 표시합니다
             // mouseout 했을 때는 인포윈도우를 닫습니다
-            (function(marker, title) {
-
-
-                kakao.maps.event.addListener(marker, 'click', function() { //마커-클릭
-                    displayInfowindow(marker, title);
+            function closeOverlay() {
+                overlay.setMap(null);
+            }
+            (function(marker, places) {
+                kakao.maps.event.addListener(marker, 'click', function(){ //커스텀오버레이호출.
+                    displayMyOverlay(marker, places); //검색 결과를 인자로 넣어준다.
                 });
-
-
-                itemEl.onclick =  function () { //결과리스트-클릭
-                    displayInfowindow(marker, title);
+                kakao.maps.event.addListener(marker, 'mouseover', function() {
+                    displayInfowindow(marker, places);
+                });
+                kakao.maps.event.addListener(marker, 'mouseout', function() {
+                    infowindow.close();
+                });
+                itemEl.onmouseover =  function () {
+                    displayInfowindow(marker, places);
                 };
-
-
-
-
-            })(marker, places[i].place_name);
-
+                itemEl.onmouseout =  function () {
+                    infowindow.close();
+                };
+            })(marker, places[i]);
             fragment.appendChild(itemEl);
         }
 
         // 검색결과 항목들을 검색결과 목록 Element에 추가합니다
         listEl.appendChild(fragment);
         menuEl.scrollTop = 0;
-
         // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
         map.setBounds(bounds);
     }
 
-    // 검색결과 항목을 Element로 반환하는 함수입니다
+    // 검색결과 항목을 Element로 반환하는 함수입니다 <li>태그로 반환. <li class="item"> <span~
     function getListItem(index, places) {
-
         var el = document.createElement('li'),
         itemStr = '<span class="markerbg marker_' + (index+1) + '"></span>' +
-                    '<div class="info">' +
+                    '<div class="pinfo">' +
                     '   <h5>' + places.place_name + '</h5>';
-
         if (places.road_address_name) {
             itemStr += '    <span>' + places.road_address_name + '</span>' +
                         '   <span class="jibun gray">' +  places.address_name  + '</span>';
         } else {
             itemStr += '    <span>' +  places.address_name  + '</span>';
         }
-
           itemStr += '  <span class="tel">' + places.phone  + '</span>' +
                     '</div>';
-
         el.innerHTML = itemStr;
         el.className = 'item';
-
         return el;
     }
 
@@ -242,7 +386,6 @@
 
         marker.setMap(map); // 지도 위에 마커를 표출합니다
         markers.push(marker);  // 배열에 생성된 마커를 추가합니다
-
         return marker;
     }
 
@@ -259,17 +402,14 @@
         var paginationEl = document.getElementById('pagination'),
             fragment = document.createDocumentFragment(),
             i;
-
         // 기존에 추가된 페이지번호를 삭제합니다
         while (paginationEl.hasChildNodes()) {
             paginationEl.removeChild (paginationEl.lastChild);
         }
-
         for (i=1; i<=pagination.last; i++) {
             var el = document.createElement('a');
             el.href = "#";
             el.innerHTML = i;
-
             if (i===pagination.current) {
                 el.className = 'on';
             } else {
@@ -279,46 +419,84 @@
                     }
                 })(i);
             }
-
             fragment.appendChild(el);
         }
         paginationEl.appendChild(fragment);
     }
 
-    // 검색결과 목록 또는 마커를 클릭했을 때 호출되는 함수입니다
+    // 검색결과 목록 또는 마커를 마우스오버했을 때 호출되는 함수입니다
     // 인포윈도우에 장소명을 표시합니다
-    function displayInfowindow(marker, title) {
-        var content = '<div class="wrap">' +
-                '    <div class="info">' +
-                '        <div class="title">' + title +
-                '            <div class="close" onclick="closeOverlay()" title="닫기"></div>' +
-                '        </div>' +
-                '        <div class="body">' +
-                '            <div class="img">' +
-                '                <img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/thumnail.png" width="73" height="70">' +
-                '           </div>' +
-                '            <div class="desc">' +
-                '                <div class="ellipsis">제주특별자치도 제주시 첨단로 242</div>' +
-                '                <div class="jibun ellipsis">(우) 63309 (지번) 영평동 2181</div>' +
-                '                <div><a href="https://www.kakaocorp.com/main" target="_blank" class="link">홈페이지</a></div>' +
-                '            </div>' +
-                '        </div>' +
-                '    </div>' +
-                '</div>';
-
+    function displayInfowindow(marker, places) {
+        var content = '<div style="padding:5px; z-index:1; max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; ">'+
+                          places.place_name +
+                      '</div>';
         infowindow.setContent(content);
         infowindow.open(map, marker);
     }
-    // 커스텀 오버레이를 닫기 위해 호출되는 함수입니다
-    function closeOverlay() {
-        infowindow.close();
+
+    // 마커를 클릭한 경우 커스텀오버레이를 띄우기 위해 호출되는 함수.
+    function displayMyOverlay(clickedMarker, clickedPlaces){
+        marker = clickedMarker;
+        places = clickedPlaces;
+        var overlay = new kakao.maps.CustomOverlay({
+            content: '<div class="co-wrap">'+
+                        '<div class="co-content">'+
+                        '<button id="closeButton" class="co-close"></button>'+
+                            '<div class="co-title">'+
+                                places.place_name+
+                                '<p class="badge rounded-pill bg-warning mx-2" style="margin-right:20px; width:40px;">'+places.category_group_code+'</p>'+
+                            '</div>'+
+                            '<div class="co-body my-2">'+
+                                '<div class="co-desc">'+
+                                    '<div class="ellipsis">'+places.road_address_name+'</div>'+
+                                    '<div class="jibun ellipsis">'+places.address_name+'</div>'+
+                                    '<div class="phone ellipsis">'+places.phone+'</div>'+
+                                    '<a href="'+places.place_url+'" target="_blank" class="link">상세보기</a>'+
+                                '</div>'+
+                                '<div class="co-button">'+
+                                    '<div type="button" onclick="openModal(marker, places)" class="btn btn-primary btn-lg">저장</div>'+
+                                '</div>'+
+                            '</div>'+
+                        '</div>'+
+                    '</div>',
+            map: map,
+            position: marker.getPosition()
+        });
+        overlay.setMap(map); //오버레이를 맵에 세팅
+
+        var closeButton = document.getElementById('closeButton'); //닫기기능 구현을 위해 버튼의 아이디를 가져와서 변수로 선언
+        //조금 변형해서 닫기버튼 아이디를 다르게 설정할 수 있으면 좋을 것 같은데..
+        closeButton.addEventListener('click', function() { //열린오버레이 닫기. 여러창이 열린 경우 맨 처음 열린 창을 닫아야 닫힘
+            overlay.setMap(null);
+        });
     }
+    function openModal(marker, places) {
+    if (marker && places) {
+        var markerLat = marker.getPosition().getLat();
+        var markerLng = marker.getPosition().getLng();
+        var placesName = places.place_name;
+        var placesAddress = places.road_address_name;
+
+        // 각각의 hidden input 요소에 값을 설정
+        document.getElementById('markerLat').value = markerLat;
+        document.getElementById('markerLng').value = markerLng;
+        document.getElementById('placesName').value = placesName;
+        document.getElementById('placesAddress').value = placesAddress;
+        var myModal = new bootstrap.Modal(document.getElementById('myModal'));
+        myModal.show();
+    } else {
+        console.log('마커 정보 없음'); // 마커가 없을 때 처리
+    }
+}
+
+
      // 검색결과 목록의 자식 Element를 제거하는 함수입니다
     function removeAllChildNods(el) {
         while (el.hasChildNodes()) {
             el.removeChild (el.lastChild);
         }
     }
+
 
 </script>
 

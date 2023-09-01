@@ -10,12 +10,20 @@ import lombok.ToString;
 @ToString
 public class SearchMapDTO {
     //필드
-    private double lng; //경도
+    /*private double lng; //경도
     private double lat; //위도
     private String placeName; //상호명
     private String address; //전체 도로명 주소
     private String sido; //시도
-    private String gugun; //시군구
+    private String gugun; //시군구*/
+
+    private String inputReview; //리뷰
+    private String inputMemo; //메모
+    private String myRecommend; //추천여부
+    private String markerLat; //위도
+    private String markerLng; //경도
+    private String placesName; //상호명
+    private String placesAddress; //전체도로명주소
     //생성자
 
     //메소드

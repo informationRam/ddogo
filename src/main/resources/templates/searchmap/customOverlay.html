@@ -3,111 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <title>커스텀오버레이 만들기</title>
-<style>
-    .co-wrap {
-        position: relative;
-        background-color: #fff;
-        border-radius: 10px;
-        padding: 20px;
-        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-        max-width: 300px; /* 말풍선 최대 너비 설정 */
-    }
+    <style>
+        /* CSS 스타일 추가 */
+        .co-wrap {
+            position: relative;
+            padding: 10px;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            max-width: 375px; /* 말풍선 최대 너비 설정 */
+        }
 
-    .co-content {
-        position: relative;
-    }
+        .co-close {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: transparent;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #888;
+        }
+        .co-close:before {
+            content: "✖";
+            font-size: 12px;
+        }
+        .co-content {
+            padding-left: 10px;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
 
-    .co-title {
-        font-weight: bold;
-        font-size: 16px;
-        margin-bottom: 10px;
-    }
+        .co-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0 10 10 0;
+        }
 
-    .co-close {
-        position: absolute;
-        top: -10px;
-        right: -10px;
-        width: 20px;
-        height: 20px;
-        background-color: #f1f1f1;
-        border-radius: 50%;
-        cursor: pointer;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+        .co-body {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start; /* 위쪽 정렬로 변경 */
+            margin-top: 10px;
+        }
 
-    .co-close:before {
-        content: "✖";
-        font-size: 12px;
-    }
+        .co-desc {
+            flex: 1;
+            padding-right: 10px; /* 오른쪽 패딩 추가 */
+        }
+        .co-desc .ellipsis {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            margin-bottom: 5px;
+        }
 
-    .co-body {
-        line-height: 1.5;
-        font-size: 14px;
-    }
+        .jibun .ellipsis {
+            font-size: 11px;
+            color: #888;
+            margin-top: -2px;
+        }
 
-    .ellipsis {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
+        .phone .ellipsis {
+            color: olive;
+        }
 
-    .jibun {
-        color: #888;
-    }
+        .co-button {
+            width: 45px;
+            text-align: right;
+        }
+        .co-desc .link {
+            color: #5085BB;
+            text-decoration:none;
+        }
 
-    .link {
-        color: #007bff;
-        text-decoration: none;
-    }
-
-    .link:hover {
-        text-decoration: underline;
-    }
-
-    .co-wrap:before {
-        content: '';
-        position: absolute;
-        bottom: -20px;
-        left: 50%;
-        transform: translateX(-50%);
-        border-width: 10px;
-        border-style: solid;
-        border-color: transparent transparent #fff transparent;
-    }
-
-    .co-wrap:after {
-        content: '';
-        position: absolute;
-        margin-left: -12px;
-        left: 50%;
-        bottom: -13px;
-        width: 22px;
-        height: 12px;
-        background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')
-    }
-</style>
-
+    </style>
 </head>
 <body>
-
-
-<div class="co-wrap">
-    <div class="co-content">
-        <div class="co-title">
-            place_name
-            <button id="closeButton" class="co-close"></button>
-        </div>
-        <div class="co-body">
-            <div class="ellipsis">제주특별자치도 제주시 첨단로 242</div>
-            <div class="jibun ellipsis">(우) 63309 (지번) 영평동 2181</div>
-            <div class="">
-                <a href="#" target="_blank">저장폼으로이동</a>
-            </div>
-        </div>
-    </div>
-</div>
-
+'<div class="co-wrap">'+
+    '<button id="closeButton" class="co-close"></button>'+
+    '<div class="co-content">'+
+        '<span class="badge bd-bg-warning">'+places.category_group_code+'</span>'+
+        '<div class="co-title">'+
+            places.place_name+
+        '</div>'+
+        '<div class="co-body my-2">'+
+            '<div class="co-desc">'+
+                '<div class="ellipsis">'+places.road_address_name+'</div>'+
+                '<div class="jibun ellipsis">'+places.address_name+'</div>'+
+                '<div class="phone ellipsis">'+places.phone+'</div>'+
+                '<a href="'+places.place_url+'" target="_blank" class="link">상세보기</a>'+
+            '</div>'+
+            '<div class="co-button" style="vertical-align:middle;">'+
+                '<button type="button" data-bs-toggle="modal" data-bs-target="#myModal" class="btn btn-lg btn-primary">또갈지도?</button>'+
+            '</div>'+
+        '</div>'+
+    '</div>'+
+'</div>'
 </body>
 </html>

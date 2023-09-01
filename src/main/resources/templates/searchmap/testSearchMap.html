@@ -49,76 +49,87 @@
         #pagination .on {font-weight: bold; cursor: default;color:#777;}
 
         .co-wrap {
-        position: relative;
-        background-color: #fff;
-        border-radius: 10px;
-        padding: 20px;
-        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-        max-width: 300px; /* 말풍선 최대 너비 설정 */
-        }
-
-        .co-content {
+            /*대부분 마커 가운데 위로 띄워줌
             position: relative;
-        }
-
-        .co-title {
-            font-weight: bold;
-            font-size: 16px;
-            margin: 0 10 10 0;
+            left: 0;bottom: 40px;
+            margin-left: -120px;
+            border-radius: 10px;*/
+            position: absolute;
+            border-top-right-radius: 20px;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            padding: 15px 10px 10px 10px;
+            background-color: #fff;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            max-width: 375px; /* 말풍선 최대 너비 설정 */
         }
 
         .co-close {
             position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 20px;
-            height: 20px;
-            background-color: #f1f1f1;
-            border-radius: 50%;
+            top: 5px;
+            right: 15px;
+            background-color: transparent;
+            border: none;
+            font-size: 20px;
             cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            color: #888;
         }
-
         .co-close:before {
             content: "✖";
             font-size: 12px;
         }
+        .co-content {
+            margin-left: 10px;
+            margin-right: 10px;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .co-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0 10 10 0;
+        }
 
         .co-body {
-            line-height: 1.5;
-            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-middle;
+            margin-top: 10px;
         }
 
-        .ellipsis {
-            white-space: nowrap;
+        .co-desc {
+            max-width: 270px;
+            flex: 1;
+            padding-right: 10px; /* 오른쪽 패딩 추가 */
+        }
+        .co-desc .ellipsis {
             overflow: hidden;
             text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
-        .jibun {
+        .jibun .ellipsis {
+            font-size: 11px;
             color: #888;
+            margin-top: -2px;
         }
 
-        .link {
-            color: #007bff;
-            text-decoration: none;
+        .phone {
+            color: olive;
         }
 
-        .link:hover {
-            text-decoration: underline;
+        .co-button {
+            width: 45px;
+            height: 45px;
+            padding: auto;
         }
-
-        .co-wrap:before {
-            content: '';
-            position: absolute;
-            bottom: -20px;
-            left: 50%;
-            transform: translateX(-50%);
-            border-width: 10px;
-            border-style: solid;
-            border-color: transparent transparent #fff transparent; /*꼬리 180도 돌아가있음 수정해야됨*/
+        .co-desc .link {
+            color: #5085BB;
+            text-decoration:none;
         }
     </style>
 </head>
@@ -421,23 +432,23 @@
     // 마커를 클릭한 경우 커스텀오버레이를 띄우기 위해 호출되는 함수.
     function displayMyOverlay(marker, places){
 
-        console.log(places.category_group_code); //되네...
-
         var overlay = new kakao.maps.CustomOverlay({
             content: '<div class="co-wrap">'+
-                                '<button id="closeButton" class="co-close"></button>'+
-                        '<div class="co-content my-1">'+
+                        '<div class="co-content">'+
+                        '<button id="closeButton" class="co-close"></button>'+
                             '<div class="co-title">'+
                                 places.place_name+
-                            '<span>'+places.category_group_code+'</span></div>'+
+                                '<p class="badge rounded-pill bg-warning mx-2" style="margin-right:20px; width:40px;">'+places.category_group_code+'</p>'+
+                            '</div>'+
                             '<div class="co-body my-2">'+
-                                '<div class="ellipsis">'+places.road_address_name+'</div>'+
-                                '<div class="jibun ellipsis">'+places.address_name+'</div>'+
-                                '<div class="jibun ellipsis">'+places.phone+'</div>'+
-                                '<div class="jibun ellipsis"></div>'+
-                                '<div class="d-flex justify-content-center">'+
-                                    '<a href="'+places.place_url+'" target="_blank" class="btn btn-success btn-lg">상세보기</a>'+
-                                    '<button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#myModal" >Open Modal</button>'+
+                                '<div class="co-desc">'+
+                                    '<div class="ellipsis">'+places.road_address_name+'</div>'+
+                                    '<div class="jibun ellipsis">'+places.address_name+'</div>'+
+                                    '<div class="phone ellipsis">'+places.phone+'</div>'+
+                                    '<a href="'+places.place_url+'" target="_blank" class="link">상세보기</a>'+
+                                '</div>'+
+                                '<div class="co-button">'+
+                                    '<div type="button" onclick="openModal()" class="btn btn-primary btn-lg">저장</div>'+
                                 '</div>'+
                             '</div>'+
                         '</div>'+
@@ -445,12 +456,22 @@
             map: map,
             position: marker.getPosition()
         });
-        var closeButton = document.getElementById('closeButton');
-        closeButton.addEventListener('click', function() {
+        overlay.setMap(map); //오버레이를 맵에 세팅
+
+        var closeButton = document.getElementById('closeButton'); //닫기기능 구현을 위해 버튼의 아이디를 가져와서 변수로 선언
+        //조금 변형해서 닫기버튼 아이디를 다르게 설정할 수 있으면 좋을 것 같은데..
+        closeButton.addEventListener('click', function() { //열린오버레이 닫기. 여러창이 열린 경우 맨 처음 열린 창을 닫아야 닫힘
             overlay.setMap(null);
         });
-        overlay.setMap(map);
     }
+    //모달활성화 시키는 함수
+    function openModal() {
+        var myModal = new bootstrap.Modal(document.getElementById('myModal'));
+        myModal.show();
+        console.log(marker);
+
+    }
+
 
      // 검색결과 목록의 자식 Element를 제거하는 함수입니다
     function removeAllChildNods(el) {
