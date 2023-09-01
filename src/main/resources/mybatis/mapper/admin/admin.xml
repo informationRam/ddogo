@@ -73,9 +73,10 @@
 
     <select id="monthlyActiveUser" resultType="int" parameterType="int">
         <![CDATA[
-        select count(distinct user_no)
-        from ddogo.mymap
-        where timestampdiff(month,recom_date,now()) in(#{monthlyGab})
+        SELECT COUNT(DISTINCT user_no)
+        FROM ddogo.mymap
+        WHERE recom_date >= DATE_FORMAT(CURDATE() - INTERVAL #{monthlyGab} MONTH ,'%Y-%m-01')
+        AND (recom_date < DATE_FORMAT(CURDATE() - INTERVAL (#{monthlyGab} - 1) MONTH ,'%Y-%m-01') OR #{monthlyGab} = 0)
       ]]>
     </select>
 </mapper>
