@@ -11,18 +11,24 @@ import com.yumpro.ddogo.user.validation.UserModifyForm;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.json.JSONParser;
+import org.apache.tomcat.util.json.ParseException;
+import org.json.JSONObject;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
+import java.util.HashMap;
+import java.util.Map;
 
 
-    //시큐리티 저장 값 가져오기 세션대용
+//시큐리티 저장 값 가져오기 세션대용
    /* Optional<User> user = userService.getUser(principal.getName());
         model.addAttribute("user", user.get().getUser_no());        ==> 유저의 no를 가져옴    */
 
@@ -39,13 +45,43 @@ public class UserController {
 
     //회원가입 폼
     @GetMapping("/joinForm")
-    public String joinForm(UserCreateForm userCreateForm, Model model){
-        model.addAttribute("userCreateForm",userCreateForm);
+    public String joinForm(UserCreateForm userCreateForm, Model model) {
+        model.addAttribute("userCreateForm", userCreateForm);
         return "/user/joinForm";
     }
 
     //회원가입처리 후 로그인페이지로 이동
     @PostMapping("/join")
+    public String userJoin(@Valid UserCreateForm userCreateForm, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            return "user/joinForm";
+        }
+
+        // 아이디 중복 여부체크
+        if (userService.checkUserIdDuplication(userCreateForm.getUser_id())) {
+            bindingResult.rejectValue("user_id", "User_idInCorrect", "이미 사용중인 아이디입니다.");
+            return "user/joinForm";
+        }
+
+        // 이메일 중복 여부체크
+        if (userService.checkEmailDuplication(userCreateForm.getEmail())) {
+            bindingResult.rejectValue("email", "EmailInCorrect", "이미 사용중인 이메일 입니다.");
+            return "user/joinForm";
+        }
+
+        // 비밀번호, 비밀번호 확인 동일 체크
+        if (!userCreateForm.getPwd1().equals(userCreateForm.getPwd2())) {
+            bindingResult.rejectValue("pwd2", "pwdInCorrect", "비밀번호 확인 값이 다릅니다.");
+            return "user/joinForm";
+        } else {
+            userService.userJoin(userCreateForm);
+            return "redirect:/user/login";
+        }
+    }
+
+
+
+   /* @PostMapping("/join")
     public String userJoin(@Valid UserCreateForm userCreateForm, BindingResult bindingResult, Model model, LoginVaildation loginVaildation) {
         if (bindingResult.hasErrors()) {
             return "user/joinForm";
@@ -55,7 +91,6 @@ public class UserController {
             bindingResult.rejectValue("user_id", "User_idInCorrect", "이미 사용중인 아이디입니다.");
             return "user/joinForm";
         }
-
         //이메일 중복여부체크
         if (userService.checkEmailDuplication(userCreateForm.getEmail())) {
             bindingResult.rejectValue("email", "EmailInCorrect", "이미 사용중인 이메일 입니다.");
@@ -65,11 +100,11 @@ public class UserController {
         if (!userCreateForm.getPwd1().equals(userCreateForm.getPwd2())) {
             bindingResult.rejectValue("pwd2", "pwdInCorrect", "비밀번호확인 값이 다릅니다.");
             return "user/joinForm";
-        }else{
+        } else {
             userService.userJoin(userCreateForm);
             return "redirect:/user/login";
         }
-    }
+    }*/
 
     //로그인 화면(get)
     @GetMapping("/login")
@@ -79,34 +114,31 @@ public class UserController {
 
     //로그인 처리
     @PostMapping("/login")
-    public String login(@Valid LoginVaildation loginVaildation, BindingResult bindingResult, Model model,HttpSession session,Principal principal) {
+    public String login(@Valid LoginVaildation loginVaildation, BindingResult bindingResult, Model model, HttpSession session, Principal principal) {
         if (bindingResult.hasErrors()) {
             return "user/loginForm";
-        }else {
-            User user = userService.getUser(principal.getName());
-            System.out.println("login-user:"+user);
-            session.setAttribute("user",user);   //로그인성공시 값을 세션에 저장
+        } else {
             return "redirect:/";
         }
     }
 
     //id찾기 폼
     @GetMapping("/searchid")
-    public String searchidForm(UserDTO userDTO,Model model){
-        model.addAttribute("userDTO",userDTO);
+    public String searchidForm(UserDTO userDTO, Model model) {
+        model.addAttribute("userDTO", userDTO);
         return "/user/searchid_Form";
     }
 
-/*
-    @PostMapping("/searchid")
-    public String searchId(Model model, @ModelAttribute("userDTO") UserDTO userDTO, HttpSession session) {
-        User user = userService.toEntity(userDTO);
-        String user_id = userService.searchId(user.getEmail());
+    /*
+        @PostMapping("/searchid")
+        public String searchId(Model model, @ModelAttribute("userDTO") UserDTO userDTO, HttpSession session) {
+            User user = userService.toEntity(userDTO);
+            String user_id = userService.searchId(user.getEmail());
 
-        if (user_id != null && !user_id.isEmpty()) {
-            //세션으로 값 담기
-            /* session.setAttribute("foundUserId", userId);
-           * String foundUserId = (String) session.getAttribute("foundUserId");*//*
+            if (user_id != null && !user_id.isEmpty()) {
+                //세션으로 값 담기
+                /* session.setAttribute("foundUserId", userId);
+               * String foundUserId = (String) session.getAttribute("foundUserId");*//*
 
 
           model.addAttribute("user_id",user_id);
@@ -119,20 +151,79 @@ public class UserController {
     }
 */
 // 아이디 찾기
+    @GetMapping("/searchid2")
+    public Map<String, String> searchId(@ModelAttribute("userDTO") UserDTO userDTO, Model model, BindingResult bindingResult) {
+        Map<String, String> response = new HashMap<>();
+        System.out.println("userDTO.getEmail():"+userDTO.getEmail());
+
+        try {
+            //회원정보에 사용자가 입력한 이메일이 있는지 확인
+            if (!userService.checkEmailDuplication2(userDTO.getEmail())) {
+                bindingResult.rejectValue("email", "EmailInCorrect", "사용자 정보를 찾을 수 없습니다.");
+                response.put("user_id", "사용자 정보를 찾을 수 없습니다.");
+                return response;
+            } else {
+                // 회원정보 일치시 아이디값 전달
+                String user_id = userService.searchId(userDTO.getEmail());
+                System.out.println("user_id:"+user_id);
+                response.put("user_id", user_id);
+                model.addAttribute("user_id", user_id);
+                return response;
+            }
+        } catch (Exception e) {
+                return response;
+        }
+    }
+
+    //test
+   /* @GetMapping("/searchid3")
+    @ResponseBody
+    public void jsonTest() throws ParseException {
+
+        //1. Json 문자열
+        String strJson = "{\"userId\":\"sim\", "
+                + "\"userPw\":\"simpw\","
+                + "\"userInfo\":{"
+                + "\"age\":50,"
+                + "\"sex\":\"male\""
+                + "}"
+                + "}";
+
+        //2. Parser
+        JSONParser jsonParser = new JSONParser();
+
+        //3. To Object
+        Object obj = jsonParser.parse(strJson);
+
+        //4. To JsonObject
+        JSONObject jsonObj = (JSONObject) obj;
+
+        //print
+        System.out.println(jsonObj.get("userId")); //sim
+        System.out.println(jsonObj.get("userPw")); //simpw
+        System.out.println(jsonObj.get("userInfo")); // {"sex":"male","age":50}
+    }
+*/
+
+
+
+/*
     @PostMapping("/searchid")
     public String searchId(@ModelAttribute("userDTO") UserDTO userDTO,Model model, BindingResult bindingResult) {
 
         System.out.println("userD:"+userDTO.getEmail());
         //회원정보에 사용자가 입력한 이메일이 있는지 확인
-        if (!userService.checkEmailDuplication(userDTO.getEmail())) {
+        if (!userService.checkEmailDuplication2(userDTO.getEmail())) {
             bindingResult.rejectValue("email", "EmailInCorrect", "사용자 정보를 찾을 수 없습니다.");
             return "user/searchid_Form";
+        }else {
+            // 회원정보 일치시 아이디값 전달
+            String user_id = userService.searchId(userDTO.getEmail());
+            System.out.println("user_id:"+user_id);
+            model.addAttribute("user_id",user_id);
+            return "/user/id";
         }
-        String user_id = userService.searchId(userDTO.getEmail());
-        System.out.println("user_id:"+user_id);
-        model.addAttribute("user_id",user_id);
-        return "/user/id";
-    }
+    }*/
 
     // 비밀번호 찾기 폼 pwdsearch_Form
     @GetMapping("/pwdsearch")
@@ -196,6 +287,7 @@ public class UserController {
         }
      return "redirect:/";
     }
+/*
 
     // 시큐리티 값 가져오기
 
@@ -209,15 +301,20 @@ public class UserController {
 
         return "/user/test";
     }
-/*
-    @GetMapping("/dashboard")
-    public String dashboard(Model model, Principal principal,HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        System.out.println("dashboard - user="+user);
-        model.addAttribute("user", user);
-        return "/user/test";
-    }*/
+*/
 
+//  탈퇴하기
+    @GetMapping("/delete/{id}")
+    public String questionDelete(@PathVariable("user_id") String user_id,
+                                 Principal principal){
+        User user = userService.getUser(user_id); //회원상세
+        if(!user.getUserId().equals(principal.getName())){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"삭제권한이 없습니다.");
+        }
+        userService.userDelete(user);
+        return "redirect:/";    //목록으로이동
+
+    }
 
 
 

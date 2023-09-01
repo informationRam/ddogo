@@ -2,15 +2,14 @@
 <div layout:fragment="content" class="container my-3">
 
     <div class="container my-5" style="width: 524px;">
-        <div class="border p-4"> <!-- Add a border and padding around the content -->
+        <div class="border p-4">
             <div class="my-3">
                 <div class="d-flex justify-content-center align-items-center flex-column">
-                    <img src="/image/logo.png">
-                    <h1 class="mb-4">로그인</h1>
+                    <img src="/image/logo.png" style="margin-bottom: 50px !important;">
                     <form id="login" class="my-2" th:object="${loginVaildation}" th:action="@{/user/login}" method="post">
 
                         <!-- 1. 아이디 -->
-                        <div class="mb-3">
+                        <div class="mb-4">
                             <input type="text" name="user_id" id="user_id" class="form-control form-control-lg" placeholder="아이디">
                         </div>
                         <!-- 2. 비밀번호 -->
@@ -39,4 +38,5 @@
     </div>
 
 </div>
+
 </html>

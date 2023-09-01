@@ -33,19 +33,28 @@ public class UserService {
         user.setEmail(userCreateForm.getEmail());
         user.setPwd(userCreateForm.getPwd1());
         user.setPwd(PasswordEncoder.encode(userCreateForm.getPwd1()));
-        user.setIsshow("Y");
         userRepository.save(user);
     }
 
-  // 회원 가입시 아이디 중복 여부 확인
+    // 회원 가입시 아이디 중복 여부 확인
     @Transactional(readOnly = true)
     public boolean checkUserIdDuplication(String user_id) {
-        boolean usernameDuplicate = userRepository.existsByUserId(user_id);
-        return usernameDuplicate;
+        System.out.println("서비스들어옴");
+        boolean emailDuplicate = userRepository.existsByUserId(user_id);
+        return emailDuplicate;
     }
+
     // 회원 가입시 이메일 중복 여부 확인
     @Transactional(readOnly = true)
     public boolean checkEmailDuplication(String email) {
+        System.out.println("서비스들어옴");
+        boolean emailDuplicate = userRepository.existsByEmail(email);
+        return emailDuplicate;
+    }
+
+    @Transactional(readOnly = true)
+    public boolean checkEmailDuplication2(String email) {
+        System.out.println("서비스들어옴");
         boolean emailDuplicate = userRepository.existsByEmail(email);
         return emailDuplicate;
     }
@@ -62,7 +71,7 @@ public class UserService {
 
     //아이디 찾기
     public String searchId(String email) {
-
+        System.out.println("searchId서비스 hi");
         Optional<User> userOptional = userRepository.findByEmail(email);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
@@ -103,8 +112,11 @@ public class UserService {
     public void userModify(User user, UserModifyForm userModifyForm) {
             user.setEmail(userModifyForm.getEmail());
             user.setPwd(PasswordEncoder.encode(userModifyForm.getPwd1()));
-            user.setIsshow("Y");
             userRepository.save(user);
+    }
+//회원탈퇴
+    public void userDelete(User user){
+        userRepository.delete(user);
     }
 
     //DTO -> Entity로 변경
@@ -118,7 +130,6 @@ public class UserService {
         user.setEmail(userDTO.getEmail());
         user.setPwd(user.getPwd());
         return user;
-
     }
 
     //user -> userDTO

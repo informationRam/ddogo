@@ -51,9 +51,39 @@
             </form>
             <!-- 회원 탈퇴 -->
             <div>
-               <a th:href="@{/user/logout}">회원탈퇴</a>
+                <a href="javascript:void(0);" th:data-uri="@{|/user/delete/${userModifyForm.user_id}|}"
+                   class="delete btn btn-sm btn-outline-secondary"
+                   sec:authorize="isAuthenticated()"
+                   th:if="${userModifyForm.user_id!=null and #authentication.getPrincipal().getUsername()==userModifyForm.user_id}"
+                   th:text="삭제"></a>
             </div>
+
         </div>
     </div>
 </div>
+<script>
+    const delElements = document.getElementsByClassName("delete");
+    Array.from(delElements).forEach(function(element) {
+     element.addEventListener("click", function() {
+         if (confirm("정말로 탈퇴하시겠습니까?")) {
+             // Get the data-uri attribute
+             const deleteUri = this.getAttribute("th:data-uri");
+
+             // Create a hidden form for the DELETE request
+             const deleteForm = document.createElement("form");
+             deleteForm.method = "POST"; // 변경: DELETE 대신 POST 요청을 사용합니다.
+             deleteForm.action = deleteUri;
+
+             // Create a CSRF token input (if needed) and append it to the form
+             // Replace 'csrfToken' with your actual CSRF token attribute
+             // deleteForm.innerHTML = '<input type="hidden" name="_csrf" value="' + csrfToken + '">';
+
+             // Append the form to the body and submit it
+             document.body.appendChild(deleteForm);
+             deleteForm.submit();
+         }
+     });
+ });
+
+</script>
 </html>
