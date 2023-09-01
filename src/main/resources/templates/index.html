@@ -4,12 +4,20 @@
     <span><p class="nav-link" sec:authorize="isAuthenticated()" sec:authentication="name">회원</span>
 
     <ul>
+        <div sec:authorize="hasRole('ROLE_ADMIN')">
+            관리자만!
+        </div>
+
+        <div sec:authorize="hasAuthority('ROLE_ADMIN')">
+            관리자만!
+        </div>
         <li> <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/joinForm}">회원가입</a></li>
         <li> <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/login}">로그인</a></li>
         <li><a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/user/logout}">로그아웃</a></li>
-        <li><a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/admin/go}">admin</a></li>
-        <li><a th:href="@{/test/go}">test</a></li>
-        <li><a href="/test/go">test2</a></li>
+        <li><a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/admin/go}">admin</a></li>
+        <li><a class="nav-link" th:href="@{/test/go}">test</a></li>
+<!--        <li><a class="nav-link" th:href="@{/test/go}}">test</a></li>-->
+
         <li>
             <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{|/user/modifyForm/${#authentication.principal.username}|}">
                 정보수정

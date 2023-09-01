@@ -234,7 +234,7 @@ public class UserController {
 
     // 비밀번호 찾기
     @PostMapping("/pwdsearch")
-    public String pwdsearch(UserDTO userDTO, Model model,HttpSession session, BindingResult bindingResult){
+    public String pwdsearch(UserDTO userDTO, Model model, BindingResult bindingResult){
         User user = userService.getUser(userDTO.getUser_id());
         model.addAttribute("userDTO",userDTO);
         //이메일 중복여부체크
@@ -298,13 +298,6 @@ public class UserController {
         }
         userService.userDelete(user);
         return "redirect:/user/logout";    //목록으로이동
-
     }
-
-
-
-
-
-
 
 }

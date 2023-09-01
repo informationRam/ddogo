@@ -2,7 +2,7 @@
 <div layout:fragment="content" class="container my-3">
     <div>
         <h3>비밀번호 찾기</h3>
-        <form id="login" class="my-3" th:object="${userDTO}" th:action="@{/user/pwdsearch}" method="post">
+        <form id="pwdsearchForm" class="my-3" th:object="${userDTO}" th:action="@{/user/pwdsearch}" method="post">
             <!-- 에러출력 영역-->
             <div th:replace="~{form_errors::formErrorsFragment}"></div>
             <!--  아이디 입력 -->
@@ -19,10 +19,19 @@
                 <input type="text" name="Certifiednum" id="Certifiednum" style="display: none;">
             </div>
             <div>
-                <input type="submit" value="패스워드 찾기">
+                <input type="submit" name="pwdsearch" id="pwdsearch" value="패스워드 찾기" onclick="showConfirmation(); return false;">
             </div>
         </form>
-        <div id="tempPasswordDisplay" style="display: none;"></div> <!-- Placeholder for tempPassword display -->
+        <div id="tempPasswordDisplay" style="display: none;"></div>
     </div>
 </div>
+<script th:src="@{/js/user/user.js}"></script>
+<script layout:fragment="script">
+    function showConfirmation() {
+           if (confirm("메일이 발송되었습니다. 확인을 누르면 다음 단계로 진행됩니다.")) {
+               // 폼 제출
+               document.getElementById("pwdsearchForm").submit();
+           }
+       }
+</script>
 </html>
