@@ -35,13 +35,14 @@
 
             <div class="col-md-3">
                 <div class="card mb-3 bd-green" style="max-width: 30rem; border">
-                    <div class="card-header bd-green">신규 문의</div>
+                    <div class="card-header bd-green">감정 평균</div>
                     <div class="card-body">
-                        <h5 class="card-title" th:text="신규 문의글 수"></h5>
-                        <p class="card-text" th:text="답변하러가기"></p>
+                        <h5 class="card-title" th:text="'긍정 '+${emoAvg}+'%'"></h5>
+                        <p class="card-text" th:text="'이번달 감정 평균: 긍정 ' + ${RecentEmoAvg} + '%'"></p>
                     </div>
                 </div>
             </div>
+
         </div>
         <div class="row">
             <div class="col-md-6 mb-3">
@@ -117,5 +118,6 @@
         var activeUserYMap = /*[[${activeUserYMap}]]*/ {};
         var yearMap = /*[[${yearMap}]]*/ {};
     </script>
+
 </div>
 </html>

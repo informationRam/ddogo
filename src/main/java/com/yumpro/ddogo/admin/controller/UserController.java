@@ -7,12 +7,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/qna")
-public class QnaController {
-    private final QnaService qnaService;
+@RequestMapping("/admin")
+public class UserController {
+    @GetMapping("/user/list")
+    public String userList(){
+        //1.get Param
 
-    @GetMapping("/list")
-    public String qnaList(){
-        //1.파라미터 받기 -
+        //2.business logic
+
+        //3.model
+
+        //4.view
+        return "";
     }
 }
