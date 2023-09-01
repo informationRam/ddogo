@@ -46,7 +46,7 @@ public class DashboardRepositoryImpl implements DashboardRepository{
     }
 
     public int monthlyActiveUser(int monthlyGab) throws DataAccessException{
-        return sqlSession.selectOne("admin.monthlyActiveUser");
+        return sqlSession.selectOne("admin.monthlyActiveUser", monthlyGab);
     }
 
 }

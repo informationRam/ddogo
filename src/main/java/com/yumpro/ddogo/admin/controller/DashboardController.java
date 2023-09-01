@@ -32,15 +32,25 @@ public class DashboardController {
         double RecentEmoAvg=dashboardService.RecentEmoAvg();
 
         //그래프
-        HashMap<Integer,Integer> activeUserMap = new HashMap<>();
-        List<HashMap> activeUserList = new ArrayList<>();
+        HashMap<String,Integer> activeUserMap = new HashMap<>();
+        HashMap<String,Integer> monthMap = new HashMap<>();
+        int m=0;
 
         for(int i=0;i<12;i++){
+            m =LocalDate.now().getMonthValue();
             int cnt = dashboardService.monthlyActiveUser(i);
-            activeUserMap.put(i,cnt);
-        }
-            activeUserList.add(activeUserMap);
+            activeUserMap.put(i+"key",cnt);
 
+            if(m-i>0){
+                m=m-i;
+            } else if (m==i) {
+                m=12;
+            } else {
+                m=12-(i-m);
+            }
+            monthMap.put(i+"key",m);
+            System.out.println(m);
+        }
 
         //랭크
         List<HashMap<String,Object>> hotplaceRanking=dashboardService.hotplaceRank();
@@ -54,7 +64,8 @@ public class DashboardController {
         model.addAttribute("emoAvg",emoAvg);
         model.addAttribute("RecentEmoAvg",RecentEmoAvg);
         //그래프
-        model.addAttribute("activeUserList",activeUserList);
+        model.addAttribute("activeUserMap",activeUserMap);
+        model.addAttribute("monthMap",monthMap);
         //리스트
         model.addAttribute("hotplaceRanking",hotplaceRanking);
 

@@ -101,9 +101,9 @@
     </div>
 </main>
     <!-- activeUserList 데이터를 JSON 형식으로 변환하여 스크립트 태그 내에 변수로 설정 -->
-    <script>
-        var activeUserListData = /*[[${activeUserList}]]*/ [];
+    <script th:inline="javascript">
+        var activeUserMapData = /*[[${activeUserMap}]]*/ {};
+        var monthMapData = /*[[${monthMap}]]*/ {};
     </script>
-
 </div>
 </html>
