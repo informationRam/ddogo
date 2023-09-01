@@ -26,7 +26,7 @@
                     <a class="nav-link active" aria-current="page" href="/admin">Home</a>
                 </li>
                 <li>
-                    <a class="nav-link" href="/">USER HOME</a>
+                    <a class="nav-link" href="/">User-Home</a>
                 </li>
             </ul>
             <form class="d-flex">
@@ -49,13 +49,14 @@
     <div class="offcanvas-body p-0">
         <nav class="navbar-light">
             <ul class="navbar-nav">
+                <li class="my-4"></li>
                 <li>
                     <div class="text-muted small fw-bold text-uppercase px-3">
-                        CORE
+                        MAIN
                     </div>
                 </li>
                 <li>
-                    <a href="#" class="nav-link px-3 active">
+                    <a href="#" class="nav-link px-3">
                         <span class="me-2"><i class="bi bi-speedometer2"></i></span>
                         <span>Dashboard</span>
                     </a>
@@ -63,17 +64,28 @@
                 <li class="my-4"><hr class="dropdown-divider bg-light" /></li>
                 <li>
                     <div class="text-muted small fw-bold text-uppercase px-3 mb-3">
-                        Interface
+
                     </div>
                 </li>
                 <li>
-                    <a
-                            class="nav-link px-3 sidebar-link"
-                            data-bs-toggle="collapse"
-                            href="#layouts"
-                    >
-                        <span class="me-2"><i class="bi bi-layout-split"></i></span>
-                        <span>Layouts</span>
+                    <a href="#" class="nav-link px-3">
+                        <span class="me-2"><i class="bi bi-question-circle"></i></span>
+                        <span>QnA</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link px-3">
+                        <span class="me-2"><i class="bi bi-exclamation-square"></i></span>
+                        <span>Notice</span>
+                    </a>
+                </li>
+                <li class="my-4"><hr class="dropdown-divider bg-light" /></li><li>
+                <li>
+                    <a class="nav-link px-3 sidebar-link"
+                       data-bs-toggle="collapse"
+                       href="#layouts">
+                        <span class="me-2"><i class="bi bi-people"></i></span>
+                        <span>User</span>
                         <span class="ms-auto">
                   <span class="right-icon">
                     <i class="bi bi-chevron-down"></i>
@@ -84,38 +96,22 @@
                         <ul class="navbar-nav ps-3">
                             <li>
                                 <a href="#" class="nav-link px-3">
-                      <span class="me-2"
-                      ><i class="bi bi-speedometer2"></i
-                      ></span>
-                                    <span>Dashboard</span>
+                      <span class="me-2"><i class="bi bi-card-list"></i></i></span>
+                                    <span>List</span>
                                 </a>
                             </li>
                         </ul>
                     </div>
-                </li>
-                <li>
-                    <a href="#" class="nav-link px-3">
-                        <span class="me-2"><i class="bi bi-book-fill"></i></span>
-                        <span>Pages</span>
-                    </a>
-                </li>
-                <li class="my-4"><hr class="dropdown-divider bg-light" /></li>
-                <li>
-                    <div class="text-muted small fw-bold text-uppercase px-3 mb-3">
-                        Addons
+                    <div class="collapse" id="layouts">
+                        <ul class="navbar-nav ps-3">
+                            <li>
+                                <a href="#" class="nav-link px-3">
+                      <span class="me-2"><i class="bi bi-plus-circle"></i></span>
+                                    <span>Join</span>
+                                </a>
+                            </li>
+                        </ul>
                     </div>
-                </li>
-                <li>
-                    <a href="#" class="nav-link px-3">
-                        <span class="me-2"><i class="bi bi-graph-up"></i></span>
-                        <span>Charts</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="nav-link px-3">
-                        <span class="me-2"><i class="bi bi-table"></i></span>
-                        <span>Tables</span>
-                    </a>
                 </li>
             </ul>
         </nav>
