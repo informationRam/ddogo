@@ -1,6 +1,61 @@
 
-// 지도 생성 함수 실행
+/*// 맛집 정보를 저장할 배열
+var myHotplList = [];
 
+// 서버에서 맛집 정보를 받아오는 함수
+function fetchMyHotplaces() {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '/api/myhotplaces', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+                var data = JSON.parse(xhr.responseText);
+                myHotplList = data;
+                renderHotplaceList();
+            } else {
+                console.error('Error fetching data:', xhr.statusText);
+            }
+        }
+    };
+    xhr.send();
+}
+// 맛집 리스트를 화면에 뿌려주는 함수
+function renderHotplaceList() {
+    var hotplaceListContainer = document.getElementById('hotplaceList');
+    for (var i = 0; i < myHotplList.length; i++) {
+        var hotplace = myHotplList[i];
+        var card = document.createElement('div');
+        card.className = 'card my-2';
+
+        var cardBody = document.createElement('div');
+        cardBody.className = 'card-body';
+
+        var title = document.createElement('h5');
+        title.className = 'card-title';
+        title.textContent = hotplace.hotplaceName;
+
+        var address = document.createElement('p');
+        address.className = 'card-text';
+        address.textContent = hotplace.address;
+
+        var button = document.createElement('button');
+        button.className = 'btn btn-primary';
+        button.textContent = '찜하기';
+
+        cardBody.appendChild(title);
+        cardBody.appendChild(address);
+        cardBody.appendChild(button);
+        card.appendChild(cardBody);
+        hotplaceListContainer.appendChild(card);
+    }
+fetchMyHotplaces(); // 맛집 정보를 받아옵니다.
+}*/
+
+// 사용자의 현재 위치를 확인하고 맛집 정보를 받아옵니다.
+gps_check(map);
+
+// 지도 생성 함수 실행
     var mapContainer = document.getElementById('map');
     var mapOption = {
         center: new kakao.maps.LatLng(37.506016526623334, 127.10691218161601),
@@ -11,8 +66,6 @@
 
     //위치고정!!!
     gps_check(map); // Check GPS and display current location
-
-
 
 
 // 현재위치 보여주기
@@ -57,7 +110,7 @@ var gps_lng = null; // 경도
 
             var marker = new kakao.maps.Marker({
                 map: map,
-               position: new kakao.maps.LatLng(positions[i].latlng.getLat(), positions[i].latlng.getLng()),
+                position: new kakao.maps.LatLng(positions[i].latlng.getLat(), positions[i].latlng.getLng()),
                 title: positions[i].title
             });
             console.log("Created marker:", marker);

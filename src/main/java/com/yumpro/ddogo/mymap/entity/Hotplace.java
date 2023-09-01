@@ -3,16 +3,16 @@ package com.yumpro.ddogo.mymap.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
-@ToString
 @Getter
 @Setter
 @Entity
+@Table(name = "HOTPLACE")
 public class Hotplace {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "hotplace_no")
     private Integer hotplaceNo;
 
     @Column(name = "sido")
@@ -27,13 +27,13 @@ public class Hotplace {
     @Column(name = "address")
     private String address;
 
-    @Column(name = "hotplace_cate_no")
-    private int hotplaceCateNo;
-
     @Column(name = "lat")
-    private double lat;
+    private Double lat;
 
     @Column(name = "lng")
-    private double lng;
+    private Double lng;
 
+    @ManyToOne(fetch = FetchType.LAZY) // 다대일 관계
+    @JoinColumn(name = "hotplace_cate_no", referencedColumnName = "hotplace_cate_no") // 외래 키 설정
+    private HotplaceCate hotplaceCate;
 }
