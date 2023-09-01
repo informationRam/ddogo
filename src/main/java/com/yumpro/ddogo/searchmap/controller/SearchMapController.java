@@ -57,7 +57,7 @@ public class SearchMapController {
         System.out.println("myRecommend: "+myRecommend);
 
         //2. 비즈니스로직처리
-        searchMapService.addMyMap();
+        //searchMapService.addMyMap();
 
         //3. 모델 4. 뷰
 
