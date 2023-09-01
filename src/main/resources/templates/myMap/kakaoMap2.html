@@ -5,47 +5,62 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" type="text/css"
               href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
-        <link rel="stylesheet" type="text/css" href="/css/mymapCSS.css">
     </head>
-    <body>
+<body>
 
 
-    <section class="box">
-            <aside class="box-sidebar">
-                고정너비
-            </aside>
-            <div class="box-contents">
-                여기는 지도출력 영역
-                <!-- 지도 사이즈 정하기 -->
-                <div id="map"  style="width:100%;height:800px;"></div>
+<section class="box">
+    <aside class="box-sidebar" id="listContainer" >
+        <h2>맛집 리스트</h2>
+        <div class="card my-2" th:each="hotplace : ${hotplaces}">
+            <div class="card-body">
+                <h5 class="card-title" th:text="${hotplace.hotplaceName}"></h5>
+                <p class="card-text" th:text="${hotplace.address}"></p>
+                <button class="btn btn-primary">찜하기</button>
+            </div>
+        </div>
+         <!-- 맛집 검색창 -->
+        <div class="input-group my-3">
+            <input type="text" class="form-control" placeholder="맛집 검색">
+            <button class="btn btn-primary" type="button">검색</button>
+        </div>
+    </aside>
 
-                <!-- 지도 api 연동 -->
-                <script type="text/javascript"
-                        src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=820d01b1cce59185ed776419691dab39&libraries=services"></script>
 
-                <!--db로 마커값 받아오기 -->
-                <script th:inline="javascript">
-                    /*<![CDATA[*/
-                    var positions = [
-                        /*[# th:each="hotplace : ${hotplaces}"]*/
-                        {
-                            title: /*[[${hotplace.hotplaceName}]]*/,
-                            latlng: new kakao.maps.LatLng(/*[[${hotplace.lat}]]*/, /*[[${hotplace.lng}]]*/)
-                        },
-                        /*[/]*/
-                    ];
-                    /*]]>*/
-                </script>
-                <script type="text/javascript" src="/js/mymapAPI.js"></script>
+    <section class="box-contents" id="mapContainer">
+        여기는 지도출력 영역
 
-                <!------------- 현위치 표시 api------- -->
+        <!-- 지도 사이즈 정하기 -->
+        <div id="map"  style="width:100%;height:100%;"></div>
+        <div id="MapControlView">
+            <button id="gpsButton" onclick="gps_check()"> 내 주변보기</button>
+        </div>
+    </section>
+</section>
+<!-----  javascript 영역 --------------->
+        <!-- 지도 api 연동 -->
+        <script type="text/javascript"
+                src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=820d01b1cce59185ed776419691dab39&libraries=services"></script>
 
-                <div id="MapControlView">
-                    <button id="gpsButton" onclick="gps_check()"> 내 주변보기</button>
-                </div>
+        <!--db로 마커값 받아오기 -->
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            var positions = [
+                /*[# th:each="hotplace : ${hotplaces}"]*/
+                {
+                    title: /*[[${hotplace.hotplaceName}]]*/,
+                    latlng: new kakao.maps.LatLng(/*[[${hotplace.lat}]]*/, /*[[${hotplace.lng}]]*/)
+                },
+                /*[/]*/
+            ];
+            /*]]>*/
+        </script>
+        <script type="text/javascript" src="/js/mymapAPI.js"></script>
 
-           </div>
-        </section>
+
+
+
+
+
     </body>
-</div>
 </html>

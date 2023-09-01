@@ -16,6 +16,7 @@ import lombok.Setter;
 public class MymapMarkerDTO {
 
     private String hotplaceName;
+    private String address;
     private double lat;
     private double lng;
 

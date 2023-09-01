@@ -24,10 +24,10 @@ class DdogoApplicationTests {
 
 	@Test
 	void test() {
-		List<MymapMarkerDTO> mymapMarkerDTOS = mymapMarkerRepository.findLatLngNames();
+		List<MymapMarkerDTO> mymapMarkerDTOS = mymapMarkerRepository.findLatLngAddNames();
 		// 결과가 비어있지 않은지 확인
 		Hotplace hotplace = Hotplace.get();
-		assertEquals("사운드온",mymapMarkerDTOS.getLatLngNames());
+		assertEquals("사운드온",mymapMarkerDTOS.findLatLngAddNames());
 	}
 
 }

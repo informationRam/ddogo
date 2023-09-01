@@ -12,7 +12,7 @@ import java.util.List;
 //여기에서는 <Hotplace,Integer> Repository의 대상이 되는 Answer의 PK는  Integer
 public interface MymapMarkerRepository extends JpaRepository<Hotplace, Integer> {
 
-    @Query("SELECT NEW com.yumpro.ddogo.mymap.dto.MymapMarkerDTO(h.hotplaceName, h.lat, h.lng) FROM Hotplace h")
+    @Query("SELECT NEW com.yumpro.ddogo.mymap.dto.MymapMarkerDTO(h.hotplaceName,h.lat, h.lng) FROM Hotplace h")
     List<MymapMarkerDTO> findLatLngNames();
 
 }
