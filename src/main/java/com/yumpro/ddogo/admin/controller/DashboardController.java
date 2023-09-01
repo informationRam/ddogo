@@ -49,7 +49,6 @@ public class DashboardController {
                 m=12-(i-m);
             }
             monthMap.put(i+"key",m);
-            System.out.println(m);
         }
 
         //랭크

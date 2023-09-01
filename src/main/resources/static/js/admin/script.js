@@ -19,10 +19,10 @@ for (var i = 11; i >= 0; i--) {
                         label: "명",
                         data: Data,
                         backgroundColor: [
-                            "rgba(255, 99, 132, 0.2)"
+                            "#FF8CA1"
                         ],
                         borderColor: [
-                            "rgba(255, 99, 132, 1)"
+                            "#FF0841"
                         ],
                         borderWidth: 1,
                     },
