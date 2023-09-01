@@ -51,6 +51,17 @@ public class DashboardController {
             monthMap.put(i+"key",m);
         }
 
+        HashMap<String,Integer> activeUserYMap = new HashMap<>();
+        HashMap<String,Integer> yearMap = new HashMap<>();
+        int y=0;
+
+        for(int i=0;i<12;i++){
+            y =LocalDate.now().getYear()-i;
+            int cnt = dashboardService.yearlyActiveUser(i);
+            activeUserYMap.put(i+"key",cnt);
+            yearMap.put(i+"key",y);
+        }
+
         //랭크
         List<HashMap<String,Object>> hotplaceRanking=dashboardService.hotplaceRank();
 
@@ -65,6 +76,8 @@ public class DashboardController {
         //그래프
         model.addAttribute("activeUserMap",activeUserMap);
         model.addAttribute("monthMap",monthMap);
+        model.addAttribute("activeUserYMap",activeUserYMap);
+        model.addAttribute("yearMap",yearMap);
         //리스트
         model.addAttribute("hotplaceRanking",hotplaceRanking);
 

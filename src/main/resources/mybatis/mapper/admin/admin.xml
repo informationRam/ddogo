@@ -79,4 +79,14 @@
         AND (recom_date < DATE_FORMAT(CURDATE() - INTERVAL (#{monthlyGab} - 1) MONTH ,'%Y-%m-01') OR #{monthlyGab} = 0)
       ]]>
     </select>
+
+    <select id="yearlyActiveUser" resultType="int" parameterType="int">
+        <![CDATA[
+        SELECT COUNT(DISTINCT user_no)
+        FROM ddogo.mymap
+        WHERE recom_date >= DATE_FORMAT(CURDATE() - INTERVAL #{yearlyGab} YEAR, '%Y-01-01')
+        AND recom_date < DATE_FORMAT(CURDATE() - INTERVAL (#{yearlyGab} - 1) YEAR, '%Y-01-01')
+
+      ]]>
+    </select>
 </mapper>

@@ -42,4 +42,7 @@ public class DashboardService {
     public int monthlyActiveUser(int monthlyGab) {
         return dashboardRepository.monthlyActiveUser(monthlyGab);
     }
+    public int yearlyActiveUser(int yearlyGab) {
+        return dashboardRepository.yearlyActiveUser(yearlyGab);
+    }
 }
