@@ -1,0 +1,95 @@
+<html layout:decorate="~{layout}" xmlns:th="http://www.thymeleaf.org">
+<div layout:fragment="content" class="container my-3">
+
+    <div class="container my-5" style="width: 524px;">
+        <div class="border p-4">
+            <h3>ID 찾기</h3>
+            <form id="login" class="my-3" th:object="${userDTO}" th:action="@{/user/searchid3}" method="get">
+            <form id="login" class="my-3" th:object="${userDTO}" th:action="@{/user/searchid3}" method="get">
+                <div th:replace="~{form_errors::formErrorsFragment}"></div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="text" class="form-control form-control-lg" th:field="*{email}">
+                </div>
+                <!-- ajax 출력 -->
+                <div>
+                    <b id="text"></b>
+                </div>
+                <div>
+                    <button type="button" id="button" class="btn btn-primary">아이디 찾기</button>
+                </div>
+
+            </form>
+            <div class="mt-3">
+                <ul class="nav justify-content-center">
+                    <li class="nav-item">
+                        <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/pwdsearch}">비밀번호 찾기</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!--<script layout:fragment="script">
+
+    document.getElementById('button').addEventListener('click',loadText);
+
+         function loadText(){
+            console.log('button click!');
+     }
+    </script>-->
+
+
+<script layout:fragment="script">
+
+    document.getElementById('button').addEventListener('click',loadText);
+
+         function loadText(){
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET','/user/searchid3',true);
+
+            xhr.onload = function(){
+                console.log('start:',xhr.readyState);
+                if(this.status == 200){
+                var user = JSON.parse(this.responseText);
+                console.log(user.userid);
+
+                var output = '';
+
+                output += user.id;
+
+                 document.getElementById('text').innerText = output;
+                }
+            }
+           xhr.send();
+         }
+</script>
+</html>
+
+
+
+<!--
+<script layout:fragment="script">
+
+    document.getElementById('button').addEventListener('click',loadText);
+
+         function loadText(){
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET','/user/searchid2',true);
+
+            xhr.onload = function(){
+                console.log('start:',xhr.readyState);
+                if(this.status == 200){
+                console.log(this.responseText);
+                    var response = JSON.parse(this.responseText);
+                    var user_id = response.user_id;
+                    document.getElementById('text').innerHTML = user_id
+                    console.log('user_id:',user_id);
+
+                }
+            }
+           xhr.send();
+         }
+</script>-->
