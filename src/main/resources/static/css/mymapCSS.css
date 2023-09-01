@@ -1,0 +1,28 @@
+:root {
+  --gap: 20px;
+}
+
+co
+body {
+  background-color: #efefef;
+}
+
+
+.box {
+    display: grid;
+    grid-template-columns: 400px 1fr; /* 첫 번째 열은 200px 고정 너비, 두 번째 열은 가변 너비 */
+    grid-gap: 20px; /* 각 열 사이의 간격 설정 */
+    padding: 20px; /* 필요에 따라 padding 설정 */
+     height: 100vh;
+}
+
+.box-sidebar {
+    background-color: gray; /* 원하는 배경색 지정 */
+    padding: 20px; /* 필요에 따라 padding 설정 */
+}
+
+.box-contents {
+    background-color: #fff; /* 원하는 배경색 지정 */
+    padding: 20px; /* 필요에 따라 padding 설정 */
+}
+
