@@ -21,4 +21,6 @@ public interface DashboardRepository {
     public double RecentEmoAvg() throws DataAccessException;
 
     public int nowActiveUser() throws DataAccessException;
+
+    List<HashMap<String, Object>> localHotplaceCnt() throws DataAccessException;
 }

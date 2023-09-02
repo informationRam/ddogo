@@ -10,7 +10,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import javax.swing.*;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
@@ -48,6 +47,8 @@ public class DashboardController {
 
         //그래프
         List<ActiveUser> activeUser=activeUserService.findByYear(year);
+        List<HashMap<String, Object>> localHotplaceCnt=dashboardService.localHotplaceCnt();
+        System.out.println(localHotplaceCnt);
         //리스트
         List<HashMap<String,Object>> hotplaceRanking=dashboardService.hotplaceRank();
 
@@ -64,6 +65,7 @@ public class DashboardController {
 
         //그래프
         model.addAttribute("activeUser",activeUser);
+        model.addAttribute("localHotplaceCnt",localHotplaceCnt);
 
         //리스트
         model.addAttribute("hotplaceRanking",hotplaceRanking);

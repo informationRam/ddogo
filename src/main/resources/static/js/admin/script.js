@@ -11,7 +11,27 @@ for (var month = 1; month <= 12; month++) {
     // 없는 경우, 0을 Data 배열에 추가
     Data.push(found ? found.activeUserCnt : 0);
 }
+
+var LocalLabels = ["서울", "부산", "대구", "인천", "광주", "대전", "울산", "세종", "경기", "강원", "충북", "충남", "전북", "전남", "경북", "경남", "제주"];
+var LocalData = [];
+
+// Convert the List to a dictionary for easy access
+var localHotplaceDict = {};
+for (var i = 0; i < localHotplaceCnt.length; i++) {
+    localHotplaceDict[localHotplaceCnt[i].sido] = localHotplaceCnt[i].hotplaceCnt;
+}
+
+// Fill in the Data array
+for (var j = 0; j < Labels.length; j++) {
+    if (localHotplaceDict.hasOwnProperty(LocalLabels[j])) {
+        LocalData.push(localHotplaceDict[LocalLabels[j]]);
+    } else {
+        LocalData.push(0);
+    }
+}
+
 const charts = document.querySelectorAll(".month");
+const Localcharts = document.querySelectorAll(".local");
 
 charts.forEach(function (chart) {
         var ctx = chart.getContext("2d");
@@ -24,10 +44,40 @@ charts.forEach(function (chart) {
                         label: "명",
                         data: Data,
                         backgroundColor: [
-                            "#E5E5E5"
+                            "#FFD1DC"
                         ],
                         borderColor: [
-                            "#B0B0B0"
+                            "#FF88A9"
+                        ],
+                        borderWidth: 1,
+                    },
+                ],
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                    },
+                },
+            },
+        });
+    });
+
+    Localcharts.forEach(function (chart) {
+        var ctx = chart.getContext("2d");
+        var myChart = new Chart(ctx, {
+            type: "bar",
+            data: {
+                labels: LocalLabels,
+                datasets: [
+                    {
+                        label: "곳",
+                        data: LocalData,
+                        backgroundColor: [
+                            "#E3FCEC"
+                        ],
+                        borderColor: [
+                            "#2E8B57"
                         ],
                         borderWidth: 1,
                     },

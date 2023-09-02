@@ -18,6 +18,6 @@ public class UserController {
         //3.model
 
         //4.view
-        return "";
+        return "admin/user_list";
     }
 }

@@ -57,4 +57,8 @@ public class DashboardService {
 
         activeUserRepository.save(activeUser);
     }
+
+    public List<HashMap<String, Object>> localHotplaceCnt() {
+        return dashboardRepository.localHotplaceCnt();
+    }
 }

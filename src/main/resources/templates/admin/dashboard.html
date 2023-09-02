@@ -52,10 +52,7 @@
                         지역별 맛집 수
                     </div>
                     <div class="card-body">
-                        <select>
-                            <option>연도</option>
-                        </select>
-                        <canvas class="chart" width="400" height="200"></canvas>
+                        <canvas class="chart local" width="400" height="200"></canvas>
                     </div>
                 </div>
             </div>
@@ -123,7 +120,7 @@
 
         $(document).ready(function() {
             var currentYear = new Date().getFullYear();
-            for(var year = 2022; year <= currentYear; year++) {
+            for(var year = 2023; year-1 <= currentYear; year++) {
                 $("#yearDropdown").append('<option value="' + year + '">' + year + '</option>');
             }
 
@@ -142,6 +139,7 @@
                 }
 
                 var activeUser = /*[[${activeUser}]]*/ {};
+                var localHotplaceCnt = /*[[${localHotplaceCnt}]]*/ [];
     </script>
 </div>
 </html>

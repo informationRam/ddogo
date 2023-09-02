@@ -48,4 +48,9 @@ public class DashboardRepositoryImpl implements DashboardRepository{
     public int nowActiveUser() throws DataAccessException{
         return sqlSession.selectOne("admin.nowActiveUser");
     }
+
+    @Override
+    public List<HashMap<String, Object>> localHotplaceCnt() throws DataAccessException{
+        return sqlSession.selectList("admin.localHotplaceCnt");
+    }
 }

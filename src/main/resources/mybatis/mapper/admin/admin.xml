@@ -73,11 +73,19 @@
 
     <select id="nowActiveUser" resultType="int">
         <![CDATA[
-        SELECT COUNT(DISTINCT user_no)
-        FROM ddogo.mymap
-        WHERE MONTH(recom_date) = MONTH(CURDATE())
-        AND YEAR(recom_date) = YEAR(CURDATE());
+        select count(distinct user_no)
+        from ddogo.mymap
+        where month(recom_date) = month(curdate())
+        and year(recom_date) = year(curdate());
       ]]>
+    </select>
+
+    <select id="localHotplaceCnt" resultType="com.yumpro.ddogo.admin.domain.LocalHotplaceDTO">
+        <![CDATA[
+        select sido, count(hotplace_no) as hotplaceCnt
+        from ddogo.hotplace
+        group by sido
+        ]]>
     </select>
 
 </mapper>
