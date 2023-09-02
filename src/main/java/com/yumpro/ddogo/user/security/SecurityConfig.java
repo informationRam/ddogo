@@ -27,37 +27,7 @@ public class SecurityConfig {
     public class SecurityConfig {
         @Bean
         SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-            http.authorizeRequests(authorizeRequests ->
-                            authorizeRequests
-                                    .antMatchers("/admin/go").hasRole("ADMIN") // Restrict access to "/admin/go" to users with "ADMIN" role
-                                    .antMatchers("/**").permitAll() // Permit all other URLs
-                    )
-                    .csrf().ignoringRequestMatchers(
-                            new AntPathRequestMatcher("/h2-console/**"))
-                    .and()
-                    .headers()
-                    .addHeaderWriter(new XFrameOptionsHeaderWriter(
-                            XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN))
-                    .and()
-                    .formLogin()
-                    .loginPage("/user/login")
-                    .usernameParameter("user_id")
-                    .passwordParameter("pwd")
-                    .defaultSuccessUrl("/")
-                    .and()
-                    .logout()
-                    .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
-                    .logoutSuccessUrl("/")
-                    .invalidateHttpSession(true);
-
-            return http.build();
-        }
-    }
-*/
-
-    @Bean
-    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
+          http.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
                         .requestMatchers(new AntPathRequestMatcher("/**")).permitAll())
                 .csrf((csrf) -> csrf
                         .ignoringRequestMatchers(new AntPathRequestMatcher("/h2-console/**")))
@@ -70,6 +40,25 @@ public class SecurityConfig {
                         .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
                         .logoutSuccessUrl("/")
                         .invalidateHttpSession(true))   //세션날리기
+                .exceptionHandling().accessDeniedPage("/common/ddoError");
+        ;
+        return http.build();
+    }
+*/
+
+    @Bean
+    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
+                        .requestMatchers(new AntPathRequestMatcher("/**")).permitAll())
+                .csrf().disable()
+                .formLogin((formLogin) -> formLogin.loginPage("/user/login").usernameParameter("user_id")
+                        .passwordParameter("pwd")
+                        .defaultSuccessUrl("/"))
+                .logout((logout) -> logout
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
+                        .logoutSuccessUrl("/")
+                        .invalidateHttpSession(true))   //세션날리기
+                .exceptionHandling().accessDeniedPage("/common/ddoError");
         ;
         return http.build();
     }

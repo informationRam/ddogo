@@ -2,6 +2,7 @@ package com.yumpro.ddogo.user.service;
 
 import com.yumpro.ddogo.user.DTO.UserDTO;
 import com.yumpro.ddogo.user.entity.User;
+import com.yumpro.ddogo.user.exception.DuplicateUserIdException;
 import com.yumpro.ddogo.user.reprository.UserRepository;
 import com.yumpro.ddogo.user.validation.UserCreateForm;
 
@@ -88,7 +89,7 @@ public class UserService {
         System.out.println("userDTO.getUser_id() :"+ userDTO.getUser_id());
         System.out.println(" userDTO.getEmail() :"+  userDTO.getEmail());
         Optional<User> byUserIdAndEmail = userRepository.findByUserIdAndEmail(userDTO.getUser_id(), userDTO.getEmail());
-        if(byUserIdAndEmail.isPresent()){
+        if(byUserIdAndEmail.isPresent()){   //중복값이 있을경우
             return result;
         }else {
             result = true;
@@ -99,7 +100,10 @@ public class UserService {
     //아이디값 넣어서 회원정보 가져오기
     public User getUser(String user_id){
         Optional<User> user = userRepository.findByUserId(user_id);
-        return user.get();
+        if (user.isPresent()) {
+            return user.get();
+        }
+        return null;
     }
 
     // 비번 변경

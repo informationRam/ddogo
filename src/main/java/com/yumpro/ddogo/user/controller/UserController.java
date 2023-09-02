@@ -3,6 +3,7 @@ package com.yumpro.ddogo.user.controller;
 import com.yumpro.ddogo.mail.service.EmailService;
 import com.yumpro.ddogo.user.DTO.UserDTO;
 import com.yumpro.ddogo.user.entity.User;
+import com.yumpro.ddogo.user.exception.DuplicateUserIdException;
 import com.yumpro.ddogo.user.service.UserSecurityService;
 import com.yumpro.ddogo.user.service.UserService;
 import com.yumpro.ddogo.user.validation.LoginVaildation;
@@ -234,19 +235,28 @@ public class UserController {
 
     // 비밀번호 찾기
     @PostMapping("/pwdsearch")
-    public String pwdsearch(UserDTO userDTO, Model model, BindingResult bindingResult){
-        User user = userService.getUser(userDTO.getUser_id());
-        model.addAttribute("userDTO",userDTO);
-        //이메일 중복여부체크
-        if (userService.pwdsearch(userDTO)) {
-            bindingResult.rejectValue("email", "EmailInCorrect", "사용자 정보를 찾을 수 없습니다.");
-            return "user/pwdsearch_Form";
-        }else {
-            String tempPassword = emailService.sendSimpleMessage(userDTO.getEmail());   //메일발송 후 임시비밀번호값저장
-            userService.userpwdModify(user,tempPassword);                //임시 패스워드로 변경
-            return "/user/loginForm";                                   //메일전송성공 -> 로그인창으로이동
-        }
+    public String pwdsearch(UserDTO userDTO, Model model, BindingResult bindingResult) {
+            model.addAttribute("userDTO", userDTO);
+
+            // 이메일 중복 여부 체크
+            if (userService.pwdsearch(userDTO)) {
+                bindingResult.rejectValue("email", "EmailInCorrect", "사용자 정보를 찾을 수 없습니다.");
+                return "user/pwdsearch_Form";
+            } else {
+                String tempPassword = emailService.sendSimpleMessage(userDTO.getEmail());   // 메일 발송 후 임시 비밀번호 값 저장
+                User user = userService.getUser(userDTO.getUser_id());
+                userService.userpwdModify(user, tempPassword);                // 임시 패스워드로 변경
+
+                // 메일 발송 성공 메시지를 Model에 추가
+                model.addAttribute("mailSentMessage", "메일을 발송했습니다. 확인을 누르면 다음 단계로 진행됩니다.");
+                return "user/loginForm"; // 메일 전송 성공 -> 로그인 창으로 이동
+            }
+
     }
+
+
+
+
 
     //정보 수정 폼
     @GetMapping("/modifyForm/{user_id}")
