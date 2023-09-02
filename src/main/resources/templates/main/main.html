@@ -10,7 +10,7 @@
     <tr>
         <th>순위</th>
         <th>전국 오늘의 맛집</th>
-        <th>감정</th>
+        <th>리뷰온도</th>
     </tr>
     <tr th:each="eatjjim, idx : ${eatjjim}">
         <td th:text="${idx.index + 1}"></td> <!-- 순위 출력 -->
@@ -27,7 +27,7 @@
     <tr>
         <th>순위</th>
         <th>전국 오늘의 카페</th>
-        <th>감정</th>
+        <th>리뷰온도</th>
     </tr>
     <tr th:each="cafejjim, idx : ${cafejjim}">
         <td th:text="${idx.index + 1}"></td> <!-- 순위 출력 -->
