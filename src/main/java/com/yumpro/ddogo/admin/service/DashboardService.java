@@ -48,7 +48,6 @@ public class DashboardService {
     public int nowActiveUser() {
         return dashboardRepository.nowActiveUser();
     }
-
     @Scheduled(cron = "0 0 0 1 * ?") // 매월 1일 0시 0분에 실행
     public void saveMonthlyActiveUSer() {
         ActiveUser activeUser = new ActiveUser();

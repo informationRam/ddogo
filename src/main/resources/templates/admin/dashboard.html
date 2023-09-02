@@ -66,9 +66,7 @@
                         월별 액티브 유저수
                     </div>
                     <div class="card-body">
-                        <select>
-                            <option>연도</option>
-                        </select>
+                        <select id="yearDropdown" onchange="goToYear()"></select>
                         <canvas class="chart month" width="400" height="200"></canvas>
                     </div>
                 </div>
@@ -122,6 +120,28 @@
         var monthMapData = /*[[${monthMap}]]*/ {};
     -->
     <script th:inline="javascript">
+
+        $(document).ready(function() {
+            var currentYear = new Date().getFullYear();
+            for(var year = 2022; year <= currentYear; year++) {
+                $("#yearDropdown").append('<option value="' + year + '">' + year + '</option>');
+            }
+
+            // 현재 URL에서 연도를 추출
+            var urlYear = window.location.pathname.split("/").pop();
+
+            // 연도가 있다면, 그 연도를 드롭다운에서 선택
+            if (urlYear && !isNaN(urlYear)) {
+                $("#yearDropdown").val(urlYear);
+            }
+        });
+
+                function goToYear() {
+                    var selectedYear = document.getElementById("yearDropdown").value;
+                    location.href = "/admin/" + selectedYear;
+                }
+
+                var activeUser = /*[[${activeUser}]]*/ {};
     </script>
 </div>
 </html>
