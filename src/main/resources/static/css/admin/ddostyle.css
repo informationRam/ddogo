@@ -35,3 +35,7 @@
 .bd-yellow{border-color: #ffc107; background-color:#fff;}
 .bd-green{border-color: #39A998; background-color:#fff;}
 .bd-blue {border-color: #0A74DA; background-color: #fff;}
+
+.right-ddo {
+    text-align: right;
+}

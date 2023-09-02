@@ -4,7 +4,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-3">
-                <div class="card mb-3 bd-red" style="max-width: 30rem;">
+                <div class="card mb-3 bd-red right-ddo" style="max-width: 30rem;">
                     <div class="card-header bd-red">회원수</div>
                     <div class="card-body">
                         <h5 class="card-title" th:text="'총 '+${userTotal}+'명'"></h5>
@@ -14,7 +14,7 @@
             </div>
 
             <div class="col-md-3">
-                <div class="card mb-3 bd-yellow" style="max-width: 30rem;">
+                <div class="card mb-3 bd-yellow right-ddo" style="max-width: 30rem;">
                     <div class="card-header bd-yellow">등록된 맛집 수</div>
                     <div class="card-body">
                         <h5 class="card-title" th:text="'총 '+${hotplaceTotal}+'곳'"></h5>
@@ -24,7 +24,7 @@
             </div>
 
             <div class="col-md-3">
-                <div class="card mb-3 bd-green" style="max-width: 30rem;">
+                <div class="card mb-3 bd-green right-ddo" style="max-width: 30rem;">
                     <div class="card-header bd-green">감정 평균</div>
                     <div class="card-body">
                         <h5 class="card-title" th:text="'긍정 '+${emoAvg}+'%'"></h5>
@@ -34,11 +34,11 @@
             </div>
 
             <div class="col-md-3">
-                <div class="card mb-3 bd-blue" style="max-width: 30rem;">
+                <div class="card mb-3 bd-blue right-ddo" style="max-width: 30rem;">
                     <div class="card-header bd-blue">이번달 액티브 유저 수</div>
                     <div class="card-body">
-                        <h5 class="card-title" th:text="${nowActiveUser}+'명'"></h5>
-                        <p class="card-text" th:text="${nowActiveUser}"></p>
+                        <h5 class="card-title" th:text="'총'+${nowActiveUser}+'명'"></h5>
+                        <p class="card-text" th:text=" '이번달 회원 활성화 정도: ' + ${activeParcent} + '%'"></p>
                     </div>
                 </div>
             </div>
