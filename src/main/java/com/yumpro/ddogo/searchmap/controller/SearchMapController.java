@@ -7,6 +7,7 @@ import com.yumpro.ddogo.searchmap.dto.SearchMapDTO;
 import com.yumpro.ddogo.searchmap.dto.TestDTO;
 import com.yumpro.ddogo.searchmap.service.SearchMapService;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,121 +16,79 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.PrintWriter;
+import java.security.Principal;
 
+@RequestMapping("/search")
+@RequiredArgsConstructor
 @Controller
 public class SearchMapController {
-    SearchMapService searchMapService;
+    //private final SearchMapService searchMapService;
+    //private final SearchMapDTO searchMapDTO;
 
     //검색할 수 있게 지도 띄워줘 요청
     /*요청주소: http://localhost/search
     * 요청방식: get*/
-    @GetMapping("/search")
+    @GetMapping("")
     public String showMap(){
-        return "searchmap/testSearchMap2";
-    }
-
-    //커스텀오버레이를 확인하는 메소드
-    @GetMapping("/")
-    public String test(){
-        return "searchmap/customOverlay";
+        return "searchmap/searchMap";
     }
 
     //마커를 클릭했을 때, 해당 장소를 내 지도에 저장해줘 요청
     /*요청주소: http://localhost/search/add
     * 요청방식: post*/
     /*form 의 input type="hidden" 으로 값 가져오는 메소드: 됨*/
-    @PostMapping("/search/add")
-    public String testAction2(@RequestParam double markerLat,
-                              @RequestParam double markerLng,
-                              @RequestParam String placesName,
-                              @RequestParam String placesAddress,
-                              @RequestParam String inputReview,
-                              @RequestParam String inputMemo,
-                              @RequestParam String myRecommend
-                              ){
-        //1. 파라미터받기
-        System.out.println("markerLat: "+markerLat);
-        System.out.println("markerLng: "+markerLng);
-        System.out.println("placesName: "+placesName);
-        System.out.println("placesAddress: "+placesAddress);
-        System.out.println("inputReview: "+inputReview);
-        System.out.println("inputMemo: "+inputMemo);
-        System.out.println("myRecommend: "+myRecommend);
+    @PostMapping("/add")
+    public String testAction2(@RequestParam double markerLat, @RequestParam double markerLng,
+                              @RequestParam String placeName, @RequestParam String placeAddress,
+                              @RequestParam String placeCateCode, @RequestParam String myRecommend,
+                              @RequestParam String inputReview, @RequestParam String inputMemo,
+                              Principal principal
+                              ){ //Principal도 추가해야함. 로그인한 유저 정보 가져와야하니까.
+
+        //1. 파라미터받아서 DTO에 담기
+        //로그인한 유저 정보 가져오기
+        System.out.println("principal.getName():"+principal.getName());
+        //도로명 주소 자르기 예:제주특별자치도->제주 서귀포시
+        String afterSido = placeAddress.substring(placeAddress.indexOf(" ")+1); //첫번째 공백 이후 부터 끝까지.
+        String sido = placeAddress.substring(0, 2);
+        String gugun = afterSido.substring(0, afterSido.indexOf(" "));
+        /*//DTO에 담기
+        searchMapDTO.setLng(markerLng); //경도
+        searchMapDTO.setLat(markerLat); //위도
+        searchMapDTO.setPlaceName(placeName); //상호명
+        searchMapDTO.setAddress(placeAddress);//전체도로명주소
+        searchMapDTO.setSido(sido); //시, 도
+        searchMapDTO.setGugun(gugun); //시,군,구
+        searchMapDTO.setInputReview(inputReview);
+        searchMapDTO.setInputMemo(inputMemo);
+        searchMapDTO.setMyRecommend(myRecommend);
+        // DTO placeCateNo필드에 코드에 따라 no부여
+        if(placeCateCode.equals("FD6")){
+            searchMapDTO.setPlaceCateNo(1);
+        } else {
+            searchMapDTO.setPlaceCateNo(2);
+        }
 
         //2. 비즈니스로직처리
-        //searchMapService.addMyMap();
+        // 1) hotplace 테이블에 insert
+        //  리턴: 방금 hotplace에 입력된 pk인 hotplace_no의 값
+        int hotplaceNo = searchMapService.insertHotpalce(searchMapDTO);
+
+        // 2) mymap 테이블에 insert
+        //  리턴: 방금 mymap에 입력된 pk인 map_no의 값
+        int mapNo = searchMapService.insertMyMap(searchMapDTO);*/
+
+        // 3) 입력받은 review감정분석
+        //  리턴: 감정분석결과
+        //double emo_result = emoService.emoAnal(searchMapDTO.getInputReview());
+
+        // 4) 분설결과와 함께 emoreview 테이블에 insert
+        //searchMapService.insertEmoReview(emo_result, searchMapDTO);
 
         //3. 모델 4. 뷰
-
+        //성공했으면, 잘 저장되었다고 alret하나 띄워줬으면..
 
         return String.format("redirect:/search");
     }
 
-    /*@PostMapping("/search/add")
-    @ResponseBody
-    public String testAction1(@RequestBody String filterJSON,
-                           HttpServletResponse response,
-                           ModelMap model) throws Exception{
-        System.out.println("testAction1()진입");
-        JSONObject resMap = new JSONObject();
-        System.out.println("JSONObject 객체 생성 완료");
-        try{
-            ObjectMapper mapper = new ObjectMapper();
-            System.out.println("ObjectMapper 객체 생성 완료");
-            SearchMapDTO searchMapDTO = (SearchMapDTO)mapper.readValue(filterJSON, new TypeReference<SearchMapDTO>() {
-            });
-            System.out.println("searchMapDTO에 담기 성공");
-            //searchMapService.insertDTO(searchMapDTO);
-            resMap.put("msg", "완료");
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-        response.setContentType("text/html; charset=UTF-8");
-        PrintWriter out = response.getWriter();
-        out.print(resMap);
-        return null;
-    }*/
-
-    /*@PostMapping("/search/add")
-    @ResponseBody // JSON 응답을 생성할 때 사용
-    public ResponseEntity<String> addData(@RequestBody String jsonData) {
-        System.out.println("add()진입");
-        try {
-            // JSON 데이터를 YourData 객체로 변환
-            ObjectMapper objectMapper = new ObjectMapper();
-            System.out.println("objectMapper 생성 완료");
-            TestDTO data = objectMapper.readValue(jsonData, TestDTO.class);
-            System.out.println("objectMapper.readValue 성공");
-            System.out.println("상호명: "+data.getPlacesName());
-            System.out.println("경도: "+data.getMarkerLng());
-            System.out.println("메모: "+data.getInputMemo());
-            // data 객체를 통해 JSON 데이터를 사용하여 원하는 작업을 수행합니다.
-
-            // 예를 들어, 데이터를 로깅하거나 데이터베이스에 저장하는 등의 작업을 수행할 수 있습니다.
-
-            // 성공 응답 반환
-            return ResponseEntity.ok("Data received successfully!");
-        } catch (Exception e) {
-            // 오류 처리
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred: " + e.getMessage());
-        }
-    }*/
-    
-    /*@PostMapping("/search/add")
-    public ResponseEntity<String> addData(@RequestBody TestDTO testDTO) {
-        try {
-            // data 객체를 통해 JSON 데이터를 사용하여 원하는 작업을 수행합니다.
-            System.out.println("memo: "+testDTO.getInputMemo());
-            System.out.println("추천여부: "+testDTO.getMyRecommend());
-            System.out.println("식당이름: "+testDTO.getPlacesName());
-
-            // 예를 들어, 데이터를 로깅하거나 데이터베이스에 저장하는 등의 작업을 수행할 수 있습니다.
-
-            // 성공 응답 반환
-            return ResponseEntity.ok("Data received successfully!");
-        } catch (Exception e) {
-            // 오류 처리
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred: " + e.getMessage());
-        }
-    }*/
 }

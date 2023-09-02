@@ -1,30 +1,27 @@
 package com.yumpro.ddogo.searchmap.dto;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @Setter
 @ToString
+@RequiredArgsConstructor
+@AllArgsConstructor
 public class SearchMapDTO {
-    //필드
-    /*private double lng; //경도
+    //hotplace
+    private double lng; //경도
     private double lat; //위도
     private String placeName; //상호명
+    private int placeCateNo; //카테고리번호(음식점/카페)
     private String address; //전체 도로명 주소
     private String sido; //시도
-    private String gugun; //시군구*/
+    private String gugun; //시군구
 
+    //emoreview
     private String inputReview; //리뷰
-    private String inputMemo; //메모
-    private String myRecommend; //추천여부
-    private String markerLat; //위도
-    private String markerLng; //경도
-    private String placesName; //상호명
-    private String placesAddress; //전체도로명주소
-    //생성자
 
-    //메소드
+    //mymap
+    private String myRecommend; //추천여부
+    private String inputMemo; //메모
+
 }

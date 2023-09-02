@@ -1,14 +1,10 @@
 package com.yumpro.ddogo.searchmap.repository;
 
 import com.yumpro.ddogo.searchmap.dto.SearchMapDTO;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class SearchMapRepository {
-    public void testInsert(SearchMapDTO searchMapDTO){
-
-    }
-//    public void addMyMap(SearchMapDTO searchMapDTO){
-//
-//    }
+public interface SearchMapRepository  {
+    //public void testInsert(SearchMapDTO searchMapDTO); extends JpaRepository<SearchMapDTO, Long>
 }
