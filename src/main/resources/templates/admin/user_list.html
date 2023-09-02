@@ -1,7 +1,47 @@
 <html layout:decorate="~{admin/bar}">
 <div layout:fragment="content">
     <main class="mt-5 pt-3">
-        userlist
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12 mb-3">
+                    <h1>회원 관리</h1>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table
+                                        id="example"
+                                        class="table table-striped data-table"
+                                        style="width: 100%"
+                                >
+                                    <thead>
+                                    <tr>
+                                        <th>PK</th>
+                                        <th>시/도</th>
+                                        <th>구/군</th>
+                                        <th>상호명</th>
+                                        <th>카테고리</th>
+                                        <th>추천수</th>
+                                        <th>감정후기</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td th:text="'안녕'"></td>
+                                        <td th:text="'안녕'"></td>
+                                        <td th:text="'안녕'"></td>
+                                        <td th:text="'안녕'"></td>
+                                        <td th:text="'안녕'"></td>
+                                        <td th:text="'안녕'"></td>
+                                        <td th:text="'안녕'"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 </div>
 </html>
