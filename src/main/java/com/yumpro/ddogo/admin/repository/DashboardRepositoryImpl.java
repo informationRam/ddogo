@@ -45,12 +45,7 @@ public class DashboardRepositoryImpl implements DashboardRepository{
         return sqlSession.selectOne("admin.RecentEmoAvg");
     }
     @Override
-    public int monthlyActiveUser(int monthlyGab) throws DataAccessException{
-        return sqlSession.selectOne("admin.monthlyActiveUser", monthlyGab);
+    public int nowActiveUser() throws DataAccessException{
+        return sqlSession.selectOne("admin.nowActiveUser");
     }
-    @Override
-    public int yearlyActiveUser(int yearlyGab) throws DataAccessException{
-        return sqlSession.selectOne("admin.yearlyActiveUser", yearlyGab);
-    }
-
 }

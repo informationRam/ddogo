@@ -2,6 +2,10 @@
   color: #fff;
   background-color: #FF0841;
   border-color: #FF0841;
+  padding: 5px 10px;
+  font-size: 12px;
+  border-radius: 3px;
+  float: right;
 }
 .btn-ddo:hover {
   color: #fff;
@@ -23,6 +27,11 @@
   box-shadow: 0 0 0 0.25rem #ff426e81;
 }
 
+.btn-ddo:disabled{
+    color:#fff;background-color:#6c757d;border-color:#6c757d
+    }
+
 .bd-red{border-color: #FF0841; background-color:#fff;}
 .bd-yellow{border-color: #ffc107; background-color:#fff;}
 .bd-green{border-color: #39A998; background-color:#fff;}
+.bd-blue {border-color: #0A74DA; background-color: #fff;}

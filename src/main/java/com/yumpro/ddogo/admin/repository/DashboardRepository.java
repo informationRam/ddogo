@@ -20,7 +20,5 @@ public interface DashboardRepository {
 
     public double RecentEmoAvg() throws DataAccessException;
 
-    public int monthlyActiveUser(int monthlyGab) throws DataAccessException;
-
-    public int yearlyActiveUser(int yearlyGab) throws DataAccessException;
+    public int nowActiveUser() throws DataAccessException;
 }
