@@ -45,7 +45,7 @@ public class UserService {
         return emailDuplicate;
     }
 
-    // 회원 가입시 이메일 중복 여부 확인
+    // 회원 가입시 이메일 중복 여부 확인 or id 찾기에 사용
     @Transactional(readOnly = true)
     public boolean checkEmailDuplication(String email) {
         System.out.println("서비스들어옴");
@@ -53,12 +53,6 @@ public class UserService {
         return emailDuplicate;
     }
 
-    @Transactional(readOnly = true)
-    public boolean checkEmailDuplication2(String email) {
-        System.out.println("서비스들어옴");
-        boolean emailDuplicate = userRepository.existsByEmail(email);
-        return emailDuplicate;
-    }
 
     //정보 수정시 사용
     @Transactional(readOnly = true)

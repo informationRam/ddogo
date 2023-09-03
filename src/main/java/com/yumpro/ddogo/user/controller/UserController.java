@@ -159,7 +159,7 @@ public class UserController {
 
         try {
             //회원정보에 사용자가 입력한 이메일이 있는지 확인
-            if (!userService.checkEmailDuplication2(userDTO.getEmail())) {
+            if (!userService.checkEmailDuplication(userDTO.getEmail())) {
                 bindingResult.rejectValue("email", "EmailInCorrect", "사용자 정보를 찾을 수 없습니다.");
                 response.put("user_id", "사용자 정보를 찾을 수 없습니다.");
                 return response;
