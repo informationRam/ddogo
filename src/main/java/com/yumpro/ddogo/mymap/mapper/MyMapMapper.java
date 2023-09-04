@@ -11,7 +11,5 @@ public interface MyMapMapper {
 
     //회원별 맛집 목록 불러오기 :=>  mymap.xml에서 쿼리 작성
    List<MyMapDTO> hotplacesByUserNo(@Param("userNo") int userNo);
-    
-   //회원번호 조회
-    List<MyMapDTO> findByUserNo(int userNo);
+
 }

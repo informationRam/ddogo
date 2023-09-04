@@ -3,16 +3,12 @@
 }
 
 
-body {
+box {
   background-color: #efefef;
   flex-direction:row
   flex-wrap: nowrap
 }
 
-box{
-	display: flex;
-
-}
 
 /* 좌측 사이드바 스타일 */
 .box-sidebar {
