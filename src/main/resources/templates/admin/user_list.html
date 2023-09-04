@@ -11,12 +11,12 @@
                             <form th:action="@{/admin/user/list}" method="get" id="searchForm" class="d-flex justify-content-between">
                                 <div class="input-group">
                                     <select name="searchCategory" class="form-select">
-                                        <option value="user_name">User Name</option>
-                                        <option value="user_id">User ID</option>
-                                        <option value="email">Email</option>
+                                        <option value="user_name">회원명</option>
+                                        <option value="user_id">아이디</option>
+                                        <option value="email">이메일</option>
                                     </select>
-                                    <input type="text" class="form-control" name="search" placeholder="Search" th:value="${search}">
-                                    <button type="submit" class="btn btn-primary">Search</button>
+                                    <input type="text" class="form-control" name="search" placeholder="검색어를 입력하세요" th:value="${search}">
+                                    <button type="submit" class="btn btn-primary">검색</button>
                                 </div>
                             </form>
                         </div>
@@ -98,17 +98,17 @@
                             </tbody>
                         </table>
 
-                        <!-- 페이징 -->
+                        <!-- 페이지네이션 -->
                         <nav>
                             <ul class="pagination">
                                 <li class="page-item" th:classappend="${currentPage == 1 ? 'disabled' : ''}">
-                                    <a class="page-link" href="#" th:href="@{'?page=' + (currentPage - 1)}">Previous</a>
+                                    <a class="page-link" href="#" th:href="@{'?page=' + (currentPage - 1)}">이전</a>
                                 </li>
                                 <li class="page-item" th:each="page : ${pageNumbers}" th:classappend="${page == currentPage ? 'active' : ''}">
                                     <a class="page-link" href="#" th:href="@{'?page=' + page}" th:text="${page}"></a>
                                 </li>
                                 <li class="page-item" th:classappend="${currentPage == totalPages ? 'disabled' : ''}">
-                                    <a class="page-link" href="#" th:href="@{'?page=' + (currentPage + 1)}">Next</a>
+                                    <a class="page-link" href="#" th:href="@{'?page=' + (currentPage + 1)}">다음</a>
                                 </li>
                             </ul>
                         </nav>
