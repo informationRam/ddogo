@@ -1,0 +1,28 @@
+<html layout:decorate="~{layout}" xmlns:th="http://www.thymeleaf.org">
+<div layout:fragment="content" class="container my-3">
+    <div>
+        <h3>비밀번호 찾기</h3>
+        <form id="login" class="my-3" th:object="${userDTO}" th:action="@{/user/pwdsearch}" method="post">
+            <!-- 에러출력 영역-->
+            <div th:replace="~{form_errors::formErrorsFragment}"></div>
+            <!--  아이디 입력 -->
+            <div class="field">
+                <label for="user_id">ID</label>
+                <input type="text" th:field="*{user_id}">
+            </div>
+            <!--  이메일입력 -->
+            <div class="field">
+                <label for="email">Email</label>
+                <input type="text" th:field="*{email}">
+            </div>
+            <div>
+                <input type="text" name="Certifiednum" id="Certifiednum" style="display: none;">
+            </div>
+            <div>
+                <input type="submit" value="패스워드 찾기">
+            </div>
+        </form>
+        <div id="tempPasswordDisplay" style="display: none;"></div> <!-- Placeholder for tempPassword display -->
+    </div>
+</div>
+</html>
