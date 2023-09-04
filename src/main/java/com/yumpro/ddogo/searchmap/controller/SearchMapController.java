@@ -1,18 +1,12 @@
 package com.yumpro.ddogo.searchmap.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yumpro.ddogo.common.entity.User;
 import com.yumpro.ddogo.searchmap.dto.SearchMapDTO;
-import com.yumpro.ddogo.searchmap.dto.TestDTO;
 import com.yumpro.ddogo.searchmap.service.SearchMapService;
-import jakarta.servlet.http.HttpServletResponse;
+import com.yumpro.ddogo.user.service.UserService;
+import com.yumpro.ddogo.emoAnal.service.EmoService;
 import lombok.RequiredArgsConstructor;
-import org.json.JSONObject;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.PrintWriter;
@@ -22,8 +16,9 @@ import java.security.Principal;
 @RequiredArgsConstructor
 @Controller
 public class SearchMapController {
-    //private final SearchMapService searchMapService;
-    //private final SearchMapDTO searchMapDTO;
+    private final SearchMapService searchMapService;
+    private final UserService userService;
+    private final EmoService emoService;
 
     //검색할 수 있게 지도 띄워줘 요청
     /*요청주소: http://localhost/search
@@ -40,19 +35,18 @@ public class SearchMapController {
     @PostMapping("/add")
     public String testAction2(@RequestParam double markerLat, @RequestParam double markerLng,
                               @RequestParam String placeName, @RequestParam String placeAddress,
-                              @RequestParam String placeCateCode, @RequestParam String myRecommend,
+                              @RequestParam String placeCateCode, @RequestParam char myRecommend,
                               @RequestParam String inputReview, @RequestParam String inputMemo,
-                              Principal principal
-                              ){ //Principal도 추가해야함. 로그인한 유저 정보 가져와야하니까.
-
+                              Principal principal ){ //로그인한 유저 정보 가져오기
+        SearchMapDTO searchMapDTO = new SearchMapDTO();
         //1. 파라미터받아서 DTO에 담기
         //로그인한 유저 정보 가져오기
-        System.out.println("principal.getName():"+principal.getName());
+        User user = userService.getUser(principal.getName());
         //도로명 주소 자르기 예:제주특별자치도->제주 서귀포시
         String afterSido = placeAddress.substring(placeAddress.indexOf(" ")+1); //첫번째 공백 이후 부터 끝까지.
         String sido = placeAddress.substring(0, 2);
         String gugun = afterSido.substring(0, afterSido.indexOf(" "));
-        /*//DTO에 담기
+        //DTO에 담기
         searchMapDTO.setLng(markerLng); //경도
         searchMapDTO.setLat(markerLat); //위도
         searchMapDTO.setPlaceName(placeName); //상호명
@@ -75,18 +69,21 @@ public class SearchMapController {
         int hotplaceNo = searchMapService.insertHotpalce(searchMapDTO);
 
         // 2) mymap 테이블에 insert
+        // 파라미터: 로그인한 유저번호, 방금 hotplace에 입력된 pk인 hotplace_no의 값
         //  리턴: 방금 mymap에 입력된 pk인 map_no의 값
-        int mapNo = searchMapService.insertMyMap(searchMapDTO);*/
+        int mapNo = searchMapService.insertMyMap(user, hotplaceNo, searchMapDTO);
 
         // 3) 입력받은 review감정분석
+        // 파라미터: form에 입력받은 review
         //  리턴: 감정분석결과
-        //double emo_result = emoService.emoAnal(searchMapDTO.getInputReview());
+        double emoResult = emoService.emoAnal(searchMapDTO.getInputReview());
 
         // 4) 분설결과와 함께 emoreview 테이블에 insert
-        //searchMapService.insertEmoReview(emo_result, searchMapDTO);
+        // 파라미터: 분석결과, 방금 입력한 hotplace_no, 방금 입력한 map_no
+        searchMapService.insertEmoReview(emoResult, hotplaceNo, mapNo, searchMapDTO);
 
         //3. 모델 4. 뷰
-        //성공했으면, 잘 저장되었다고 alret하나 띄워줬으면..
+        //성공했으면, 잘 저장되었다고 alret하나 띄워줬으면..*/
 
         return String.format("redirect:/search");
     }

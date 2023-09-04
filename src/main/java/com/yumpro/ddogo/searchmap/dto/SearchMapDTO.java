@@ -21,7 +21,7 @@ public class SearchMapDTO {
     private String inputReview; //리뷰
 
     //mymap
-    private String myRecommend; //추천여부
+    private char myRecommend; //추천여부
     private String inputMemo; //메모
 
 }
