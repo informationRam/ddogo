@@ -83,10 +83,10 @@ public class UserService {
         System.out.println("user_id: "+user_id);
         System.out.println("email: "+email);
         System.out.println("byUserIdAndEmail.isEmpty()?"+byUserIdAndEmail.isEmpty());
-        if(byUserIdAndEmail.isEmpty()){   //값이 비어있지않다면
-            return false;
-        }else {
+        if(byUserIdAndEmail.isEmpty()){   //값이 비어있다면
             return true;
+        }else {
+            return false;
         }
     }
 
