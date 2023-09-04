@@ -1,38 +1,42 @@
 <html layout:decorate="~{layout}" xmlns:th="http://www.thymeleaf.org">
 <div layout:fragment="content" class="container my-3">
     <div>
-        <h3>비밀번호 찾기</h3>
-        <form id="pwdsearchForm" class="my-3" th:object="${userDTO}" th:action="@{/user/pwdsearch}" method="post">
-            <!-- 에러출력 영역-->
-            <div th:replace="~{form_errors::formErrorsFragment}"></div>
-            <!--  아이디 입력 -->
-            <div class="field">
-                <label for="user_id">ID</label>
-                <input type="text" th:field="*{user_id}">
-            </div>
-            <!--  이메일입력 -->
-            <div class="field">
-                <label for="email">Email</label>
-                <input type="text" th:field="*{email}">
-            </div>
-                <!-- 메일 발송 성공 메시지 출력 -->
-                <div th:if="${mailSentMessage}" class="alert alert-success">
-                    <p th:text="${mailSentMessage}"></p>
+        <div>
+            <h3 class="mb-4">비밀번호 찾기</h3>
+            <form id="pwdsearchForm" th:object="${userDTO}" th:action="@{/user/pwdsearch}" method="post" class="my-3">
+                <!-- 에러출력 영역 -->
+                <div th:replace="~{form_errors::formErrorsFragment}" class="mb-3"></div>
+
+                <!-- 아이디 입력 -->
+                <div class="mb-3">
+                    <label for="user_id" class="form-label">ID</label>
+                    <input type="text" th:field="*{user_id}" class="form-control">
                 </div>
 
-            <div>
-                <input type="submit" name="pwdsearch" id="pwdsearch" value="패스워드 찾기" onclick="showConfirmation(); return false;">
-            </div>
-        </form>
-        <div id="tempPasswordDisplay" style="display: none;"></div>
-    </div>
+                <!-- 이메일 입력 -->
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="text" th:field="*{email}" class="form-control">
+                </div>
+
+                <div>
+                    <button type="submit" name="pwdsearch" id="pwdsearch" class="btn btn-primary" onclick="showConfirmation(); return false;">패스워드 찾기</button>
+                </div>
+            </form>
+            <div id="tempPasswordDisplay" style="display: none;"></div>
+        </div>
 </div>
 <script th:src="@{/js/user/user.js}"></script>
 <script layout:fragment="script">
-    <script layout:fragment="script">
+
      function showConfirmation() {
+
+        var emailValue = document.getElementById('email').value;
          // 메일 발송 절차 실행
          document.getElementById("pwdsearchForm").submit();
+
+
+           alert("메일을 발송했습니다.");
      }
 </script>
 </html>

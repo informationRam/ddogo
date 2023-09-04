@@ -1,4 +1,4 @@
-    document.getElementById('button').addEventListener('click', loadText);
+document.getElementById('button').addEventListener('click', loadText);
     console.log("1");
 
     // 폼 요소와 버튼을 가져옵니다.
@@ -20,7 +20,7 @@ function loadText() {
  console.log("2");
     var emailValue = document.getElementById('email').value;
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', '/test/goajax', true);
+    xhr.open('POST', '/user/searchid', true);
 
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
@@ -39,7 +39,7 @@ function loadText() {
             console.log("userid:", userid);
 
             // 결과를 화면에 출력
-            document.getElementById('text').innerText = '사용자 ID: ' + userid;
+            document.getElementById('text').innerText = '사용자 ID : ' + userid;
 
         }
     };

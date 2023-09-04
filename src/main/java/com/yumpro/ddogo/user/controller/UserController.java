@@ -30,7 +30,7 @@ import java.util.Map;
 
 
 //시큐리티 저장 값 가져오기 세션대용
-   /* Optional<User> user = userService.getUser(principal.getName());
+   /* User user = userService.getUser(principal.getName());
         model.addAttribute("user", user.get().getUser_no());        ==> 유저의 no를 가져옴    */
 
 @Controller
