@@ -11,7 +11,7 @@ import java.util.Map;
 
 @Repository
 @RequiredArgsConstructor
-public class UserRepositoryImpl implements UserRepository{
+public class UserListRepositoryImpl implements UserListRepository {
     private final SqlSession sqlSession;
     @Override
     public List<UserDTO> userList(Map<String,Object> map) throws DataAccessException{

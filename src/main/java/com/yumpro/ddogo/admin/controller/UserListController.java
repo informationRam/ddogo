@@ -1,7 +1,7 @@
 package com.yumpro.ddogo.admin.controller;
 
 import com.yumpro.ddogo.admin.domain.UserDTO;
-import com.yumpro.ddogo.admin.service.UserService;
+import com.yumpro.ddogo.admin.service.UserListService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,8 +15,8 @@ import java.util.Map;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/admin")
-public class UserController {
-    private final UserService userService;
+public class UserListController {
+    private final UserListService userService;
     @GetMapping("/user/list")
     public String userList(Model model, @RequestParam Map<String, Object> map, @RequestParam(value = "page", defaultValue = "1") int currentPage) {
 

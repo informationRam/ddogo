@@ -1,7 +1,7 @@
 package com.yumpro.ddogo.admin.service;
 
-import com.yumpro.ddogo.admin.entity.ActiveUser;
 import com.yumpro.ddogo.admin.repository.ActiveUserRepository;
+import com.yumpro.ddogo.common.entity.ActiveUser;
 import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.stereotype.Service;

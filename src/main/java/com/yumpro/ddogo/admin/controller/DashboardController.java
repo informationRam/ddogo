@@ -1,8 +1,8 @@
 package com.yumpro.ddogo.admin.controller;
 
-import com.yumpro.ddogo.admin.entity.ActiveUser;
 import com.yumpro.ddogo.admin.service.ActiveUserService;
 import com.yumpro.ddogo.admin.service.DashboardService;
+import com.yumpro.ddogo.common.entity.ActiveUser;
 import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.stereotype.Controller;
