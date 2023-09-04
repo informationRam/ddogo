@@ -1,0 +1,75 @@
+<html layout:decorate="~{admin/bar}">
+<div layout:fragment="content">
+    <main class="mt-5 pt-3">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12 mb-3">
+                    <h1>회원 정보 수정</h1>
+                    <div class="card">
+                        <div class="card-body">
+                            <form id="userModifyByAdmin" th:object="${userModiForm}" th:action="@{/admin/user/modify/{userNo}(userNo=${userModiForm.user_no})}" method="post">
+                               <div>
+                                <table class="table">
+                                    <tbody>
+                                    <tr>
+                                        <th>회원번호</th>
+                                        <td>
+                                            <input type="text" th:field="*{user_no}" value="${userModiForm.user_no}" disabled="disabled"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>회원명</th>
+                                        <td>
+                                            <input type="text" th:field="*{user_name}" value="${userModiForm.user_name}"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>회원id</th>
+                                        <td>
+                                            <input type="text" th:field="*{user_id}" value="${userModiForm.user_id}"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>비밀번호</th>
+                                        <td><span>*비밀번호는 본인만 변경할 수 있습니다</span></td>
+                                    </tr>
+                                    <tr>
+                                        <th>생일</th>
+                                        <td>
+                                            <input type="date" th:field="*{BIRTH}" value="${userModiForm.BIRTH}"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>성별</th>
+                                        <td>
+                                            <input type="radio" th:field="*{gender}" id="genderM" value="M"/>
+                                            <label for="genderM">남성</label>
+                                            <input type="radio" th:field="*{gender}" id="genderF" value="F"/>
+                                            <label for="genderF">여성</label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>가입일</th>
+                                        <td>
+                                            <input type="text" th:field="*{join_date}" th:pattern="'yyyy년 MM월 dd일'" value="${userModiForm.join_date}" disabled="disabled"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>이메일</th>
+                                        <td>
+                                            <input type="text" th:field="*{email}" value="${userModiForm.email}"/>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                               </div>
+                                <input type="submit" value="저장" class="btn btn-ddo my-2"/>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+</html>
