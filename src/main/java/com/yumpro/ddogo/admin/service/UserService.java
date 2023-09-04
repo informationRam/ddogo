@@ -11,7 +11,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -48,14 +50,7 @@ public class UserService {
 
         return userDTO;
         }
-    public Page<User> getList(int page) {
-
-        //질문목록조회 : findAll(0)
-        int size=20;
-        List<Sort.Order> sorts =new ArrayList();
-        sorts.add(Sort.Order.desc("join_date"));
-        Pageable pageable = PageRequest.of(page,size, Sort.by(sorts));//(page,size,sort)
-        Page<User> userList = userRepository.findAll(pageable);
-        return userList;
+    public List<UserDTO> userList(Map<String,Object> map) {
+        return userRepository.userList(map);
     }
 }

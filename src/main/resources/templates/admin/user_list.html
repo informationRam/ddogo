@@ -7,41 +7,93 @@
                     <h1>회원 관리</h1>
                     <div class="card">
                         <div class="card-body">
-                            <div class="table-responsive">
-                                <table
-                                        id="example"
-                                        class="table table-striped data-table"
-                                        style="width: 100%"
-                                >
-                                    <thead>
-                                    <tr>
-                                        <th>PK</th>
-                                        <th>시/도</th>
-                                        <th>구/군</th>
-                                        <th>상호명</th>
-                                        <th>카테고리</th>
-                                        <th>추천수</th>
-                                        <th>감정후기</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td th:text="'안녕'"></td>
-                                        <td th:text="'안녕'"></td>
-                                        <td th:text="'안녕'"></td>
-                                        <td th:text="'안녕'"></td>
-                                        <td th:text="'안녕'"></td>
-                                        <td th:text="'안녕'"></td>
-                                        <td th:text="'안녕'"></td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                            <!-- 검색 폼 -->
+                            <form th:action="@{/users}" method="get" id="searchForm">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="search" placeholder="Search" th:value="${search}">
+                                    <button type="submit" class="btn btn-primary">Search</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- 유저 테이블 -->
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th><a href="#" th:href="@{${sortField == 'user_no' and sortOrder == 'asc' ? '?sortField=user_no&sortOrder=desc' : '?sortField=user_no&sortOrder=asc'}}">User No</a></th>
+                                <th><a href="#" th:href="@{${sortField == 'user_name' and sortOrder == 'asc' ? '?sortField=user_name&sortOrder=desc' : '?sortField=user_name&sortOrder=asc'}}">User Name</a></th>
+                                <th><a href="#" th:href="@{${sortField == 'user_id' and sortOrder == 'asc' ? '?sortField=user_id&sortOrder=desc' : '?sortField=user_id&sortOrder=asc'}}">User ID</a></th>
+                                <th><a href="#" th:href="@{${sortField == 'BIRTH' and sortOrder == 'asc' ? '?sortField=BIRTH&sortOrder=desc' : '?sortField=BIRTH&sortOrder=asc'}}">Birth</a></th>
+                                <th><a href="#" th:href="@{${sortField == 'join_date' and sortOrder == 'asc' ? '?sortField=join_date&sortOrder=desc' : '?sortField=join_date&sortOrder=asc'}}">Join Date</a></th>
+                                <th><a href="#" th:href="@{${sortField == 'email' and sortOrder == 'asc' ? '?sortField=email&sortOrder=desc' : '?sortField=email&sortOrder=asc'}}">Email</a></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="user : ${users}">
+                                <td th:text="${user.userNo}"></td>
+                                <td th:text="${user.userName}"></td>
+                                <td th:text="${user.userId}"></td>
+                                <td th:text="${user.birth}"></td>
+                                <td th:text="${user.joinDate}"></td>
+                                <td th:text="${user.email}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- 페이징 -->
+                        <nav>
+                            <ul class="pagination">
+                                <li class="page-item" th:classappend="${currentPage == 1 ? 'disabled' : ''}">
+                                    <a class="page-link" href="#" th:href="@{'?page=' + (currentPage - 1)}">Previous</a>
+                                </li>
+                                <li class="page-item" th:each="page : ${pageNumbers}" th:classappend="${page == currentPage ? 'active' : ''}">
+                                    <a class="page-link" href="#" th:href="@{'?page=' + page}" th:text="${page}"></a>
+                                </li>
+                                <li class="page-item" th:classappend="${currentPage == totalPages ? 'disabled' : ''}">
+                                    <a class="page-link" href="#" th:href="@{'?page=' + (currentPage + 1)}">Next</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </main>
+<script>
+    $(document).ready(function() {
+        function updateUrlParam(key, value) {
+            var params = new URLSearchParams(window.location.search);
+            params.set(key, value);
+            window.location.search = params.toString();
+        }
+
+        // 정렬 필드와 순서 업데이트
+        $("th a").on("click", function(event) {
+            event.preventDefault();
+            var url = new URL(this.href);
+            var sortField = url.searchParams.get("sortField");
+            var sortOrder = url.searchParams.get("sortOrder");
+            updateUrlParam("sortField", sortField);
+            updateUrlParam("sortOrder", sortOrder);
+        });
+
+        // 페이지 업데이트
+        $(".pagination a").on("click", function(event) {
+            event.preventDefault();
+            var url = new URL(this.href);
+            var page = url.searchParams.get("page");
+            updateUrlParam("page", page);
+        });
+
+        // 검색 폼 제출 시 검색어 업데이트
+        $("#searchForm").on("submit", function(event) {
+            event.preventDefault();
+            var search = $(this).find('input[name="search"]').val();
+            updateUrlParam("search", search);
+        });
+    });
+</script>
 </div>
 </html>
