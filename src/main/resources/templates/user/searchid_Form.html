@@ -1,95 +1,77 @@
 <html layout:decorate="~{layout}" xmlns:th="http://www.thymeleaf.org">
 <div layout:fragment="content" class="container my-3">
+    <div class="container my-3">
 
-    <div class="container my-5" style="width: 524px;">
-        <div class="border p-4">
-            <h3>ID 찾기</h3>
-            <form id="login" class="my-3" th:object="${userDTO}" th:action="@{/user/searchid3}" method="get">
-            <form id="login" class="my-3" th:object="${userDTO}" th:action="@{/user/searchid3}" method="get">
-                <div th:replace="~{form_errors::formErrorsFragment}"></div>
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email</label>
-                    <input type="text" class="form-control form-control-lg" th:field="*{email}">
-                </div>
-                <!-- ajax 출력 -->
-                <div>
-                    <b id="text"></b>
-                </div>
-                <div>
-                    <button type="button" id="button" class="btn btn-primary">아이디 찾기</button>
-                </div>
-
-            </form>
-            <div class="mt-3">
-                <ul class="nav justify-content-center">
-                    <li class="nav-item">
-                        <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/pwdsearch}">비밀번호 찾기</a>
-                    </li>
-                </ul>
+        <form th:action="@{/user/searchid}" method="post" >
+            <img src="/image/logo.png">
+            <h2 class="mt-5">아이디 찾기</h2>
+            <div class="mb-4">
+                <input type="text" name="email" id="email" class="form-control form-control-lg" placeholder="가입하신 이메일주소">
             </div>
+            <div class="col-auto">
+                <button type="button" class="btn btn-primary" id="button" name="button">아이디찾기</button>
+            </div>
+        </form>
+        <div class="mt-3">
+            <p id="text"></p>
+        </div>
+        <div class="mt-3">
+            <a class="nav-link" th:href="@{/user/pwdsearch}">비밀번호 찾기</a>
+        </div>
+        <div class="mt-3">
+            <a class="nav-link" th:href="@{/user/joinForm}">회원가입</a>
         </div>
     </div>
-
-    <!--<script layout:fragment="script">
-
-    document.getElementById('button').addEventListener('click',loadText);
-
-         function loadText(){
-            console.log('button click!');
-     }
-    </script>-->
-
-
+<!--<script src="/js/user.js"></script>-->
 <script layout:fragment="script">
+    document.getElementById('button').addEventListener('click', loadText);
+    console.log("1");
 
-    document.getElementById('button').addEventListener('click',loadText);
+    // 폼 요소와 버튼을 가져옵니다.
+    var form = document.querySelector('form');
+    var button = document.getElementById('button');
 
-         function loadText(){
+    // 버튼 클릭 이벤트 리스너를 추가합니다.
+    button.addEventListener('click', loadText);
 
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET','/user/searchid3',true);
+    // Enter 키를 누를 때 폼이 자동으로 제출되도록 합니다.
+    form.addEventListener('keydown', function (e) {
+        if (e.key === "Enter") {
+            e.preventDefault(); // Enter 키의 기본 동작을 막습니다.
+            loadText(); // loadText 함수를 호출하여 "POST" 요청을 보냅니다.
+        }
+    });
 
-            xhr.onload = function(){
-                console.log('start:',xhr.readyState);
-                if(this.status == 200){
-                var user = JSON.parse(this.responseText);
-                console.log(user.userid);
+function loadText() {
+ console.log("2");
+    var emailValue = document.getElementById('email').value;
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/user/searchid', true);
 
-                var output = '';
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
-                output += user.id;
+    // email 값을 전송
+    var params = 'email=' + emailValue;
 
-                 document.getElementById('text').innerText = output;
-                }
-            }
-           xhr.send();
-         }
+    xhr.onload = function () {
+     console.log("3: ",this.status );
+        if (this.status == 200) {
+        console.log("4");
+            // JSON 응답 파싱
+            var responseJson = JSON.parse(this.responseText);
+
+            // user.userid 값을 가져와서 화면에 출력
+            var userid = responseJson.userid;
+            console.log("userid:", userid);
+
+            // 결과를 화면에 출력
+            document.getElementById('text').innerText = '사용자 ID : ' + userid;
+
+        }
+    };
+
+    xhr.send(params);
+}
+
 </script>
 </html>
-
-
-
-<!--
-<script layout:fragment="script">
-
-    document.getElementById('button').addEventListener('click',loadText);
-
-         function loadText(){
-
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET','/user/searchid2',true);
-
-            xhr.onload = function(){
-                console.log('start:',xhr.readyState);
-                if(this.status == 200){
-                console.log(this.responseText);
-                    var response = JSON.parse(this.responseText);
-                    var user_id = response.user_id;
-                    document.getElementById('text').innerHTML = user_id
-                    console.log('user_id:',user_id);
-
-                }
-            }
-           xhr.send();
-         }
-</script>-->
