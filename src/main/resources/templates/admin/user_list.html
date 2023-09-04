@@ -14,8 +14,8 @@
                                         <option value="user_id">아이디</option>
                                         <option value="email">이메일</option>
                                     </select>
-                                    <input type="text" class="form-control" name="search" placeholder="검색어를 입력하세요" th:value="${search}">
-                                    <button type="submit" class="btn btn-primary">검색</button>
+                                    <input type="text" class="form-control" name="search" id="search"/>
+                                    <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i></button>
                                 </div>
                             </form>
                         <!-- 유저 테이블 -->
@@ -81,36 +81,33 @@
                                 <td th:text="${user.user_no}"></td>
                                 <td th:text="${user.user_name}"></td>
                                 <td th:text="${user.user_id}"></td>
-                                <td th:text="${user.BIRTH}"></td>
-                                <td th:text="${user.join_date}"></td>
+                                <td th:text="${#dates.format(user.BIRTH, 'yyyy/MM/dd')}"></td>
+                                <td th:text="${#dates.format(user.join_date, 'yyyy/MM/dd')}"></td>
                                 <td th:text="${user.email}"></td>
-
                             </tr>
                             <tr th:if="${#lists.isEmpty(users)}">
                                 <td colspan="6" class="text-center">검색 결과가 없습니다.</td>
                             </tr>
                             </tbody>
                         </table>
-
-                        <!-- 페이지네이션 -->
-                        <nav>
-                            <ul class="pagination">
-                                <li class="page-item" th:classappend="${currentPage == 1 ? 'disabled' : ''}">
-                                    <a class="page-link" href="#" th:href="@{'?page=' + (currentPage - 1)}">이전</a>
-                                </li>
-                                <li class="page-item" th:each="page : ${pageNumbers}" th:classappend="${page == currentPage ? 'active' : ''}">
-                                    <a class="page-link" href="#" th:href="@{'?page=' + page}" th:text="${page}"></a>
-                                </li>
-                                <li class="page-item" th:classappend="${currentPage == totalPages ? 'disabled' : ''}">
-                                    <a class="page-link" href="#" th:href="@{'?page=' + (currentPage + 1)}">다음</a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
+                            <nav>
+                                <ul class="pagination">
+                                    <li class="page-item" th:classappend="${currentPage == 1 ? 'disabled' : ''}">
+                                        <a class="page-link" th:href="@{'?page=' + (${currentPage} - 1)}">이전</a>
+                                    </li>
+                                    <li class="page-item" th:each="i : ${#numbers.sequence(1, totalPages)}" th:classappend="${i == currentPage ? 'active' : ''}">
+                                        <a class="page-link" th:href="@{'?page=' + ${i}}" th:text="${i}"></a>
+                                    </li>
+                                    <li class="page-item" th:classappend="${currentPage == totalPages ? 'disabled' : ''}">
+                                        <a class="page-link" th:href="@{'?page=' + (${currentPage} + 1)}">다음</a>
+                                    </li>
+                                </ul>
+                            </nav>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
     </main>
 <script>
     $(document).ready(function() {
@@ -141,6 +138,7 @@
         $("#searchForm").on("submit", function(event) {
             event.preventDefault();
             var search = $(this).find('input[name="search"]').val();
+            console.log(search);
             var searchCategory = $(this).find('select[name="searchCategory"]').val();
             updateUrlParam("search", search);
             updateUrlParam("searchCategory", searchCategory);

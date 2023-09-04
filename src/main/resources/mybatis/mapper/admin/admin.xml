@@ -127,10 +127,7 @@
                 asc
             </otherwise>
         </choose>
-            <!-- 페이지네이션을 위한 LIMIT 및 OFFSET 설정 -->
-        <if test="limit == null and offset == ''">
-        limit 15 offset 0
-        </if>
+            <!-- 페이지네이션 -->
         <if test="limit != null and offset != ''">
         limit #{limit} offset #{offset}
         </if>
