@@ -1,6 +1,6 @@
 package com.yumpro.ddogo.user.service;
 
-import com.yumpro.ddogo.user.entity.User;
+import com.yumpro.ddogo.common.entity.User;
 import com.yumpro.ddogo.user.reprository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
