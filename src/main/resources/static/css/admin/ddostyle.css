@@ -39,3 +39,12 @@
 .right-ddo {
     text-align: right;
 }
+
+.ddo-a {
+text-decoration: none;
+color: inherit;
+}
+
+.ddo-search{
+max-width: 500px;
+}
