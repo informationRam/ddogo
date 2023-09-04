@@ -2,7 +2,7 @@ package com.yumpro.ddogo.user.controller;
 
 import com.yumpro.ddogo.mail.service.EmailService;
 import com.yumpro.ddogo.user.DTO.UserDTO;
-import com.yumpro.ddogo.user.entity.User;
+import com.yumpro.ddogo.common.entity.User;
 import com.yumpro.ddogo.user.service.UserSecurityService;
 import com.yumpro.ddogo.user.service.UserService;
 import com.yumpro.ddogo.user.validation.LoginVaildation;
