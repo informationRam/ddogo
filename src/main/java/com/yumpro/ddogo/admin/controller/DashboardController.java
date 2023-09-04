@@ -42,13 +42,11 @@ public class DashboardController {
         int nowActiveUser=dashboardService.nowActiveUser();
 
         double activeParcent=((double)nowActiveUser/userTotal)*100;
-        System.out.println((nowActiveUser/userTotal)*100);
-        System.out.println(activeParcent);
 
         //그래프
         List<ActiveUser> activeUser=activeUserService.findByYear(year);
         List<HashMap<String, Object>> localHotplaceCnt=dashboardService.localHotplaceCnt();
-        System.out.println(localHotplaceCnt);
+
         //리스트
         List<HashMap<String,Object>> hotplaceRanking=dashboardService.hotplaceRank();
 

@@ -14,7 +14,6 @@ import java.util.Optional;
 public class ActiveUserService {
     public final ActiveUserRepository activeUserRepository;
     public List<ActiveUser> findByYear(int year) throws NotFoundException {
-        System.out.println("진입");
         Optional<List<ActiveUser>> oa = activeUserRepository.findByYear(year);
         if(oa.isPresent()){
             return oa.get();
