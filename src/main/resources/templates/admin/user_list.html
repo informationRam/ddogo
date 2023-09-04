@@ -36,12 +36,54 @@
                                 <th>가입일<a href="#" th:href="@{${sortField == '?sortField=join_date&sortOrder=asc'}"><i class="bi bi-arrow-down-short"></i></a></th>
                                 <th>이메일<a href="#" th:href="@{${sortField == '?sortField=email&sortOrder=asc'}"><i class="bi bi-arrow-down-short"></i></a></th>
                                 -->
-                                <th>회원번호<a href="#" th:href="@{${sortField == 'user_no' and sortOrder == 'asc' ? '?sortField=user_no&sortOrder=desc' : '?sortField=user_no&sortOrder=asc'}}"><i class="bi bi-arrow-down-short"></i></a></th>
-                                <th>회원명<a href="#" th:href="@{${sortField == 'user_name' and sortOrder == 'asc' ? '?sortField=user_name&sortOrder=desc' : '?sortField=user_name&sortOrder=asc'}}"><i class="bi bi-arrow-down-short"></i></a></th>
-                                <th>Id<a href="#" th:href="@{${sortField == 'user_id' and sortOrder == 'asc' ? '?sortField=user_id&sortOrder=desc' : '?sortField=user_id&sortOrder=asc'}}"><i class="bi bi-arrow-down-short"></i></a></th>
-                                <th>생년월일<a href="#" th:href="@{${sortField == 'BIRTH' and sortOrder == 'asc' ? '?sortField=BIRTH&sortOrder=desc' : '?sortField=BIRTH&sortOrder=asc'}}"><i class="bi bi-arrow-down-short"></i></a></th>
-                                <th>가입일<a href="#" th:href="@{${sortField == 'join_date' and sortOrder == 'asc' ? '?sortField=join_date&sortOrder=desc' : '?sortField=join_date&sortOrder=asc'}}"><i class="bi bi-arrow-down-short"></i></a></th>
-                                <th>Email<a href="#" th:href="@{${sortField == 'email' and sortOrder == 'asc' ? '?sortField=email&sortOrder=desc' : '?sortField=email&sortOrder=asc'}}"><i class="bi bi-arrow-down-short"></i></a></th>
+                                <th>회원번호
+                                    <a href="#" th:href="@{${sortField == 'user_no' and sortOrder == 'asc' ? '?sortField=user_no&sortOrder=desc' : '?sortField=user_no&sortOrder=asc'}}">
+                                    <i class="bi bi-arrow-down-short"></i>
+                                    </a>
+                                    <a href="#" th:href="@{${sortField == 'user_no' and sortOrder == 'desc' ? '?sortField=user_no&sortOrder=asc' : '?sortField=user_no&sortOrder=desc'}}">
+                                        <i class="bi bi-arrow-up-short"></i>
+                                    </a>
+                                </th>
+                                <th>회원명
+                                    <a href="#" th:href="@{${sortField == 'user_name' and sortOrder == 'asc' ? '?sortField=user_name&sortOrder=desc' : '?sortField=user_name&sortOrder=asc'}}">
+                                        <i class="bi bi-arrow-down-short"></i>
+                                    </a>
+                                    <a href="#" th:href="@{${sortField == 'user_name' and sortOrder == 'desc' ? '?sortField=user_name&sortOrder=asc' : '?sortField=user_name&sortOrder=desc'}}">
+                                        <i class="bi bi-arrow-up-short"></i>
+                                    </a>
+                                </th>
+                                <th>Id
+                                    <a href="#" th:href="@{${sortField == 'user_id' and sortOrder == 'asc' ? '?sortField=user_id&sortOrder=desc' : '?sortField=user_id&sortOrder=asc'}}">
+                                        <i class="bi bi-arrow-down-short"></i>
+                                    </a>
+                                    <a href="#" th:href="@{${sortField == 'user_id' and sortOrder == 'desc' ? '?sortField=user_id&sortOrder=asc' : '?sortField=user_id&sortOrder=desc'}}">
+                                        <i class="bi bi-arrow-up-short"></i>
+                                    </a>
+                                </th>
+                                <th>생년월일
+                                    <a href="#" th:href="@{${sortField == 'BIRTH' and sortOrder == 'asc' ? '?sortField=BIRTH&sortOrder=desc' : '?sortField=BIRTH&sortOrder=asc'}}">
+                                        <i class="bi bi-arrow-down-short"></i>
+                                    </a>
+                                    <a href="#" th:href="@{${sortField == 'BIRTH' and sortOrder == 'desc' ? '?sortField=BIRTH&sortOrder=asc' : '?sortField=BIRTH&sortOrder=desc'}}">
+                                        <i class="bi bi-arrow-up-short"></i>
+                                    </a>
+                                </th>
+                                <th>가입일
+                                    <a href="#" th:href="@{${sortField == 'join_date' and sortOrder == 'asc' ? '?sortField=join_date&sortOrder=desc' : '?sortField=join_date&sortOrder=asc'}}">
+                                        <i class="bi bi-arrow-down-short"></i>
+                                    </a>
+                                    <a href="#" th:href="@{${sortField == 'join_date' and sortOrder == 'desc' ? '?sortField=join_date&sortOrder=asc' : '?sortField=join_date&sortOrder=desc'}}">
+                                        <i class="bi bi-arrow-up-short"></i>
+                                    </a>
+                                </th>
+                                <th>Email
+                                    <a href="#" th:href="@{${sortField == 'email' and sortOrder == 'asc' ? '?sortField=email&sortOrder=desc' : '?sortField=email&sortOrder=asc'}}">
+                                        <i class="bi bi-arrow-down-short"></i>
+                                    </a>
+                                    <a href="#" th:href="@{${sortField == 'email' and sortOrder == 'desc' ? '?sortField=email&sortOrder=asc' : '?sortField=email&sortOrder=desc'}}">
+                                        <i class="bi bi-arrow-up-short"></i>
+                                    </a>
+                                </th>
                             </tr>
                             </thead>
                             <tbody>
