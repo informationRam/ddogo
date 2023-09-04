@@ -259,5 +259,5 @@ public class UserController {
         userService.userDelete(user);
         return "redirect:/user/logout";    //목록으로이동
     }
-
+//
 }
