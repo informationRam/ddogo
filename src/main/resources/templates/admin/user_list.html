@@ -15,8 +15,8 @@
                                         <option value="user_id">아이디</option>
                                         <option value="email">이메일</option>
                                     </select>
-                                    <input type="text" class="form-control" name="search" placeholder="Search"/>
-                                    <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i></button>
+                                    <input type="text" class="form-control" name="search"/>
+                                    <button type="submit" class="btn btn-ddo"><i class="bi bi-search"></i></button>
                                 </div>
                             </form>
                             <!-- 총 개수 표시 -->
@@ -116,7 +116,7 @@
             window.location.search = params.toString();
         }
 
-        // 페이지 업데이트
+        // 페이지네이션 파라미터 업뎃
         $(".pagination a").on("click", function(event) {
             event.preventDefault();
             var url = new URL(this.href);
@@ -124,7 +124,7 @@
             updateUrlParam("page", page);
         });
 
-        // 검색 폼 제출 시 검색어 및 검색 카테고리 업데이트
+        // 검색 파라미터 업뎃
         $("#searchForm").on("submit", function(event) {
             event.preventDefault();
             var search = $(this).find('input[name="search"]').val();
