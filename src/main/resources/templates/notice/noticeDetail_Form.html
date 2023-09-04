@@ -1,0 +1,95 @@
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="container my-3">
+  <!-- 공지사항 제목 -->
+  <h2 class="border-bottom py-2" th:text="${notice.notiTitle}"></h2>
+  <div class="card my-3">
+    <div class="card-body">
+      <!-- 내용 -->
+      <div class="card-text" style="white-space:pre-line;" th:text="${notice.notiContent}"></div>
+      <div class="d-flex justify-content-end">  <!--d-flex:한개의 row를 block레벨로 처리-->
+        <div class="badge bg-light text-dark p-2 text-start">
+          <div>
+            <p>관리자</p>
+          </div>
+        </div>
+        <!-- 작성일 -->
+        <div th:text="${#temporals.format(notice.notiDate,'yyyy-MM-dd HH:mm')}"/>
+      </div>
+
+        <!-- 공지사항수정: 관리자만 가능 -->
+        <a th:href="@{|/notice/modify/${notice.notiNo}|}"
+           class="btn btn-sm btn-outline-secondary"
+           sec:authorize="isAuthenticated()"
+           th:if="${#authentication.getPrincipal().getUsername()=='admin'}"
+           th:text="수정"></a>
+        <!-- 공지사항삭제:  관리자만 가능-->
+        <a href="javascript:void(0);"   th:data-uri="@{|/notice/delete/${notice.notiNo}|}"
+           class="delete btn btn-sm btn-outline-secondary"
+           sec:authorize="isAuthenticated()"
+           th:if="${#authentication.getPrincipal().getUsername()=='admin'}"
+           th:text="삭제"></a>
+      </div>
+    </div>
+<!-- javascript부분 -- ----------------------------->
+<script layout:fragment="script">
+  //(질문,답변)삭제버튼클릭시 호출
+  const delElements = document.getElementsByClassName("delete");
+  Array.from(delElements).forEach(function(element){
+
+      //$(".delete").on("click",function(){ alert("정말삭제할거여?"); });
+      element.addEventListener("click",function(){
+          if(confirm("삭제하시겠습니까??")){//확인버튼을 클릭하면
+              //click이벤트가 발생한 a요소의  data-uri속성의 값을 가져와
+              //location객체의 href속성의 값으로 적용해라
+              //=>현재 browser의 URL주소를 변경해라
+              location.href=this.dataset.uri;
+              //location.href="/question/delete/${question.id}";//질문삭제요청
+              //location.href="/answer/delete/${answer.id}";//답변삭제요청
+          };
+      });
+  });
+
+</script>
+
+<!-- 기본 기능
+  th:text="${}"
+  th:href="@{}"
+  th:with="${}"
+  th:value="${}"
+
+-Layout
+  xmlns:layout="", layout:decorator=""
+  th:block
+  th:fragment=""
+  th:replace="~{파일경로 :: 조각이름}"
+  th:insert="~{파일경로 :: 조각이름}"
+
+-Form
+  th:action="@{}"
+  th:object="${}"
+  th:field="*{}"
+
+-조건문과 반복문
+  th:if="${}", th:unless="${}"
+  th:each="변수 : ${list}"
+  th:switch, th:case
+
+-Number.sequest
+  #numbers.sequest(start, end, step)
+
+-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

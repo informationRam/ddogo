@@ -1,0 +1,9 @@
+        .table thead {
+            background-color: #888888;
+            color: white;
+        }
+
+        /* "공지사항 작성하기" 버튼을 우측으로 이동 */
+        .btn-primary {
+            float: right;
+        }
