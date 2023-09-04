@@ -26,6 +26,7 @@ public class UserListController {
         map.put("limit", limit);
         map.put("offset", offset);
 
+        System.out.println("검색어는 ?!?! "+map.get("search"));
         List<UserDTO> userList = userService.userList(map);
 
         int totalPages = (int) Math.ceil((double) userList.size() / limit);

@@ -8,16 +8,19 @@
                     <div class="card">
                         <!-- 유저 테이블 -->
                         <div class="card-body">
-                            <form th:action="@{/admin/user/list}" method="get" id="searchForm" class="d-flex justify-content-between ddo-search">
-                                <div class="input-group">
+                            <!-- 회원 검색 폼 -->
+                            <form id="searchForm" class="mb-3" action="/admin/user/list" method="GET">
+                                <div class="input-group ddo-search">
                                     <select name="searchCategory" class="form-select">
                                         <option value="user_name">회원명</option>
                                         <option value="user_id">아이디</option>
                                         <option value="email">이메일</option>
                                     </select>
-                                    <input type="text" class="form-control" name="search"/>
-                                    <button type="submit" class="btn btn-ddo"><i class="bi bi-search"></i></button>
+                                    <input type="text" class="form-control" name="search" placeholder="검색">
+                                    <button type="submit" class="btn btn-primary">검색</button>
                                 </div>
+                            </form>
+                        </div>
                             </form>
                             <!-- 총 개수 표시 -->
                             <div class="mb-2">총 개수: <span th:text="${#lists.size(users)}"></span></div>
@@ -89,7 +92,7 @@
                             </tr>
                             </tbody>
                         </table>
-                            <nav>
+                            <nav th:if="${#lists.size(users)} > 0">
                                 <ul class="pagination">
                                     <li class="page-item" th:classappend="${currentPage == 1 ? 'disabled' : ''}">
                                         <a class="page-link" th:href="@{'?page=' + (${currentPage} - 1)}">이전</a>
@@ -114,6 +117,11 @@
             var params = new URLSearchParams(window.location.search);
             params.set(key, value);
             window.location.search = params.toString();
+        }
+
+        //결과없으면 페이지네이션 숨기기
+        if (${#lists.size(users)} == 0) {
+        $(".pagination").hide();
         }
 
         // 페이지네이션 파라미터 업뎃
