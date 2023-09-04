@@ -1,10 +1,8 @@
 package com.yumpro.ddogo.admin.controller;
 
 import com.yumpro.ddogo.admin.domain.UserDTO;
-import com.yumpro.ddogo.admin.entity.User;
 import com.yumpro.ddogo.admin.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

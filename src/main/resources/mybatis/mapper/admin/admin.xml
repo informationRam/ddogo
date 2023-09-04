@@ -88,19 +88,17 @@
         ]]>
     </select>
 
-    <select id="userList" resultType="com.yumpro.ddogo.admin.entity.UseDTO" parameterType="map">
-        SELECT
+    <select id="userList" resultType="com.yumpro.ddogo.admin.domain.UserDTO" parameterType="map">
+        select
         user_no, user_name, user_id, BIRTH, join_date, email
-        FROM user
-        WHERE 1=1
-            <!-- 검색어(search)에 대한 조건 추가 -->
-        <if test="search != null and search != ''">
-            AND (user_name LIKE CONCAT('%', #{search}, '%')
-            OR user_id LIKE CONCAT('%', #{search}, '%')
-            OR email LIKE CONCAT('%', #{search}, '%'))
+        from user
+        where 1=1
+        <!-- 검색어(search)에 대한 조건 추가 -->
+        <if test="search != null and search != '' and searchCategory != null and searchCategory != ''">
+            and ${searchCategory} like concat('%', #{search}, '%')
         </if>
-        ORDER BY
         <!-- 정렬 필드(sortField)에 따른 정렬 -->
+        order by
         <choose>
             <when test="sortField == 'user_name'">
                 user_name
@@ -123,14 +121,19 @@
             </choose>
         <choose>
             <when test="sortOrder == 'desc'">
-                DESC
+                desc
             </when>
             <otherwise>
-                ASC
+                asc
             </otherwise>
         </choose>
             <!-- 페이지네이션을 위한 LIMIT 및 OFFSET 설정 -->
-        LIMIT #{limit} OFFSET #{offset}
+        <if test="limit == null and offset == ''">
+        limit 15 offset 0
+        </if>
+        <if test="limit != null and offset != ''">
+        limit #{limit} offset #{offset}
+        </if>
     </select>
 
 </mapper>
