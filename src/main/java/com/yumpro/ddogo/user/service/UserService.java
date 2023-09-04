@@ -1,8 +1,7 @@
 package com.yumpro.ddogo.user.service;
 
+import com.yumpro.ddogo.common.entity.User;
 import com.yumpro.ddogo.user.DTO.UserDTO;
-import com.yumpro.ddogo.user.entity.User;
-import com.yumpro.ddogo.user.exception.DuplicateUserIdException;
 import com.yumpro.ddogo.user.reprository.UserRepository;
 import com.yumpro.ddogo.user.validation.UserCreateForm;
 
