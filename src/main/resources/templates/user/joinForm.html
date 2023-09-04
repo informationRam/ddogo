@@ -19,14 +19,7 @@
                 <label for="birth" class="form-label">생년월일</label>
                 <input type="date" class="form-control form-control-lg" th:field="*{birth}" th:format="'yyyy-MM-dd'">
             </div>
-            <!-- 성별 -->
-           <!-- <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                <input type="radio" th:field="*{gender}" value="M" class="btn-check" name="btnradio" id="genderMale" autocomplete="off">
-                <label class="btn btn-outline-primary" for="genderMale">남</label>
 
-                <input type="radio" th:field="*{gender}" value="F" class="btn-check" name="btnradio" id="genderFemale" autocomplete="off">
-                <label class="btn btn-outline-primary" for="genderFemale">여</label>
-            </div>-->
             <!-- 성별 -->
             <input type="radio" class="btn-check" th:field="*{gender}" value="M" id="genderMale" autocomplete="off">
             <label class="btn btn-secondary" for="genderMale">남</label>

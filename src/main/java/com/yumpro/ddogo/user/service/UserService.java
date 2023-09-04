@@ -77,22 +77,22 @@ public class UserService {
     }
 
 //비밀번호찾기 - id && email값 동시에 일치하는 회원이 있는지
-    public boolean pwdsearch(UserDTO userDTO){
-        boolean result = false;
+    public boolean pwdsearch(String user_id,String email){
         System.out.println("pwdsearch 서비스옴!");
-        System.out.println("userDTO.getUser_id() :"+ userDTO.getUser_id());
-        System.out.println(" userDTO.getEmail() :"+  userDTO.getEmail());
-        Optional<User> byUserIdAndEmail = userRepository.findByUserIdAndEmail(userDTO.getUser_id(), userDTO.getEmail());
-        if(byUserIdAndEmail.isPresent()){   //중복값이 있을경우
-            return result;
+        Optional<User> byUserIdAndEmail = userRepository.findByUserIdAndEmail(user_id,email);
+        System.out.println("user_id: "+user_id);
+        System.out.println("email: "+email);
+        System.out.println("byUserIdAndEmail.isEmpty()?"+byUserIdAndEmail.isEmpty());
+        if(byUserIdAndEmail.isEmpty()){   //값이 비어있지않다면
+            return false;
         }else {
-            result = true;
-            return result;
+            return true;
         }
     }
 
     //아이디값 넣어서 회원정보 가져오기
     public User getUser(String user_id){
+        System.out.println("getUser진입");
         Optional<User> user = userRepository.findByUserId(user_id);
         if (user.isPresent()) {
             return user.get();

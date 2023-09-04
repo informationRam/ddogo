@@ -3,40 +3,82 @@
     <div>
         <div>
             <h3 class="mb-4">비밀번호 찾기</h3>
-            <form id="pwdsearchForm" th:object="${userDTO}" th:action="@{/user/pwdsearch}" method="post" class="my-3">
-                <!-- 에러출력 영역 -->
-                <div th:replace="~{form_errors::formErrorsFragment}" class="mb-3"></div>
+            <form id="pwdsearchForm" th:action="@{/user/pwdsearch}" method="post" class="my-3">
 
                 <!-- 아이디 입력 -->
                 <div class="mb-3">
                     <label for="user_id" class="form-label">ID</label>
-                    <input type="text" th:field="*{user_id}" class="form-control">
+                    <input type="text" id="user_id" name="user_id" class="form-control">
                 </div>
 
                 <!-- 이메일 입력 -->
                 <div class="mb-3">
                     <label for="email" class="form-label">Email</label>
-                    <input type="text" th:field="*{email}" class="form-control">
+                    <input type="text" id="email" name="email" class="form-control">
                 </div>
-
                 <div>
-                    <button type="submit" name="pwdsearch" id="pwdsearch" class="btn btn-primary" onclick="showConfirmation(); return false;">패스워드 찾기</button>
+                    <p id="text"></p>
+                </div>
+                <div>
+                    <button type="submit" name="button" id="button" class="btn btn-primary">패스워드 찾기</button>
                 </div>
             </form>
             <div id="tempPasswordDisplay" style="display: none;"></div>
-        </div>
 </div>
-<script th:src="@{/js/user/user.js}"></script>
-<script layout:fragment="script">
+    <script layout:fragment="script">
+        document.getElementById('button').addEventListener('click', function(event) {
+             event.preventDefault(); // Prevent the default form submission
+             loadText();
+         });
 
-     function showConfirmation() {
+         console.log("1");
 
-        var emailValue = document.getElementById('email').value;
-         // 메일 발송 절차 실행
-         document.getElementById("pwdsearchForm").submit();
+           // 폼 요소와 버튼을 가져옵니다.
+           var form = document.querySelector('form');
 
 
-           alert("메일을 발송했습니다.");
-     }
-</script>
+           // Enter 키를 누를 때 폼이 자동으로 제출되도록 합니다.
+           form.addEventListener('keydown', function (e) {
+               if (e.key === "Enter") {
+                   e.preventDefault(); // Enter 키의 기본 동작을 막습니다.
+                   loadText(); // loadText 함수를 호출하여 "POST" 요청을 보냅니다.
+               }
+           });
+
+       function loadText() {
+        console.log("2");
+           var emailValue = document.getElementById('email').value;
+            var user_idValue = document.getElementById('user_id').value;
+           var xhr = new XMLHttpRequest();
+           xhr.open('POST', '/user/pwdsearch', true);
+
+           xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+           // email 값, user_id값 전송
+             var params = 'email=' + emailValue + '&user_id=' + user_idValue;
+           xhr.onload = function () {
+            console.log("3: ",this.status );
+               if (this.status == 200) {
+               console.log("4");
+                   // JSON 응답 파싱
+                   var responseJson = JSON.parse(this.responseText);
+
+                   // user.userid 값을 가져와서 화면에 출력
+                   var message = responseJson.message;
+                   console.log("message:", message);
+                   if (message === "사용자 정보를 찾을 수 없습니다.") {
+                    alert("사용자 정보를 찾을 수 없습니다.");
+
+                   }
+                    if (message === "메일을 발송하였습니다.") {
+                    alert("메일을 발송하였습니다.");
+                     window.location.href = '/user/loginForm';
+                   }
+
+               }
+           };
+
+           xhr.send(params);
+       }a
+    </script>
 </html>
