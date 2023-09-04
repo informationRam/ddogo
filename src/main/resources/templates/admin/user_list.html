@@ -6,20 +6,19 @@
                 <div class="col-md-12 mb-3">
                     <h1>회원 관리</h1>
                     <div class="card">
-                            <!-- 검색 폼 -->
-                            <form th:action="@{/admin/user/list}" method="get" id="searchForm" class="ddo-search">
+                        <!-- 유저 테이블 -->
+                        <div class="card-body">
+                            <form th:action="@{/admin/user/list}" method="get" id="searchForm" class="d-flex justify-content-between ddo-search">
                                 <div class="input-group">
                                     <select name="searchCategory" class="form-select">
                                         <option value="user_name">회원명</option>
                                         <option value="user_id">아이디</option>
                                         <option value="email">이메일</option>
                                     </select>
-                                    <input type="text" class="form-control" name="search" id="search"/>
+                                    <input type="text" class="form-control" name="search" placeholder="Search"/>
                                     <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i></button>
                                 </div>
                             </form>
-                        <!-- 유저 테이블 -->
-                        <div class="card-body">
                             <!-- 총 개수 표시 -->
                             <div class="mb-2">총 개수: <span th:text="${#lists.size(users)}"></span></div>
                             <table class="table table-striped">
@@ -116,15 +115,6 @@
             params.set(key, value);
             window.location.search = params.toString();
         }
-
-        // 정렬 드롭다운에서 선택한 정렬 옵션 반영
-        $("#sortDropdown").on("change", function() {
-            var selectedOption = $(this).val().split(':');
-            var sortField = selectedOption[0];
-            var sortOrder = selectedOption[1];
-            updateUrlParam("sortField", sortField);
-            updateUrlParam("sortOrder", sortOrder);
-        });
 
         // 페이지 업데이트
         $(".pagination a").on("click", function(event) {
