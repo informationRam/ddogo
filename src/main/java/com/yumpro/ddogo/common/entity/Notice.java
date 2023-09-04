@@ -25,6 +25,4 @@ public class Notice {
     @Column(name="noti_Date")
     private LocalDateTime notiDate;
 
-
-
 }

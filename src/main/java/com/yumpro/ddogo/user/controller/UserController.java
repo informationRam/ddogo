@@ -76,33 +76,6 @@ public class UserController {
         }
     }
 
-
-
-   /* @PostMapping("/join")
-    public String userJoin(@Valid UserCreateForm userCreateForm, BindingResult bindingResult, Model model, LoginVaildation loginVaildation) {
-        if (bindingResult.hasErrors()) {
-            return "user/joinForm";
-        }
-        //아이디 중복여부체크
-        if (userService.checkUserIdDuplication(userCreateForm.getUser_id())) {
-            bindingResult.rejectValue("user_id", "User_idInCorrect", "이미 사용중인 아이디입니다.");
-            return "user/joinForm";
-        }
-        //이메일 중복여부체크
-        if (userService.checkEmailDuplication(userCreateForm.getEmail())) {
-            bindingResult.rejectValue("email", "EmailInCorrect", "이미 사용중인 이메일 입니다.");
-            return "user/joinForm";
-        }
-        //비밀번호, 비밀번호 확인 동일 체크
-        if (!userCreateForm.getPwd1().equals(userCreateForm.getPwd2())) {
-            bindingResult.rejectValue("pwd2", "pwdInCorrect", "비밀번호확인 값이 다릅니다.");
-            return "user/joinForm";
-        } else {
-            userService.userJoin(userCreateForm);
-            return "redirect:/user/login";
-        }
-    }*/
-
     //로그인 화면(get)
     @GetMapping("/login")
     public String loginForm(LoginVaildation loginVaildation) {
@@ -113,6 +86,8 @@ public class UserController {
     @PostMapping("/login")
     public String login(@Valid LoginVaildation loginVaildation, BindingResult bindingResult, Model model, HttpSession session, Principal principal) {
         if (bindingResult.hasErrors()) {
+
+
             return "user/loginForm";
         } else {
             return "redirect:/";
@@ -184,25 +159,6 @@ public class UserController {
         }
     }
 
-    // 비밀번호 찾기
-/*    @PostMapping("/pwdsearch")
-    public String pwdsearch(UserDTO userDTO, Model model, BindingResult bindingResult) {
-        model.addAttribute("userDTO", userDTO);
-
-        // 이메일 중복 여부 체크
-        if (userService.pwdsearch(userDTO)) {
-            bindingResult.rejectValue("email", "EmailInCorrect", "사용자 정보를 찾을 수 없습니다.");
-            return "user/pwdsearch_Form";
-        } else {
-            String tempPassword = emailService.sendSimpleMessage(userDTO.getEmail());   // 메일 발송 후 임시 비밀번호 값 저장
-            User user = userService.getUser(userDTO.getUser_id());
-            userService.userpwdModify(user, tempPassword);                // 임시 패스워드로 변경
-
-            // 메일 발송 성공 메시지를 Model에 추가
-            model.addAttribute("mailSentMessage", "true");
-            return "user/loginForm"; // 메일 전송 성공 -> 로그인 창으로 이동
-        }
-    }*/
     //정보 수정 폼
     @GetMapping("/modifyForm/{user_id}")
     public String userUpdateForm(Principal principal, Model model) {

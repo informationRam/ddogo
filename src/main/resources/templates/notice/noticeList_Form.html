@@ -1,0 +1,88 @@
+
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="container my-3">
+  <table class="table">
+    <thead class="table-dark">
+    <tr>
+      <th>번호</th>
+      <th>제목</th>
+      <th>작성일</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!--1페이지당 출력할 게시물수만큼 반복시작
+    *페이징처리에서 글번호 공식에 사용되는 개념
+       paging정보.getTotalElements:총게시물수
+       paging정보.number:현재 페이지 번호
+       paging정보.size:페이지당게시물개수
+       loop정보.index:나열 인덱스(0부터 시작.for반복문내부의 index)
+       여기에서는 한페이지당 게시글수를 10-> 0~9 =>0첫번째페이지 글번호12 11 10~3
+       여기에서는 한페이지당 게시글수를 2-> 0~1=>1 두번째페이지 글번호 2 1
+    -->
+    <tr th:each="notice, loop : ${noticePage}">
+      <!-- 글번호=총게시물수-(현재페이지번호*페이지당게시물개수)-나열 인덱스 -->
+      <!--12? =12-(0*10)-0 -->
+      <!-- =12-(0*10)-1 -->
+      <!-- =12-(0*10)-2 -->
+      <!--3? =12-(0*10)-9 -->
+
+      <!--2? =12-(1*10)-0 -->
+      <!--1? =12-(1*10)-1 -->
+      <td th:text="${noticePage.getTotalElements - (noticePage.number * noticePage.size) - loop.index}"></td>
+      <!--요청주소 http://localhost:포트/question/detail?id=1001
+         <td th:text="${question.subject}"><a href="/question/detail?id=${question.id}"></a></td>-->
+      <td>
+        <!--요청주소 http://localhost:포트/question/detail/1001
+         th:href속성에서  주소를 나타낼때에는 반드시  @{}을 이용해야한다
+          @{URL}
+          주의:URL이  조합되어질때에는  @{| |} 작성해야한다-->
+        <a href="/notice/detail/${notice.notiNo}"
+           th:href="@{|/notice/detail/${notice.notiNo}|}"
+           th:text="${notice.notiTitle}"></a>
+      </td>
+      <!-- temporals.format(날짜대상,"date포맷") -->
+      <td th:text="${#temporals.format(notice.notiDate,'yyyy-MM-dd HH:mm')}"></td>
+    </tr><!--1페이지당 출력할 게시물수만큼 반복끝-->
+    </tbody>
+  </table>
+  <!-- 공지사항 등록하기 -->
+  <div sec:authorize="hasRole('ROLE_ADMIN')">
+    <a th:href="@{/notice/add}" class="btn btn-primary">공지사항작성하기</a>
+  </div>
+  <!-- Pagenation 부분 영역 시작-->
+  <!--<div th:if="${!noticePage.isEmpty()}">-->
+    <div th:if="${noticePage != null && !noticePage.isEmpty()}">
+    <ul class="pagination justify-content-center">
+      <!-- 이전버튼:조건  -->
+      <li class="page-item"
+          th:classappend="${!noticePage.hasPrevious} ? 'disabled'">
+        <a class="page-link"
+           th:href="@{|?page=${noticePage.number-1}|}"><span>이전</span></a>
+      </li>
+      <!-- 페이지번호:반복+연결+bootstrap [0] [1] [2] [3~]  [4] [5] [6] [7]~~[9] [10] [11]  -->
+      <li class="page-item"
+          th:each="page : ${#numbers.sequence(0,noticePage.totalPages-1)}"
+          th:if="${  page>=noticePage.number-3 and  page<=noticePage.number+3 }"
+          th:classappend="${page==noticePage.number} ? 'active'">
+        <a class="page-link"
+           th:href="@{|?page=${page}|}"
+           th:text="${page+1}"></a>
+      </li>
+      <!-- 다음버튼:조건  -->
+      <li class="page-item"
+          th:classappend="${!noticePage.hasNext} ? 'disabled'">
+        <a class="page-link"
+           th:href="@{|?page=${noticePage.number+1}|}"><span>다음</span></a>
+      </li>
+    </ul>
+  </div><!-- Pagenation 부분 영역 끝-->
+
+</div>
+</html>
+
+
+
+
+
+
+
