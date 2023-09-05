@@ -67,3 +67,11 @@ max-width: 500px;
 .ddo-icon-class :hover, .your-icon-class :focus {
     color: black;
 }
+
+.ddo-error-text{
+    color: #FF0841;
+    font-weight: bold;
+    margin: 5px 0;
+    font-size: 11px;
+    display: block;
+}

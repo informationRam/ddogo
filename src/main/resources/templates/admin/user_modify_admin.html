@@ -8,8 +8,6 @@
                     <div class="card">
                         <div class="card-body">
                             <form id="userModifyByAdmin" th:object="${userModiForm}" th:action="@{|/admin/user/modify/${userModiForm.user_no}|}" method="post">
-                                <!--에러출력영역-->
-                                <div th:replace="~{form_errors::formErrorsFragment}"></div>
                                 <table class="table">
                                     <tbody>
                                     <tr>
@@ -21,14 +19,15 @@
                                     <tr>
                                         <th>회원명</th>
                                         <td>
-                                            <input type="text" th:field="*{user_name}"/>
+                                            <input type="text" th:field="*{user_name}"/><br/>
+                                            <span class="ddo-error-text" th:if="${#fields.hasErrors('user_name')}" th:errors="*{user_name}"></span>
                                         </td>
                                     </tr>
                                     <tr>
                                         <th>회원id</th>
                                         <td>
-                                            <input type="text" th:field="*{user_id}"/>
-                                            <span class="error" th:if="${#fields.hasErrors('user_id')}" th:errors="*{user_id}"></span>
+                                            <input type="text" th:field="*{user_id}"/><br/>
+                                            <span class="ddo-error-text" th:if="${#fields.hasErrors('user_id')}" th:errors="*{user_id}"></span>
                                         </td>
                                     </tr>
                                     <tr>
@@ -38,7 +37,8 @@
                                     <tr>
                                         <th>생일</th>
                                         <td>
-                                            <input type="date" th:field="*{BIRTH}"/>
+                                            <input type="date" th:field="*{BIRTH}"/><br/>
+                                            <span class="ddo-error-text" th:if="${#fields.hasErrors('BIRTH')}" th:errors="*{BIRTH}"></span>
                                         </td>
                                     </tr>
                                     <tr>
@@ -47,7 +47,8 @@
                                             <input type="radio" th:field="*{gender}" id="genderM" value="M"/>
                                             <label for="genderM">남성</label>
                                             <input type="radio" th:field="*{gender}" id="genderF" value="F"/>
-                                            <label for="genderF">여성</label>
+                                            <label for="genderF">여성</label><br/>
+                                            <span class="ddo-error-text" th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}"></span>
                                         </td>
                                     </tr>
                                     <tr>
@@ -59,8 +60,8 @@
                                     <tr>
                                         <th>이메일</th>
                                         <td>
-                                            <input type="text" th:field="*{email}"/>
-                                            <span class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+                                            <input type="text" th:field="*{email}"/><br/>
+                                            <span class="ddo-error-text" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
                                         </td>
                                     </tr>
                                     </tbody>

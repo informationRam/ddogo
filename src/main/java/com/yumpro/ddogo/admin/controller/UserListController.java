@@ -93,13 +93,14 @@ public class UserListController {
         //이메일 중복여부체크
         if (userService.checkEmailDuplication(user, userModiForm)) {
             bindingResult.rejectValue("email", "EmailInCorrect", "이미 사용중인 이메일 입니다.");
+            return "admin/user_modify_admin";
         }
 
         //아이디 중복여부체크
         if (userService.checkIdDuplication(user, userModiForm)) {
             bindingResult.rejectValue("user_id", "User_idInCorrect", "이미 사용중인 아이디 입니다.");
+            return "admin/user_modify_admin";
         }
-
 
         try {
             userService.userModify(user, userModiForm);
