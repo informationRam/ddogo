@@ -1,0 +1,114 @@
+<html layout:decorate="~{layout}" xmlns:th="http://www.thymeleaf.org">
+<div layout:fragment="content" class="container my-3">
+    <div class="container my-3">
+        <!-- 문의 검색 폼 -->
+        <form id="searchForm" class="mb-3" action="/qna/list" method="GET">
+            <div class="input-group ddo-search">
+                <input type="text" class="form-control" name="keyword" placeholder="검색">
+                <button type="submit" class="btn btn-ddo"><i class="bi bi-search"></i></button>
+            </div>
+        </form>
+        <!-- 총 개수 표시 -->
+        <div class="mb-2">총 개수: <span th:text="${#lists.size(qnaList)}"></span></div>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>문의번호
+                    <a href="#" th:href="@{${sortField == 'qna_no' and sortOrder == 'asc' ? '?sortField=qna_no&sortOrder=desc' : '?sortField=qna_no&sortOrder=asc'}}" class="ddo-a">
+                        <i class="bi bi-arrow-down-short ddo-icon-class"></i>
+                    </a>
+                    <a href="#" th:href="@{${sortField == 'qna_no' and sortOrder == 'desc' ? '?sortField=qna_no&sortOrder=asc' : '?sortField=qna_no&sortOrder=desc'}}" class="ddo-a">
+                        <i class="bi bi-arrow-up-short ddo-icon-class"></i>
+                    </a>
+                </th>
+                <th>제목
+                    <a href="#" th:href="@{${sortField == 'qna_title' and sortOrder == 'asc' ? '?sortField=qna_title&sortOrder=desc' : '?sortField=qna_title&sortOrder=asc'}}" class="ddo-a">
+                        <i class="bi bi-arrow-down-short ddo-icon-class"></i>
+                    </a>
+                    <a href="#" th:href="@{${sortField == 'qna_title' and sortOrder == 'desc' ? '?sortField=qna_title&sortOrder=asc' : '?sortField=qna_title&sortOrder=desc'}}" class="ddo-a">
+                        <i class="bi bi-arrow-up-short ddo-icon-class"></i>
+                    </a>
+                </th>
+                <th>해결상태
+                    <a href="#" th:href="@{${sortField == 'qna_solved' and sortOrder == 'asc' ? '?sortField=qna_solved&sortOrder=desc' : '?sortField=qna_solved&sortOrder=asc'}}" class="ddo-a">
+                        <i class="bi bi-arrow-down-short ddo-icon-class"></i>
+                    </a>
+                    <a href="#" th:href="@{${sortField == 'qna_solved' and sortOrder == 'desc' ? '?sortField=qna_solved&sortOrder=asc' : '?sortField=qna_solved&sortOrder=desc'}}" class="ddo-a">
+                        <i class="bi bi-arrow-up-short ddo-icon-class"></i>
+                    </a>
+                </th>
+                <th>작성일
+                    <a href="#" th:href="@{${sortField == 'qna_date' and sortOrder == 'asc' ? '?sortField=qna_date&sortOrder=desc' : '?sortField=qna_date&sortOrder=asc'}}" class="ddo-a">
+                        <i class="bi bi-arrow-down-short ddo-icon-class"></i>
+                    </a>
+                    <a href="#" th:href="@{${sortField == 'qna_date' and sortOrder == 'desc' ? '?sortField=qna_date&sortOrder=asc' : '?sortField=qna_date&sortOrder=desc'}}" class="ddo-a">
+                        <i class="bi bi-arrow-up-short ddo-icon-class"></i>
+                    </a>
+                </th>
+                <th>작성자</th>
+                <th>수정</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="qna : ${qnaList}">
+                <td th:text="${qna.qnaNo}"></td>
+                <td th:text="${qna.qnaTitle}"></td>
+                <td th:text="${qna.qnaSolved}"></td>
+                <td th:text="${#temporals.format(qna.qnaDate.toLocalDate(), 'yyyy/MM/dd')}"></td>
+                <td th:text="${qna.userName}"></td>
+                <td><a th:href="@{|/qna/modify/${qna.qnaNo}|}"><i class="bi bi-pencil-square ddo-icon-class"></i></a></td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(qnaList)}">
+                <td colspan="6" class="text-center">검색 결과가 없습니다.</td>
+            </tr>
+            </tbody>
+        </table>
+        <a href="/qna/list" class="btn btn-ddo ms-2"><i class="bi bi-arrow-repeat"></i></a>
+        <!--페이지네이션-->
+        <nav th:if="${#lists.size(qnaList)} > 0">
+            <ul class="pagination">
+                <li class="page-item" th:classappend="${currentPage == 1 ? 'disabled' : ''}">
+                    <a class="page-link" th:href="@{'?page=' + (${currentPage} - 1)}">이전</a>
+                </li>
+                <li class="page-item" th:each="i : ${#numbers.sequence(1, totalPages)}" th:classappend="${i == currentPage ? 'active' : ''}">
+                    <a class="page-link" th:href="@{'?page=' + ${i}}" th:text="${i}"></a>
+                </li>
+                <li class="page-item" th:classappend="${currentPage == totalPages ? 'disabled' : ''}">
+                    <a class="page-link" th:href="@{'?page=' + (${currentPage} + 1)}">다음</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            function updateUrlParam(key, value) {
+                var params = new URLSearchParams(window.location.search);
+                params.set(key, value);
+                window.location.search = params.toString();
+            }
+
+            //결과없으면 페이지네이션 숨기기
+            if (${#lists.size(qnaList)} == 0) {
+                $(".pagination").hide();
+            }
+
+            // 페이지네이션 파라미터 업뎃
+            $(".pagination a").on("click", function(event) {
+                event.preventDefault();
+                var url = new URL(this.href);
+                var page = url.searchParams.get("page");
+                updateUrlParam("page", page);
+            });
+
+            // 검색 파라미터 업뎃
+            $("#searchForm").on("submit", function(event) {
+                event.preventDefault();
+                var search = $(this).find('input[name="keyword"]').val();
+                updateUrlParam("search", search);
+            });
+        });
+
+    </script>
+</div>
+</html>
