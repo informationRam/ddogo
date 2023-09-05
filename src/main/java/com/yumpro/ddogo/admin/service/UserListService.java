@@ -4,13 +4,11 @@ import com.yumpro.ddogo.admin.domain.UserDTO;
 import com.yumpro.ddogo.admin.exception.DataNotFoundException;
 import com.yumpro.ddogo.admin.repository.UserListRepository;
 import com.yumpro.ddogo.admin.repository.UserModiRepository;
-import com.yumpro.ddogo.admin.validation.UserModiAdmin;
+import com.yumpro.ddogo.admin.validation.UserModiForm;
 import com.yumpro.ddogo.common.entity.User;
-import com.yumpro.ddogo.user.validation.UserModifyForm;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -25,7 +23,7 @@ import java.util.Optional;
 public class UserListService {
     private final JavaMailSender mailSender;
     private final UserListRepository userRepository;
-    private final UserModiAdmin userModiAdmin;
+    private final UserModiForm userModiForm;
     private final UserModiRepository userModiRepository;
 
     public UserDTO toDTO(User user){
@@ -57,7 +55,7 @@ public class UserListService {
     }
 
     @Transactional(readOnly = true)
-    public boolean checkEmailDuplication(User user, UserModiAdmin userModiForm) {
+    public boolean checkEmailDuplication(User user, UserModiForm userModiForm) {
         boolean emailDuplicate = false;
         if(!user.getEmail().equals(userModiForm.getEmail())){     //기존 이메일값, 변경한 이메일값이 다르면
             emailDuplicate = userModiRepository.existsByEmail(userModiForm.getEmail());   //회원의 이메일값과 비교를 한다.
@@ -66,7 +64,7 @@ public class UserListService {
     }
 
     @Transactional(readOnly = true)
-    public boolean checkIdDuplication(User user, UserModiAdmin userModiForm) {
+    public boolean checkIdDuplication(User user, UserModiForm userModiForm) {
         boolean user_ifDuplicate = false;
         if(!user.getUserId().equals(userModiForm.getUser_id())){     //기존 이메일값, 변경한 이메일값이 다르면
             user_ifDuplicate = userModiRepository.existsByUserId(userModiForm.getUser_id());   //회원의 이메일값과 비교를 한다.
@@ -74,7 +72,7 @@ public class UserListService {
         return user_ifDuplicate;
     }
     @Transactional
-    public void userModify(User user, UserModiAdmin userModiForm) {
+    public void userModify(User user, UserModiForm userModiForm) {
         user.setUserId(userModiForm.getUser_id());
         user.setUser_name(userModiForm.getUser_name());
         user.setBirth(userModiForm.getBIRTH());
@@ -108,8 +106,8 @@ public class UserListService {
         userModiRepository.delete(user);
     }
 
-    public UserModiAdmin toModifyForm(User user) {
-        UserModiAdmin modiAdmin = new UserModiAdmin();
+    public UserModiForm toModifyForm(User user) {
+        UserModiForm modiAdmin = new UserModiForm();
         modiAdmin.setUser_no(user.getUser_no());
         modiAdmin.setUser_name(user.getUser_name());
         modiAdmin.setUser_id(user.getUserId());

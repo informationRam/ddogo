@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yumpro.ddogo.admin.domain.UserDTO;
 import com.yumpro.ddogo.admin.service.UserListService;
-import com.yumpro.ddogo.admin.validation.UserModiAdmin;
+import com.yumpro.ddogo.admin.validation.UserModiForm;
 import com.yumpro.ddogo.common.entity.User;
 
 import jakarta.validation.Valid;
@@ -66,7 +66,7 @@ public class UserListController {
         //1.파라미터받기
         //2.비즈니스로직수행
         User user =userService.getUser(userNo);
-        UserModiAdmin userModiForm=userService.toModifyForm(user);
+        UserModiForm userModiForm=userService.toModifyForm(user);
 
         if ( !principal.getName().equals("admin") ) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"수정권한이 없습니다.");
@@ -80,7 +80,7 @@ public class UserListController {
     //수정 처리하기
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/user/modify/{userNo}")
-    public String userUpdate(Model model, @Valid UserModiAdmin userModiForm,
+    public String userUpdate(Model model, @Valid UserModiForm userModiForm,
                              BindingResult bindingResult, @PathVariable int userNo) {
 
         User user = userService.getUser(userNo);

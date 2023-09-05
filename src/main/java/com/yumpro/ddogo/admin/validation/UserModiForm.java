@@ -4,17 +4,15 @@ import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.Optional;
 
 @Getter
 @Setter
 @Component
-public class UserModiAdmin {
+public class UserModiForm {
     private int user_no;
 
     @Size(min = 2, max = 5)
