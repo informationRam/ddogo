@@ -27,7 +27,7 @@
             hp.hotplace_name,
             hc.hotplace_cate_name,
             SUM(CASE WHEN mm.recom = 'Y' THEN 1 ELSE 0 END) AS recom_count,
-            AVG(COALESCE(er.emo_result, 0)) AS emo_result
+            round(AVG(COALESCE(er.emo_result, 0)),3) AS emo_result
         FROM
             hotplace hp
         JOIN
