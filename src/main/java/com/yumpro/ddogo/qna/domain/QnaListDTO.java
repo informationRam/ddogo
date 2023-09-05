@@ -1,24 +1,21 @@
 package com.yumpro.ddogo.qna.domain;
 
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
+
 import java.time.LocalDateTime;
 
+@Data
+@ToString
+@RequiredArgsConstructor
 public class QnaListDTO {
-
-    private Integer qnaNo;
-    private String qnaTitle;
-    private char qnaSolved;
-    private LocalDateTime qnaDate;
-    private String userName;
-
-    public QnaListDTO(Integer qnaNo, String qnaTitle, char qnaSolved, LocalDateTime qnaDate, String userName) {
-        this.qnaNo = qnaNo;
-        this.qnaTitle = qnaTitle;
-        this.qnaSolved = qnaSolved;
-        this.qnaDate = qnaDate;
-        this.userName = userName;
-    }
-
-    // getters and setters
-
+    private int qna_no;
+    private String qna_title;
+    private int user_no;
+    private String user_id;
+    private char qna_solved;
+    private LocalDateTime qna_date;
 }
+
 

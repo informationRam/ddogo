@@ -12,15 +12,17 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class QnaService {
-    public QnaRepository qnaRepository;
-    public List<QnaListDTO> getQnaList(String keyword) {
-        if (keyword == null) {
-            keyword = "";
-        }
-        return qnaRepository.findQnaList(keyword);
+    public final QnaRepository qnaRepository;
+    public List<QnaListDTO> getQnaList(Map<String,Object> map) {
+        return qnaRepository.findQnaList(map);
+    }
+
+    public int getQnaListCount(Map<String, Object> map) {
+        return qnaRepository.getQnaListCount(map);
     }
 }

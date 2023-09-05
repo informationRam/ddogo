@@ -25,23 +25,25 @@ public class QnaController {
     @GetMapping("/list")
     public String qnaList(Model model, @RequestParam Map<String, Object> map, @RequestParam(value = "page", defaultValue = "1") int currentPage) {
 
-        int limit = 10; // 페이지당 보여줄 아이템 개수
+        int limit = 1; // 페이지당 보여줄 아이템 개수
         int offset = (currentPage - 1) * limit;
 
         map.put("limit", limit);
         map.put("offset", offset);
 
-        String keyword = (String) map.getOrDefault("keyword", ""); // 키워드 값을 가져옴
-        List<QnaListDTO> qnaList = this.qnaService.getQnaList(keyword); // 키워드 값을 메소드에 전달
+        List<QnaListDTO> qnaList = qnaService.getQnaList(map);
 
-        int totalPages = (int) Math.ceil((double) qnaList.size() / limit);
+        int totalCount = qnaService.getQnaListCount(map); // 전체 데이터 수를 가져오는 메서드를 추가해야 합니다.
+        int totalPages = (int) Math.ceil((double) totalCount / limit);
 
+        model.addAttribute("totalCnt",totalCount);
         model.addAttribute("currentPage", currentPage);
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("qnaList",qnaList);
 
         return "qna/qna_list";
     }
+}
 
     //(유저)문의글 작성 폼
     //(유저)문의글 작성 처리
@@ -49,4 +51,3 @@ public class QnaController {
     //(관리자)문의글 답변 달기
     //(관리자)문의글 답변 수정
     //(관리자)문의글 답변 삭제
-}
