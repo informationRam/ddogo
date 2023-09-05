@@ -86,8 +86,6 @@ public class UserController {
     @PostMapping("/login")
     public String login(@Valid LoginVaildation loginVaildation, BindingResult bindingResult, Model model, HttpSession session, Principal principal) {
         if (bindingResult.hasErrors()) {
-
-
             return "user/loginForm";
         } else {
             return "redirect:/";
@@ -158,7 +156,6 @@ public class UserController {
             return message; // 메일 전송 성공 -> 로그인 창으로 이동
         }
     }
-
     //정보 수정 폼
     @GetMapping("/modifyForm/{user_id}")
     public String userUpdateForm(Principal principal, Model model) {
@@ -210,5 +207,9 @@ public class UserController {
         userService.userDelete(user);
         return "redirect:/user/logout";    //목록으로이동
     }
-//
+
+
+
+
+
 }
