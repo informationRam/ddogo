@@ -18,4 +18,5 @@ public class BestJjimDTO {
     private String hotplace_name;
     private double emo_result;
     private double avg_emo_result;
+    private int jjim;
 }

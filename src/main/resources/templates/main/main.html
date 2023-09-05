@@ -10,16 +10,14 @@
     <tr>
         <th>순위</th>
         <th>전국 오늘의 맛집</th>
-        <th>리뷰온도</th>
+        <th>리뷰 온도</th>
+        <th>오늘의 찜수</th>
     </tr>
     <tr th:each="eatjjim, idx : ${eatjjim}">
         <td th:text="${idx.index + 1}"></td> <!-- 순위 출력 -->
         <td th:text="${eatjjim.hotplace_name}"></td>
-        <td>
-            <span th:if="${eatjjim.avg_emo_result != null}" th:text="${eatjjim.avg_emo_result}"></span>
-            <span th:if="${eatjjim.avg_emo_result == null}"></span>
-        </td>
-        <!--<td th:text="${eatjjim.avg_emo_result}"></td>-->
+        <td th:text="${eatjjim.avg_emo_result}"></td>
+        <td th:text="${eatjjim.jjim}"></td>
     </tr>
 </table>
 <br/>
@@ -27,12 +25,14 @@
     <tr>
         <th>순위</th>
         <th>전국 오늘의 카페</th>
-        <th>리뷰온도</th>
+        <th>리뷰 온도</th>
+        <th>오늘의 찜수</th>
     </tr>
     <tr th:each="cafejjim, idx : ${cafejjim}">
         <td th:text="${idx.index + 1}"></td> <!-- 순위 출력 -->
         <td th:text="${cafejjim.hotplace_name}"></td>
         <td th:text="${cafejjim.avg_emo_result}"></td>
+        <td th:text="${cafejjim.jjim}"></td>
     </tr>
 </table>
 
