@@ -78,7 +78,8 @@ public class UserController {
 
     //로그인 화면(get)
     @GetMapping("/login")
-    public String loginForm(LoginVaildation loginVaildation) {
+    public String loginForm(LoginVaildation loginVaildation,Model model,UserCreateForm userCreateForm) {
+        model.addAttribute("userCreateForm",userCreateForm);
         return "/user/loginForm";
     }
 
