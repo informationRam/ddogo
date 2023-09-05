@@ -90,7 +90,7 @@
 
     <select id="userList" resultType="com.yumpro.ddogo.admin.domain.UserDTO" parameterType="map">
         select
-        user_no, user_name, user_id, BIRTH, join_date, email
+        user_no, user_name, user_id, BIRTH, gender, join_date, email
         from user
         where 1=1
         <!-- 검색어(search)에 대한 조건 추가 -->

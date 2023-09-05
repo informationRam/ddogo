@@ -7,8 +7,7 @@
                     <h1>회원 정보 수정</h1>
                     <div class="card">
                         <div class="card-body">
-                            <form id="userModifyByAdmin" th:object="${userModiForm}" th:action="@{/admin/user/modify/{userNo}(userNo=${userModiForm.user_no})}" method="post">
-                               <div>
+                            <form id="userModifyByAdmin" th:object="${userModiForm}" th:action="@{|/admin/user/modify/${userModiForm.user_no}|}" method="post">
                                 <table class="table">
                                     <tbody>
                                     <tr>
@@ -21,12 +20,14 @@
                                         <th>회원명</th>
                                         <td>
                                             <input type="text" th:field="*{user_name}" value="${userModiForm.user_name}"/>
+                                            <span class="error" th:if="${#fields.hasErrors('user_name')}" th:errors="*{user_name}"></span>
                                         </td>
                                     </tr>
                                     <tr>
                                         <th>회원id</th>
                                         <td>
                                             <input type="text" th:field="*{user_id}" value="${userModiForm.user_id}"/>
+                                            <span class="error" th:if="${#fields.hasErrors('user_id')}" th:errors="*{user_id}"></span>
                                         </td>
                                     </tr>
                                     <tr>
@@ -37,6 +38,7 @@
                                         <th>생일</th>
                                         <td>
                                             <input type="date" th:field="*{BIRTH}" value="${userModiForm.BIRTH}"/>
+                                            <span class="error" th:if="${#fields.hasErrors('BIRTH')}" th:errors="*{BIRTH}"></span>
                                         </td>
                                     </tr>
                                     <tr>
@@ -46,6 +48,7 @@
                                             <label for="genderM">남성</label>
                                             <input type="radio" th:field="*{gender}" id="genderF" value="F"/>
                                             <label for="genderF">여성</label>
+                                            <span class="error" th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}"></span>
                                         </td>
                                     </tr>
                                     <tr>
@@ -58,18 +61,66 @@
                                         <th>이메일</th>
                                         <td>
                                             <input type="text" th:field="*{email}" value="${userModiForm.email}"/>
+                                            <span class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
                                         </td>
                                     </tr>
                                     </tbody>
                                 </table>
-                               </div>
                                 <input type="submit" value="저장" class="btn btn-ddo my-2"/>
                             </form>
+                            <button onclick="showNewCard()" class="btn btn-secondary"><i class="bi bi-trash"></i></button>
+                        </div>
+                    </div>
+                    <div class="card" id="newCard" style="display: none;">
+                        <div class="card-body">
+                            <div>회원 탈퇴를 위해서는 관리자 인증이 필요합니다</div>
+                            <label>관리자 비밀번호: </label>
+                            <input type="password" id="adminPassword" />
+                            <button onclick="expelUser()" class="btn btn-danger">강제탈퇴</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </main>
+    <script>
+        document.getElementById('userModifyByAdmin').addEventListener('submit', function() {
+        var elements = this.elements;
+        for (var i = 0; i < elements.length; i++) {
+        elements[i].disabled = false;
+        }
+        });
+    </script>
+    <script>
+        function showNewCard() {
+            document.getElementById('newCard').style.display = 'block';
+        }
+
+        function expelUser() {
+            const adminPassword = document.getElementById('adminPassword').value;
+            const userId = document.querySelector('input[name="user_id"]').value;
+
+            fetch(`http://localhost/admin/user/valiAdmin`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ inputPassword: adminPassword })
+            })
+            .then(response => {
+                if (response.ok) {
+                    return fetch(`http://localhost/admin/user/delete/${userId}`, { method: 'POST' });
+                } else {
+                    return Promise.reject("비밀번호가 불일치합니다");
+                }
+            })
+            .then(response => response.text())
+            .then((message) => {
+                alert(message);
+                window.location.href = 'http://localhost/admin/user/list';
+            })
+            .catch(alert);
+        }
+    </script>
 </div>
 </html>

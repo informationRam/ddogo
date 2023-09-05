@@ -15,6 +15,7 @@
                                         <option value="user_name">회원명</option>
                                         <option value="user_id">아이디</option>
                                         <option value="email">이메일</option>
+                                        <option value="gender">성별</option>
                                     </select>
                                     <input type="text" class="form-control" name="search" placeholder="검색">
                                     <button type="submit" class="btn btn-ddo"><i class="bi bi-search"></i></button>
@@ -58,6 +59,14 @@
                                         <i class="bi bi-arrow-up-short"></i>
                                     </a>
                                 </th>
+                                <th>성별
+                                    <a href="#" th:href="@{${sortField == 'gender' and sortOrder == 'asc' ? '?sortField=gender&sortOrder=desc' : '?sortField=gender&sortOrder=asc'}}" class="ddo-a">
+                                        <i class="bi bi-arrow-down-short"></i>
+                                    </a>
+                                    <a href="#" th:href="@{${sortField == 'gender' and sortOrder == 'desc' ? '?sortField=gender&sortOrder=asc' : '?sortField=gender&sortOrder=desc'}}" class="ddo-a">
+                                        <i class="bi bi-arrow-up-short"></i>
+                                    </a>
+                                </th>
                                 <th>가입일
                                     <a href="#" th:href="@{${sortField == 'join_date' and sortOrder == 'asc' ? '?sortField=join_date&sortOrder=desc' : '?sortField=join_date&sortOrder=asc'}}" class="ddo-a">
                                         <i class="bi bi-arrow-down-short"></i>
@@ -83,6 +92,7 @@
                                 <td th:text="${user.user_name}"></td>
                                 <td th:text="${user.user_id}"></td>
                                 <td th:text="${#dates.format(user.BIRTH, 'yyyy/MM/dd')}"></td>
+                                <td th:text="${user.gender}"></td>
                                 <td th:text="${#temporals.format(user.join_date.toLocalDate(), 'yyyy/MM/dd')}"></td>
                                 <td th:text="${user.email}"></td>
                                 <td><a th:href="@{|/admin/user/modify/${user.user_no}|}"><i class="bi bi-pencil-square"></i></a></td>
