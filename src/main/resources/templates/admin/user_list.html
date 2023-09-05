@@ -22,65 +22,65 @@
                                 </div>
                             </form>
                             <!-- 총 개수 표시 -->
-                            <div class="mb-2">총 개수: <span th:text="${#lists.size(users)}"></span><a href="/admin/user/list" class="btn btn-ddo ms-2"><i class="bi bi-arrow-repeat"></i></a></div>
+                            <div class="mb-2">총 개수: <span th:text="${#lists.size(users)}"></span>
                             <table class="table table-striped">
 
                             <thead>
                             <tr>
                                 <th>회원번호
                                     <a href="#" th:href="@{${sortField == 'user_no' and sortOrder == 'asc' ? '?sortField=user_no&sortOrder=desc' : '?sortField=user_no&sortOrder=asc'}}" class="ddo-a">
-                                    <i class="bi bi-arrow-down-short"></i>
+                                    <i class="bi bi-arrow-down-short ddo-icon-class"></i>
                                     </a>
                                     <a href="#" th:href="@{${sortField == 'user_no' and sortOrder == 'desc' ? '?sortField=user_no&sortOrder=asc' : '?sortField=user_no&sortOrder=desc'}}" class="ddo-a">
-                                        <i class="bi bi-arrow-up-short"></i>
+                                        <i class="bi bi-arrow-up-short ddo-icon-class"></i>
                                     </a>
                                 </th>
                                 <th>회원명
                                     <a href="#" th:href="@{${sortField == 'user_name' and sortOrder == 'asc' ? '?sortField=user_name&sortOrder=desc' : '?sortField=user_name&sortOrder=asc'}}" class="ddo-a">
-                                        <i class="bi bi-arrow-down-short"></i>
+                                        <i class="bi bi-arrow-down-short ddo-icon-class"></i>
                                     </a>
                                     <a href="#" th:href="@{${sortField == 'user_name' and sortOrder == 'desc' ? '?sortField=user_name&sortOrder=asc' : '?sortField=user_name&sortOrder=desc'}}" class="ddo-a">
-                                        <i class="bi bi-arrow-up-short"></i>
+                                        <i class="bi bi-arrow-up-short ddo-icon-class"></i>
                                     </a>
                                 </th>
                                 <th>Id
                                     <a href="#" th:href="@{${sortField == 'user_id' and sortOrder == 'asc' ? '?sortField=user_id&sortOrder=desc' : '?sortField=user_id&sortOrder=asc'}}" class="ddo-a">
-                                        <i class="bi bi-arrow-down-short"></i>
+                                        <i class="bi bi-arrow-down-short ddo-icon-class"></i>
                                     </a>
                                     <a href="#" th:href="@{${sortField == 'user_id' and sortOrder == 'desc' ? '?sortField=user_id&sortOrder=asc' : '?sortField=user_id&sortOrder=desc'}}" class="ddo-a">
-                                        <i class="bi bi-arrow-up-short"></i>
+                                        <i class="bi bi-arrow-up-short ddo-icon-class"></i>
                                     </a>
                                 </th>
                                 <th>생년월일
                                     <a href="#" th:href="@{${sortField == 'BIRTH' and sortOrder == 'asc' ? '?sortField=BIRTH&sortOrder=desc' : '?sortField=BIRTH&sortOrder=asc'}}" class="ddo-a">
-                                        <i class="bi bi-arrow-down-short"></i>
+                                        <i class="bi bi-arrow-down-short ddo-icon-class"></i>
                                     </a>
                                     <a href="#" th:href="@{${sortField == 'BIRTH' and sortOrder == 'desc' ? '?sortField=BIRTH&sortOrder=asc' : '?sortField=BIRTH&sortOrder=desc'}}" class="ddo-a">
-                                        <i class="bi bi-arrow-up-short"></i>
+                                        <i class="bi bi-arrow-up-short ddo-icon-class"></i>
                                     </a>
                                 </th>
                                 <th>성별
                                     <a href="#" th:href="@{${sortField == 'gender' and sortOrder == 'asc' ? '?sortField=gender&sortOrder=desc' : '?sortField=gender&sortOrder=asc'}}" class="ddo-a">
-                                        <i class="bi bi-arrow-down-short"></i>
+                                        <i class="bi bi-arrow-down-short ddo-icon-class"></i>
                                     </a>
                                     <a href="#" th:href="@{${sortField == 'gender' and sortOrder == 'desc' ? '?sortField=gender&sortOrder=asc' : '?sortField=gender&sortOrder=desc'}}" class="ddo-a">
-                                        <i class="bi bi-arrow-up-short"></i>
+                                        <i class="bi bi-arrow-up-short ddo-icon-class"></i>
                                     </a>
                                 </th>
                                 <th>가입일
                                     <a href="#" th:href="@{${sortField == 'join_date' and sortOrder == 'asc' ? '?sortField=join_date&sortOrder=desc' : '?sortField=join_date&sortOrder=asc'}}" class="ddo-a">
-                                        <i class="bi bi-arrow-down-short"></i>
+                                        <i class="bi bi-arrow-down-short ddo-icon-class"></i>
                                     </a>
                                     <a href="#" th:href="@{${sortField == 'join_date' and sortOrder == 'desc' ? '?sortField=join_date&sortOrder=asc' : '?sortField=join_date&sortOrder=desc'}}" class="ddo-a">
-                                        <i class="bi bi-arrow-up-short"></i>
+                                        <i class="bi bi-arrow-up-short ddo-icon-class"></i>
                                     </a>
                                 </th>
                                 <th>Email
                                     <a href="#" th:href="@{${sortField == 'email' and sortOrder == 'asc' ? '?sortField=email&sortOrder=desc' : '?sortField=email&sortOrder=asc'}}" class="ddo-a">
-                                        <i class="bi bi-arrow-down-short"></i>
+                                        <i class="bi bi-arrow-down-short ddo-icon-class"></i>
                                     </a>
                                     <a href="#" th:href="@{${sortField == 'email' and sortOrder == 'desc' ? '?sortField=email&sortOrder=asc' : '?sortField=email&sortOrder=desc'}}" class="ddo-a">
-                                        <i class="bi bi-arrow-up-short"></i>
+                                        <i class="bi bi-arrow-up-short ddo-icon-class"></i>
                                     </a>
                                 </th>
                                 <th>수정</th>
@@ -95,13 +95,14 @@
                                 <td th:text="${user.gender}"></td>
                                 <td th:text="${#temporals.format(user.join_date.toLocalDate(), 'yyyy/MM/dd')}"></td>
                                 <td th:text="${user.email}"></td>
-                                <td><a th:href="@{|/admin/user/modify/${user.user_no}|}"><i class="bi bi-pencil-square"></i></a></td>
+                                <td><a th:href="@{|/admin/user/modify/${user.user_no}|}"><i class="bi bi-pencil-square ddo-icon-class"></i></a></td>
                             </tr>
                             <tr th:if="${#lists.isEmpty(users)}">
                                 <td colspan="7" class="text-center">검색 결과가 없습니다.</td>
                             </tr>
                             </tbody>
                         </table>
+                                <a href="/admin/user/list" class="btn btn-ddo ms-2"><i class="bi bi-arrow-repeat"></i></a></div>
                             <!--페이지네이션-->
                             <nav th:if="${#lists.size(users)} > 0">
                                 <ul class="pagination">

@@ -8,25 +8,26 @@
                     <div class="card">
                         <div class="card-body">
                             <form id="userModifyByAdmin" th:object="${userModiForm}" th:action="@{|/admin/user/modify/${userModiForm.user_no}|}" method="post">
+                                <!--에러출력영역-->
+                                <div th:replace="~{form_errors::formErrorsFragment}"></div>
                                 <table class="table">
                                     <tbody>
                                     <tr>
                                         <th>회원번호</th>
                                         <td>
-                                            <input type="text" th:field="*{user_no}" value="${userModiForm.user_no}" disabled="disabled"/>
+                                            <input type="text" th:field="*{user_no}" disabled="disabled"/>
                                         </td>
                                     </tr>
                                     <tr>
                                         <th>회원명</th>
                                         <td>
-                                            <input type="text" th:field="*{user_name}" value="${userModiForm.user_name}"/>
-                                            <span class="error" th:if="${#fields.hasErrors('user_name')}" th:errors="*{user_name}"></span>
+                                            <input type="text" th:field="*{user_name}"/>
                                         </td>
                                     </tr>
                                     <tr>
                                         <th>회원id</th>
                                         <td>
-                                            <input type="text" th:field="*{user_id}" value="${userModiForm.user_id}"/>
+                                            <input type="text" th:field="*{user_id}"/>
                                             <span class="error" th:if="${#fields.hasErrors('user_id')}" th:errors="*{user_id}"></span>
                                         </td>
                                     </tr>
@@ -37,8 +38,7 @@
                                     <tr>
                                         <th>생일</th>
                                         <td>
-                                            <input type="date" th:field="*{BIRTH}" value="${userModiForm.BIRTH}"/>
-                                            <span class="error" th:if="${#fields.hasErrors('BIRTH')}" th:errors="*{BIRTH}"></span>
+                                            <input type="date" th:field="*{BIRTH}"/>
                                         </td>
                                     </tr>
                                     <tr>
@@ -48,19 +48,18 @@
                                             <label for="genderM">남성</label>
                                             <input type="radio" th:field="*{gender}" id="genderF" value="F"/>
                                             <label for="genderF">여성</label>
-                                            <span class="error" th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}"></span>
                                         </td>
                                     </tr>
                                     <tr>
                                         <th>가입일</th>
                                         <td>
-                                            <input type="text" th:field="*{join_date}" th:pattern="'yyyy년 MM월 dd일'" value="${userModiForm.join_date}" disabled="disabled"/>
+                                            <input type="text" th:field="*{join_date}" disabled="disabled"/>
                                         </td>
                                     </tr>
                                     <tr>
                                         <th>이메일</th>
                                         <td>
-                                            <input type="text" th:field="*{email}" value="${userModiForm.email}"/>
+                                            <input type="text" th:field="*{email}"/>
                                             <span class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
                                         </td>
                                     </tr>
@@ -68,12 +67,19 @@
                                 </table>
                                 <input type="submit" value="저장" class="btn btn-ddo my-2"/>
                             </form>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <div class="ddo-right">
                             <button onclick="showNewCard()" class="btn btn-secondary"><i class="bi bi-trash"></i></button>
+                            <a th:href="@{/admin/user/modify/{userNo}(userNo=${userModiForm.user_no})}" class="btn btn-secondary"><i class="bi bi-arrow-clockwise"></i></a>
+                            </div>
                         </div>
                     </div>
                     <div class="card" id="newCard" style="display: none;">
                         <div class="card-body">
                             <div>회원 탈퇴를 위해서는 관리자 인증이 필요합니다</div>
+                            <div class="ddo-small-text">수정을 마치지 않은 내용이 있다면 리셋 후 퇴원처리 해주세요</div>
                             <label>관리자 비밀번호: </label>
                             <input type="password" id="adminPassword" />
                             <button onclick="expelUser()" class="btn btn-danger">강제탈퇴</button>
@@ -93,7 +99,12 @@
     </script>
     <script>
         function showNewCard() {
-            document.getElementById('newCard').style.display = 'block';
+            var newCard = document.getElementById('newCard');
+            if (newCard.style.display === 'block') {
+                newCard.style.display = 'none';
+            } else {
+                newCard.style.display = 'block';
+            }
         }
 
         function expelUser() {
@@ -111,16 +122,24 @@
                 if (response.ok) {
                     return fetch(`http://localhost/admin/user/delete/${userId}`, { method: 'POST' });
                 } else {
-                    return Promise.reject("비밀번호가 불일치합니다");
+                    return Promise.reject("비밀번호가 일치하지 않습니다");
                 }
             })
-            .then(response => response.text())
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(error => Promise.reject(error));
+                }
+                return response.text();
+            })
             .then((message) => {
                 alert(message);
                 window.location.href = 'http://localhost/admin/user/list';
             })
-            .catch(alert);
+            .catch(error => {
+                alert(error);
+            });
         }
+
     </script>
 </div>
 </html>

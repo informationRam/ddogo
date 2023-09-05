@@ -2,8 +2,8 @@
   color: #fff;
   background-color: #FF0841;
   border-color: #FF0841;
-  padding: 5px 10px;
-  font-size: 12px;
+  padding: 7px 14px;
+  font-size: 14px;
   border-radius: 3px;
   float: right;
 }
@@ -46,4 +46,24 @@ text-decoration: none;
 
 .ddo-search{
 max-width: 500px;
+}
+
+.ddo-small-text{
+     font-size: 12px;
+     color: #D3D3D3;
+     font-style: italic;
+}
+
+.ddo-right{
+  float: right;
+}
+
+
+.ddo-icon-class {
+    text-decoration: none;
+    color: gray;
+}
+
+.ddo-icon-class :hover, .your-icon-class :focus {
+    color: black;
 }

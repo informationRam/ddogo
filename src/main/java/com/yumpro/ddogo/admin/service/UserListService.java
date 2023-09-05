@@ -101,15 +101,22 @@ public class UserListService {
 
     public Optional<User> findUserByUserId(String userId) {
         Optional<User> user =userModiRepository.findByUserId(userId);
-        if(user.isPresent()) {
-            return user;
-        } else {
-            //사용자 정의 예외처리
-            throw new DataNotFoundException();
-        }
+        return user;
     }
 
     public void deleteUser(User user) {
         userModiRepository.delete(user);
+    }
+
+    public UserModiAdmin toModifyForm(User user) {
+        UserModiAdmin modiAdmin = new UserModiAdmin();
+        modiAdmin.setUser_no(user.getUser_no());
+        modiAdmin.setUser_name(user.getUser_name());
+        modiAdmin.setUser_id(user.getUserId());
+        modiAdmin.setBIRTH(user.getBirth());
+        modiAdmin.setGender(user.getGender());
+        modiAdmin.setEmail(user.getEmail());
+        modiAdmin.setJoin_date(user.getJoinDate());
+        return modiAdmin;
     }
 }

@@ -25,7 +25,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.Principal;
-import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -67,14 +66,13 @@ public class UserListController {
         //1.파라미터받기
         //2.비즈니스로직수행
         User user =userService.getUser(userNo);
-        UserDTO userDTO = userService.toDTO(user);
-        System.out.println(userDTO);
+        UserModiAdmin userModiForm=userService.toModifyForm(user);
+
         if ( !principal.getName().equals("admin") ) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"수정권한이 없습니다.");
         }
         //3.Model
-        model.addAttribute("userModiForm", userDTO);
-
+        model.addAttribute("userModiForm", userModiForm);
         //4.View
         return "admin/user_modify_admin";
     }
@@ -86,7 +84,12 @@ public class UserListController {
                              BindingResult bindingResult, @PathVariable int userNo) {
 
         User user = userService.getUser(userNo);
+        model.addAttribute("userModiForm", userModiForm);
 
+        if (bindingResult.hasErrors()) {
+            System.out.println(bindingResult.getModel());
+            return "admin/user_modify_admin";
+        }
         //이메일 중복여부체크
         if (userService.checkEmailDuplication(user, userModiForm)) {
             bindingResult.rejectValue("email", "EmailInCorrect", "이미 사용중인 이메일 입니다.");
@@ -97,12 +100,6 @@ public class UserListController {
             bindingResult.rejectValue("user_id", "User_idInCorrect", "이미 사용중인 아이디 입니다.");
         }
 
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("userModiForm", userModiForm);
-            System.out.println(bindingResult.getAllErrors());
-            model.addAttribute("errors", bindingResult.getAllErrors());
-            return "admin/user_modify_admin";
-        }
 
         try {
             userService.userModify(user, userModiForm);
@@ -131,14 +128,15 @@ public class UserListController {
             if (passwordMatches) {
                 return ResponseEntity.ok("Valid admin password");
             } else {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Incorrect admin password");
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("비밀번호가 일치하지 않습니다");
             }
 
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid request body");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("회원 삭제에 실패했습니다");
         }
     }
 
+    //메일용 html파일 문서화
     public String readHTMLFileAsString(String filePath) {
         String content = "";
         try {
@@ -149,6 +147,8 @@ public class UserListController {
         }
         return content;
     }
+
+    //회원 강퇴(+메일발송)
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/user/delete/{username}")
     public ResponseEntity<String> expelUser(@PathVariable String username) {
@@ -165,7 +165,7 @@ public class UserListController {
 
             return ResponseEntity.ok("회원정보를 성공적으로 삭제했습니다");
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 아이디의 회원은 없습니다.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("수정중이던 정보를 마무리해주세요");
         }
     }
 }
