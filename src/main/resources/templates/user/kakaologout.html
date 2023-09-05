@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<a href="javascript:kakaoLogout();" id="button">카카오로 로그아!</a>
+<a href="javascript:kakaoLogout2();" id="button2">카카오로 탈퇴!</a>
+
+<script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+<script>
+    function kakaoLogout(kakaoKey) {
+    Kakao.init("31feb9463857fd32db15e3bc8bc1b3d1"); // 초기화
+    Kakao.isInitialized();
+
+    if (!Kakao.Auth.getAccessToken()) { // 토큰이 있는지 확인 (토큰 가져와보기)
+      console.log('Not logged in.');
+      return;
+    }
+
+    Kakao.Auth.logout(function() { // 카카오 로그아웃
+      console.log(Kakao.Auth.getAccessToken());
+    });
+  };
+</script>
+
+function kakaoLogout2() {
+Kakao.init("31feb9463857fd32db15e3bc8bc1b3d1");
+Kakao.isInitialized();
+Kakao.Auth.setAccessToken(사용자액세스 키);
+
+Kakao.API.request({
+url: '/v1/user/unlink',
+success: function(response) {
+console.log(response);
+callbackFunction(); // 연결끊기(탈퇴)성공시 서버에서 처리할 함수
+},
+fail: function(error) {
+alert('탈퇴처리가 미완료되었습니다. \n관리자에게 문의하시기 바랍니다.');
+console.log(error);
+}
+});
+</body>
+</html>

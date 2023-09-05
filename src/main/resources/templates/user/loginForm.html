@@ -1,8 +1,8 @@
 <html layout:decorate="~{layout}" xmlns:th="http://www.thymeleaf.org">
 <div layout:fragment="content" class="container my-3">
 <style>
-    @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
-
+    /* 글꼴 */
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
 * {
   box-sizing: border-box;
 }
@@ -255,6 +255,16 @@ footer a {
     color: #3c97bf;
     text-decoration: none;
 }
+
+   .gender-container {
+    display: flex;
+    flex-direction: row; /* 수정: 라디오 버튼을 수평으로 배치 */
+    align-items: flex-start; /* 수정: 가운데 정렬 */
+  }
+
+  .gender-container input[type="radio"] {
+    margin-right: 5px; /* 수정: 라디오 버튼과 라벨 사이 간격 조정 */
+  }
 </style>
     <div class="container" id="container">
         <div class="form-container sign-up-container">
@@ -266,11 +276,13 @@ footer a {
                     <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
                 </div>
                 <span>or use your email for registration</span>
+                <!-- 오류시 보여주는 문구-->
+                <div th:replace="~{form_errors::formErrorsFragment}"></div>
                 <input type="text" th:field="*{user_name}" placeholder="이름">
                 <input type="text" name="user_id" id="user_id" placeholder="아이디">
                 <input type="email" th:field="*{email}" placeholder="ex)eeee@naver.com">
                 <!-- 성별 -->
-                <div>
+                <div class="gender-container">
                     <input type="radio" th:field="*{gender}" value="M" id="genderMale" autocomplete="off">
                     <label for="genderMale">남</label>
                     <input type="radio" th:field="*{gender}" value="F" id="genderFemale" autocomplete="off">
@@ -280,7 +292,7 @@ footer a {
                 <input type="date" th:field="*{birth}" th:format="'yyyy-MM-dd'">
                 <input type="password" th:field="*{pwd1}" placeholder="비밀번호">
                 <input type="password" th:field="*{pwd2}" placeholder="비밀번호확인">
-                <button>Sign Up</button>
+                <button type="submit">Sign Up</button>
             </form>
         </div>
         <!-- 로그인 -->
@@ -304,7 +316,7 @@ footer a {
                     </div>
                 </div>
                 <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/pwdsearchfrom}">Forgot your password?</a>
-                <button>Sign In</button>
+                <button type="submit">Sign In</button>
             </form>
         </div>
         <div class="overlay-container">
@@ -371,10 +383,12 @@ const container = document.getElementById('container');
 
 signUpButton.addEventListener('click', () => {
   container.classList.add("right-panel-active");
+
 });
 
 signInButton.addEventListener('click', () => {
   container.classList.remove("right-panel-active");
+
 });
 </script>
 

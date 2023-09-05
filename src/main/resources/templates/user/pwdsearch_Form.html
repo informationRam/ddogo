@@ -28,12 +28,6 @@
             </figcaption>
         </figure>
     </div>
-
-
-
-
-
-
     <div class="center-content">
         <div class="d-flex justify-content-center">
             <form class="row g-3 justify-content-center" id="pwdsearchForm" th:action="@{/user/pwdsearch}" method="post">
@@ -67,42 +61,6 @@
         </div>
     </div>
 </div>
-
-
-
-
-
-<!--
-
-
-    <div>
-        <div>
-            <h3 class="mb-4">비밀번호 찾기</h3>
-            <form id="pwdsearchForm" th:action="@{/user/pwdsearch}" method="post" class="my-3">
-
-                &lt;!&ndash; 아이디 입력 &ndash;&gt;
-                <div class="mb-3">
-                    <label for="user_id" class="form-label">ID</label>
-                    <input type="text" id="user_id" name="user_id" class="form-control">
-                </div>
-
-                &lt;!&ndash; 이메일 입력 &ndash;&gt;
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email</label>
-                    <input type="text" id="email" name="email" class="form-control">
-                </div>
-                <div>
-                    <p id="text"></p>
-                </div>
-                <div>
-                    <button type="submit" name="button" id="button" class="btn btn-primary">비밀번호 찾기</button>
-                </div>
-            </form>
-            <div id="tempPasswordDisplay" style="display: none;"></div>
-        </div>
-    </div>
--->
-
     <script layout:fragment="script">
         document.getElementById('button').addEventListener('click', function(event) {
              event.preventDefault(); // Prevent the default form submission

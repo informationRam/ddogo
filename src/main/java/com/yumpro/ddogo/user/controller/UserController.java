@@ -1,6 +1,8 @@
 package com.yumpro.ddogo.user.controller;
 
+import com.yumpro.ddogo.common.entity.KakaoAccount;
 import com.yumpro.ddogo.common.entity.User;
+import com.yumpro.ddogo.common.entity.KakaoUser;
 import com.yumpro.ddogo.mail.service.EmailService;
 
 import com.yumpro.ddogo.user.service.UserSecurityService;
@@ -47,7 +49,39 @@ public class UserController {
         return "/user/joinForm";
     }
 
+
+
     //회원가입처리 후 로그인페이지로 이동
+    @PostMapping("/join")
+    public String userJoin(@Valid UserCreateForm userCreateForm, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            return "/user/loginForm";
+        }
+
+        // 아이디 중복 여부체크
+        if (userService.checkUserIdDuplication(userCreateForm.getUser_id())) {
+            bindingResult.rejectValue("user_id", "User_idInCorrect", "이미 사용중인 아이디입니다.");
+            return "/user/loginForm";
+        }
+
+        // 이메일 중복 여부체크
+        if (userService.checkEmailDuplication(userCreateForm.getEmail())) {
+            bindingResult.rejectValue("email", "EmailInCorrect", "이미 사용중인 이메일 입니다.");
+            return "/user/loginForm";
+        }
+
+        // 비밀번호, 비밀번호 확인 동일 체크
+        if (!userCreateForm.getPwd1().equals(userCreateForm.getPwd2())) {
+            bindingResult.rejectValue("pwd2", "pwdInCorrect", "비밀번호 확인 값이 다릅니다.");
+            return "/user/loginForm";
+        } else {
+            userService.userJoin(userCreateForm);
+            return "redirect:/user/login";
+        }
+    }
+
+
+  /*  //회원가입처리 후 로그인페이지로 이동
     @PostMapping("/join")
     public String userJoin(@Valid UserCreateForm userCreateForm, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
@@ -75,7 +109,7 @@ public class UserController {
             return "redirect:/user/login";
         }
     }
-
+*/
     //로그인 화면(get)
     @GetMapping("/login")
     public String loginForm(LoginVaildation loginVaildation,Model model,UserCreateForm userCreateForm) {
@@ -211,6 +245,46 @@ public class UserController {
 
 
 
+    //카카오 테스트폼
+    @GetMapping("/kakao")
+    public String kakao() {
+        return "/user/kakaoLogin";
+    }
+
+    @PostMapping("/kakao")
+    public String kakaoLogin(@RequestBody KakaoAccount kakaoAccount,@RequestBody Map<String, String> data) {
+        System.out.println("받음!@");
+
+        System.out.println("kakaoAccount:"+kakaoAccount);
+        String nickname = data.get("nickname");
+
+      /*  kakaoAccount = kakaoUser.getKakao_account();*/
 
 
+        String profileNickname = kakaoAccount.getProfileNickname();
+        String gender = kakaoAccount.getGender();
+        String ageRange = kakaoAccount.getAgeRange();
+        String birthday = kakaoAccount.getBirthday();
+        String email = kakaoAccount.getEmail();
+
+        // 사용자 정보를 출력하거나 원하는 작업을 수행합니다.
+        System.out.println("Profile Nickname: " + profileNickname);
+        System.out.println("Gender: " + gender);
+        System.out.println("Age Range: " + ageRange);
+        System.out.println("Birthday: " + birthday);
+        System.out.println("email: " + email);
+        System.out.println("nickname:" +nickname);
+
+        // 원하는 로직을 수행한 후 응답을 반환합니다.
+        return "카카오 로그인 완료";
+    }
+
+
+    //카카오 테스트폼
+    @GetMapping("/kakaoout")
+    public String kakao2() {
+        return "/user/kakaologout";
+    }
 }
+
+

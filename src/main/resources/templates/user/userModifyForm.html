@@ -1,65 +1,79 @@
 <html layout:decorate="~{layout}" xmlns:th="http://www.thymeleaf.org">
 <div layout:fragment="content" class="container my-3">
+    <style>
+        .center-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 10vh;       /* 로고와 높이 */
+            border: 1px solid #EAEAEA; /* 테두리 스타일과 색상 */
+            margin-top: 10px !important;
+            border-top-width: 1px !important;
+            height: 750px !important;
+        }
+    </style>
 
-    <div class="container my-3">
-        <h1>회원 정보 변경 </h1>
-            <form id="join" class="my-3" th:object="${userModifyForm}" th:action="@{|/user/modify/${#authentication.principal.username}|}"  method="post">
-                <!-- 오류시 보여주는 문구-->
-                <div th:replace="~{form_errors::formErrorsFragment}"></div>
-                <!-- 1. 이름 -->
-                <div class="field">
-                    <label for="user_name">이름</label>
-                    <input type="text" th:field="*{user_name}" value="${userModifyForm.user_name}" disabled/>
-                </div>
-                <!--  2. 아이디 -->
-                <div class="field">
-                    <label for="user_id">ID</label>
-                    <input type="text" th:field="*{user_id}" value="${userModifyForm.user_id}" disabled/>
-                </div>
-                <!--  3. 생년월일-->
-                <div class="field">
-                    <label for="birth">생년월일</label>
-                    <input type="date" th:field="*{birth}" value="${userModifyForm.birth}" disabled/>
-                </div>
-                <!-- 4. 성별 -->
-                <div class="field gender">
-                    <label for="gender">성별</label>
-                    <div>
-                        <label><input type="radio" th:field="*{gender}" value="M" disabled>남자</label>
-                        <label><input type="radio" th:field="*{gender}" value="F" disabled>여자</label>
+    <h1>회원 정보 변경 </h1>
+    <div class="center-content">
+        <div class="container my-5">
+                <form id="join" class="my-3" th:object="${userModifyForm}" th:action="@{|/user/modify/${#authentication.principal.username}|}"  method="post">
+                    <!-- 오류시 보여주는 문구-->
+                    <div th:replace="~{form_errors::formErrorsFragment}"></div>
+                    <!-- 1. 이름 -->
+                    <div class="my-3">
+                        <label for="user_name">이름</label>
+                        <input class="form-control form-control-lg" type="text" aria-label=".form-control-lg example" th:field="*{user_name}" value="${userModifyForm.user_name}" disabled readonly>
                     </div>
-                </div>
-                <!-- 5. 이메일 -->
-                <div class="field">
-                    <label for="email">이메일</label>
-                    <input type="email" th:field="*{email}" value="${userModifyForm.email}" placeholder="ex)eeee@naver.com">
-                </div>
-               <!-- 6. 비밀번호1 -->
-                <div class="field">
-                    <label for="pwd1">비밀번호</label>
-                    <input class="userpw-confirm" type="password" th:field="*{pwd1}">
-                </div>
-               <!-- 6. 비밀번호 확인2 -->
-                <div class="field">
-                    <label for="pwd2">비밀번호확인</label>
-                    <input class="userpw-confirm" type="password" th:field="*{pwd2}">
-                </div>
-                <!-- 7. 정보수정 버튼 -->
-                <div>
-                    <input type="submit" value="정보수정">
-                </div>
-            </form>
-        <!-- 회원 탈퇴 -->
-        <div>
-            <a href="javascript:void(0);" th:data-uri="@{|/user/delete/${userModifyForm.user_id}|}"
-               class="delete btn btn-sm btn-outline-secondary"
-               sec:authorize="isAuthenticated()"
-               th:text="탈퇴하기"></a>
+                    <!--  2. 아이디 -->
+                    <div class="my-3">
+                        <label for="user_id">ID</label>
+                        <input class="form-control form-control-lg" type="text" aria-label=".form-control-lg example"  th:field="*{user_id}" value="${userModifyForm.user_id}" disabled readonly>
+                    </div>
+                    <!--  3. 생년월일-->
+                    <div class="my-3">
+                        <label for="birth">생년월일</label>
+                        <input class="form-control form-control-lg" type="date" aria-label=".form-control-lg example" th:field="*{birth}" value="${userModifyForm.birth}" disabled readonly>
+                    </div>
+                    <!-- 4. 성별 -->
+                    <div class="my-3">
+                        <label for="gender">성별</label>
+                        <div>
+                            <label><input type="radio" th:field="*{gender}" value="M" disabled>남자</label>
+                            <label><input type="radio" th:field="*{gender}" value="F" disabled>여자</label>
+                        </div>
+                    </div>
+                    <!-- 5. 이메일 -->
+                    <div class="my-3">
+                        <label for="email">이메일</label>
+                        <input class="form-control form-control-lg" type="email" aria-label=".form-control-lg example" th:field="*{email}" value="${userModifyForm.email}" placeholder="ex)eeee@naver.com">
+                    </div>
+                   <!-- 6. 비밀번호1 -->
+                    <div class="my-3">
+                        <label for="pwd1">비밀번호</label>
+                        <input class="form-control form-control-lg" type="password" aria-label=".form-control-lg example" th:field="*{pwd1}" placeholder="비밀번호를 입력해주세요.">
+                    </div>
+                   <!-- 6. 비밀번호 확인2 -->
+                    <div class="my-3">
+                        <label for="pwd2">비밀번호확인</label>
+                        <input class="form-control form-control-lg" type="password" aria-label=".form-control-lg example" th:field="*{pwd2}" placeholder="비밀번호를 다시 입력해주세요.">
+                    </div>
+                    <!-- 7. 정보수정 버튼 -->
+                    <div claa="my-3">
+                        <button type="button" class="btn btn-outline-danger">정보수정</button>
+                    </div>
+                </form>
+            <!-- 회원 탈퇴 -->
+            <div>
+                <a href="javascript:void(0);" th:data-uri="@{|/user/delete/${userModifyForm.user_id}|}"
+                   class="delete btn btn-sm btn-outline-secondary"
+                   sec:authorize="isAuthenticated()"
+                   th:text="탈퇴하기"></a>
+            </div>
         </div>
-
-    </div>
     </div>
 </div>
+
 <script layout:fragment="script">
     //탈퇴버튼클릭시 호출
     const delElements = document.getElementsByClassName("delete");

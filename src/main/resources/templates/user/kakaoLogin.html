@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<a href="javascript:kakaoLogin();" id="button">카카오로 로그인!</a>
+
+<script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+
+<script>
+
+    Kakao.init("31feb9463857fd32db15e3bc8bc1b3d1");
+
+   function kakaoLogin() {
+     Kakao.Auth.login({
+        scope: 'profile_nickname,account_email,gender,age_range,birthday',
+         success: function (authObj) {
+             console.log('authObj:',authObj);
+             Kakao.API.request({
+                 url: '/v2/user/me',
+                 success: function (res) {
+                     const kakao_account = res.kakao_account;
+                     console.log('kakao_account:',kakao_account);
+
+                     // 사용자 정보를 서버로 전송
+                     const xhr = new XMLHttpRequest();
+                     xhr.open('POST', '/user/kakao', true);
+                     xhr.setRequestHeader('Content-Type', 'application/json');
+                     xhr.send(JSON.stringify(kakao_account));
+                 }
+             });
+         }
+     });
+ }
+</script>
+<!--<script>
+    Kakao.init("31feb9463857fd32db15e3bc8bc1b3d1");
+
+    function kakaoLogin() {
+        Kakao.Auth.login({
+            scope: 'profile_nickname,account_email,gender,age_range,birthday',
+            success: function (authObj) {
+                console.log(authObj);
+                Kakao.API.request({
+                    url: '/v2/user/me',
+                    success: function (res) {
+                        const kakao_account = res.kakao_account;
+                        console.log(kakao_account);
+                    }
+                });
+            }
+        });
+    }
+</script>-->
+<!--
+<script>
+      document.getElementById('button').addEventListener('click', function(event) {
+           event.preventDefault(); // Prevent the default form submission
+           loadText();
+       });
+
+       console.log("1");
+
+         // 폼 요소와 버튼을 가져옵니다.
+         var form = document.querySelector('form');
+
+     function loadText() {
+      console.log("2");
+         var emailValue = document.getElementById('email').value;
+         var user_idValue = document.getElementById('user_id').value;
+         var xhr = new XMLHttpRequest();
+         xhr.open('POST', '/user/pwdsearch', true);
+
+         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+         // email 값, user_id값 전송
+           var params = 'email=' + emailValue + '&user_id=' + user_idValue;
+
+         xhr.onload = function () {
+          console.log("3: ",this.status );
+             if (this.status == 200) {
+             console.log("4");
+                 // JSON 응답 파싱
+                 var responseJson = JSON.parse(this.responseText);
+
+                 // user.userid 값을 가져와서 화면에 출력
+                 var message = responseJson.message;
+                 console.log("message:", message);
+                 if (message === "사용자 정보를 찾을 수 없습니다.") {
+                  alert("사용자 정보를 찾을 수 없습니다.");
+
+                 }
+                  if (message === "메일을 발송하였습니다.") {
+                  alert("메일을 발송하였습니다.");
+                   window.location.href = '/user/login';
+                 }
+
+             }
+         };
+
+         xhr.send(params);
+     }
+</script>
+-->
+
+</body>
+</html>
