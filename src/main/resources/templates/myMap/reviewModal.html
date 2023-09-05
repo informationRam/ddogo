@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!-- Modal -->
+<div class="modal fade" id="reviewModal" tabindex="-1" role="dialog" aria-labelledby="reviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reviewModalLabel">내 후기</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Display reviews here -->
+                <ul th:if="${myHotplList != null}" class="list-group">
+                    <li th:each="review : ${myHotplList}" class="list-group-item">
+                        <!-- Display review content -->
+                        <span th:text="${review.review}"></span>
+                        <!-- Add an edit button for each review -->
+                        <button class="btn btn-sm btn-outline-primary float-right" onclick="editReview(${review.reviewId})">수정</button>
+                        //수정" 버튼을 클릭하면 editReview JavaScript 함수가 트리거되고 review.reviewId를 인수로 전달하여 해당 reviewId와 관련된 작업 또는 로직을 수행
+                        //동작을 처리할 editReview라는 이름의 JavaScript 함수가 코드에 있어야 합니다.
+                    </li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- JavaScript 영역 -->
+<script>
+    // Function to open the review modal
+    function openReviewModal() {
+      // Trigger the modal to open
+      $('#reviewModal').modal('show');
+    }
+</script>
+</body>
+</html>

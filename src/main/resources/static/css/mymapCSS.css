@@ -2,28 +2,42 @@
   --gap: 20px;
 }
 
+.container-fluid  {
+       display: flex;
+       flex-basis: 0;
+       flex-direction: row;
+       flex-wrap: nowrap;
+   }
 
-box {
-  background-color: #efefef;
-  flex-direction:row
-  flex-wrap: nowrap
-}
 
 
-/* 좌측 사이드바 스타일 */
-.box-sidebar {
-    width: 400px; /* 원하는 고정 너비로 조정 */
-    background-color: gray; /* 배경색 설정 */
-    padding: 20px; /* 여백 설정 */
-    box-sizing: border-box; /* 내용에 padding이 포함되도록 설정 */
-    height: 100%; /* 높이 100%로 설정하여 컨텐츠가 꽉 채워지도록 함 */
-}
+#listContainer {
+    width: 400px; /* .listContainer의 가로 사이즈 고정 */
+    overflow-y: auto; /* 내용이 넘칠 경우 스크롤 표시 */
+    padding: 20px; /* 영역 간격 설정 (원하는 값으로 조정) */
+    border: 1px solid #ddd; /* 경계선 설정 (선택 사항) */
+    height: 100vh
+  }
 
-/* 우측 지도 영역 스타일 */
-.box-contents {
-    flex: 1; /* 남은 공간을 모두 채우도록 설정 */
-    background-color: #fff; /* 배경색 설정 */
-    padding: 20px; /* 여백 설정 */
-    box-sizing: border-box; /* 내용에 padding이 포함되도록 설정 */
-    height: 100%; /* 높이 100%로 설정하여 컨텐츠가 꽉 채워지도록 함 */
+ #mapContainers{
+     flex-grow: 1; /* .mapContainer의 가로 넓이 가변으로 설정 */
+     position: relative; /* 내용이 넘칠 경우 스크롤 표시 */
+     padding: 20px;
+     height: 100%;
+  }
+
+ /* 임시용 감정 출력 영역 */
+.square {
+    width: 50px; /* 원하는 너비 조절 */
+    height: 50px; /* 원하는 높이 조절 */
+    display: flex;
+    align-items: center;
+    text-align: center; /* 내용 가운데 정렬 */
+    line-height: 30px; /* 텍스트 수직 가운데 정렬 */
+    background-color: lightpink; /* 배경색 지정 (원하는 색상으로 변경 가능) */
+    border: 1px solid pink; /* 테두리 스타일 및 색상 지정 */
+    border-radius: 4px; /* 모서리 둥글게 만듭니다. */
+    margin-left: 10px; /* 왼쪽 여백 조절 */
+    font-size: 20px; /* 원하는 폰트 크기로 설정합니다. */
+    font-weight: bold; /* 원하는 폰트 굵기로 설정합니다. */
 }

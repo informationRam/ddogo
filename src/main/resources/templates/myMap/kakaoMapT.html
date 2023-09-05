@@ -1,0 +1,92 @@
+<html layout:decorate="~{layout}" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<div layout:fragment="content" > <!-- container-fluid-->
+  <head>
+    <title>마이맵</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/css/mymapCSS.css">
+  </head>
+  <body>
+
+  <!-- 좌측에 맛집 리스트를 표시하는 부분 -->
+<div class="container-fluid">
+    <div id="listContainer" class="column">
+      <div class="col-md-3">
+         <h2><span th:text="${user.user_name}"></span>님의 맛집 리스트</h2>
+
+          <!-- 맛집 검색창 -->
+          <div class="input-group my-3">
+            <input type="text" class="form-control" placeholder="맛집 검색">
+            <button class="btn btn-primary" type="button">검색</button>
+          </div>
+
+        <!-- 카드로 목록 출력 -->
+        <div class="card my-2" th:each="myhotpl : ${hotplList}">
+            <div class="card-body">
+
+              <!--<h6 class="card-subtitle mb-2 text-muted" th:text="$${myhotpl.hotplaceName}"></h6>-->
+              <h5 class="card-title" th:text="${myhotpl.hotplaceName}"></h5>
+               <p class="card-text" th:text="${myhotpl.address}"></p>
+
+              <!-- 감정결과 박스 -->
+              <div class="square" >
+                <p th:text="${myhotpl.avgEmoResult != null ? myhotpl.avgEmoResult.toString() : ''}"></p>
+              </div>
+
+              <div class="justify-content-end">
+                  <a href="#" class="btn btn-outline-secondary btn-sm">삭제</a> <!-- 삭제 -->
+                <a href="#" class="btn btn-outline-danger btn-sm">찜</a> <!-- 찜 아이콘 -->
+                <a href="#" class="btn btn-outline-success btn-sm">내 후기</a> <!-- 내 후기 -->
+              </div>
+
+          </div>
+        </div>
+      </div>  <!-- col-md-3 -->
+    </div><!-- listContainer 끝 -->
+<!-- 지도 영역 시작   -->
+  <div class="column" id="mapContainer">
+      <div class="col-md-9">
+         여기는 지도출력 영역
+
+        <!-- 지도 사이즈 정하기 -->
+        <div id="map"  style="width:100%;height:100%;"></div>
+        <!-- 현재위치 버튼 -->
+        <div id="MapControlView">
+          <button id="gpsButton" onclick="gps_check()"> 내 주변보기</button>
+        </div>
+      </div>
+  </div>
+</div>
+
+
+
+
+      <!-----  javascript 영역 --------------->
+  <!-- 지도 api 연동 -->
+  <script type="text/javascript"
+          src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=820d01b1cce59185ed776419691dab39&libraries=services"></script>
+
+  <!--db로 마커값 받아오기 -->
+  <script th:inline="javascript">
+    /*<![CDATA[*/
+    var positions = [
+        /*[# th:each="myhotpl : ${myHotplList}"]*/
+        {
+            title: /*[[${myhotpl.hotplaceName}]]*/,
+            latlng: new kakao.maps.LatLng(/*[[${myhotpl.lat}]]*/, /*[[${myhotpl.lng}]]*/)
+        },
+        /*[/]*/
+    ];
+    /*]]>*/
+  </script>
+
+
+  <!-- mymapAPI.js 파일을 포함 -->
+  <script type="text/javascript" src="/js/mymapAPI.js"></script>
+
+
+
+
+
+
+  </body>
+</html>

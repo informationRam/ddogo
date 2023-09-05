@@ -1,134 +1,133 @@
-
-// JSON 데이터를 비동기적으로 가져와서 화면에 표시하는 함수
+//mymapAPI.js
+// JSON 데이터를 비동기적으로 가져와서 화면에 표시하는 함수 //html 타임리프로 userId
 function loadPlaces() {
     const listContainer = document.getElementById('listContainer');
     const mapContainer = document.getElementById('mapContainer'); // 지도생성함수
-    const mapObject;
 
-    // 서버에서 JSON 데이터를 가져오기
-  fetch('/mymap/userMap/{userNo}') // {userNo}는 로그인한 사용자의 번호로 대체필요
-        .then(response => response.json())
-        .then(data => {
-            // JSON 데이터를 받아와서 처리
-            const myHotplList = data; // JSON 데이터를 myHotplList 변수에 저장
+    // 맛집 목록과 마커를 저장할 배열
+    var myHotplList = [];
 
-            // 좌측에 맛집 리스트 표시 : 부트스트랩 카드 형식
-               myHotplList.forEach(myhotpl => {
-                   const listItem = document.createElement('div');
-                   listItem.className = 'card my-2';
-                   listItem.innerHTML = `
-                       <div class="card-body">
-                           <h5 class="card-title">${myhotpl.hotplaceName}</h5>
-                           <p class="card-text">${myhotpl.address}</p>
-                           <p class="card-text">${myhotpl.sido}</p>
-                           <p class="card-text">${myhotpl.avgEmoResult}</p>
-                           <button class="btn btn-primary">찜하기</button>
-                       </div>
-                   `;
-                   listContainer.appendChild(listItem);
-               });
+  // AJAX 요청으로 맛집 데이터 가져오기
+    $.ajax({
+        url: "/mymap/hotplaces/" + userName,
+        method: "GET",
+        success: function (data) {
+            // 맛집 목록을 표시
+            myHotplList = data.myHotplList;
+            console.log("맛집 목록:", myHotplList);
 
-        // 우측에 지도에 마커 표시 (지도 관련 코드는 여기에 추가)
-        mapObject = new kakao.maps.Map(mapContainer, {
-            center: new kakao.maps.LatLng(myHotplList[0].latitude, myHotplList[0].longitude),
-            level: 2
-        });
+            // 맛집 목록을 동적으로 생성하여 표시
+            listContainer.innerHTML = ''; // 이전 목록을 지웁니다.
 
-        //반복문으로 마커 표시
-        myHotplList.forEach(myhotpl => {
-                    const position = new kakao.maps.LatLng(myhotpl.latitude, myhotpl.longitude);
-                    const marker = new kakao.maps.Marker({
-                        position: position,
-                        clickable: true // 마커를 클릭했을 때 지도의 클릭 이벤트 발생하지 않도록 설정
-                    });
-                    marker.setMap(mapObject); //마커를 지도에 표시함
+            myHotplList.forEach(function (myhotpl, index) {
+                      var card = document.createElement('div');
+                      card.className = 'card my-2'; // 추가: 카드 컬럼 크기 지정
+                      card.innerHTML = `
+                           <div class='card my-2'>
+                                         <div class="card-body">
+                                             <h6 class="card-subtitle mb-2 text-muted">${myhotpl.sido}</h6>
+                                             <h5 class="card-title">${myhotpl.hotplaceName}</h5>
+                                             <p class="card-text">${myhotpl.address}</p>
+                                             <p class="card-text text-right" style="height: 100%;">${myhotpl.avgEmoResult}%</p>
+                                             <div class="d-flex justify-content-end">
+                                                 <a href="#" class="btn btn-outline-secondary btn-sm"><i class="bi bi-trash"></i></a> <!-- 삭제 -->
+                                                 <a href="#" class="btn btn-outline-danger btn-sm"><i class="bi bi-heart-fill"></i></a> <!-- 찜 아이콘 -->
+                                                 <a href="#" class="btn btn-outline-success btn-sm">내 후기</a> <!-- 내 후기 -->
+                                             </div>
+                                         </div>
+                                     </div>
+                                 `;
 
-                    //마커 클릭이벤트 설정
-                    kakao.maps.event.addListener(marker, 'click', () => {
-                        alert(`${myhotpl.hotplaceName} 선택.`);
-                    });
+                // 클릭 이벤트 핸들러를 추가하여 해당 맛집의 위치로 이동
+                card.addEventListener('click', function () {
+                    var lat = myhotpl.lat;
+                    var lng = myhotpl.lng;
+
+                    // 선택된 맛집의 마커만 표시하고 나머지 숨기기
+                     showMarker(index);
+                    // 해당 맛집의 위치로 지도 이동
+                    map.setCenter(new kakao.maps.LatLng(lat, lng));
                 });
-            })
-            .catch(error => {
-                console.error('Error:', error);
+
+
             });
-    }
 
-// 페이지 로드 시 맛집 데이터 가져오기
-window.onload = loadPlaces;
-
- /*   var mapOption = {
-        center: new kakao.maps.LatLng(37.506016526623334, 127.10691218161601),
-        level: 3
-    }; //기본값 석촌*/
-
-/* 웹보고따라한거
-   cosnt loadMap = (lat, lng)=>{
-        mapObject = new.kakao.maps.Map(mapContainer,{
-            center: new kakao.maps.LatLng(lat,lng), //지도의 중심좌표
-            level: 3
-     });
-     loadPlaces();
-};
-
-
-    var map = new kakao.maps.Map(mapContainer, mapOption);
-*/
-
-/*
-// 서버에서 맛집 정보를 받아오는 함수
-const loadPlaces = () =>{
-    list.innerText=''; //중복 제외를 위한 리스트 초기화
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', '/mymap/userMap/{userNo}');
-    xhr.onreadystatechange = function () {
-         if (xhr.readyState === XMLHttpRequest.DONE) {
-             if (xhr.status >== 200 && xhr.status < 300) {
-                 const myHotplList = JSON.parse(xhr.responseText);
-
-                 //저장된 맛집 정보로 마커생성 지도 표시
-                 for(const myhotpl of myHotplList){
-                 const position = new kakao.maps.LatLng(  //마커 표시 위치 설정
-                    myhotpl['latitude'],
-                    myhotpl['longtitude']);
-
-                 // 마커 생성 및 지도에 표시하는 로직 작성
-                const marker = new kakao.maps.marker({
-                    position: position,
-                    clickable : true // 마커를 클릭했을 때 지도의 클릭 이벤트 발생하지 않도록 설정
-                });
-
-                //마커 클릭 이벤트 처리
-                kakao.maps.event.addListener(marker,'click',() => {
-                    alert('${myhotpl['hotplaceName'] 선택.');
-                });
-                marker.setMap(mapObject); //마커를 지도에 표시함
+            // 지도 초기화 및 표시 함수 호출
+            initializeMap(myHotplList, mapContainer);
+        },
+        error: function (error) {
+            console.error("데이터 가져오기 실패:", error);
         }
-        //DomParser로 html 을 DOM 구조로 변환
-        const hotplElement  = new DomParser()
-            .parseFromString(placeHtml, 'text/html')
-            .querySelector('[rel="item"]');
 
-        hotplElement.addEventListener('click',()=>{  //마커 클릭이벤트 등록: 위치이동
-            const latlng = new kakao.maps.latlng(myhotpl['latitude'], myhotpl['longtitude']);
-            mapObject.setCenter(latlng); //지도의 중심을 이동시킨다.
+//지도 생성
+function initializeMap(mapOption, mapContainer) {
+
+    var mapOption = {
+          center: new kakao.maps.LatLng(37.506016526623334, 127.10691218161601),
+          level: 3
+      }; //기본값 석촌*/
+
+    var map = new kakao.maps.Map(mapContainer, mapOption) //지도 생성
+    // html에서 받아온 값으로 마커 생성 : 맛집 마커
+    var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
+
+    // 서버에서 받은 맛집 목록 데이터를 사용하여 마커를 지도에 표시
+    myHotplList.forEach(function (myhotpl) {
+        var position = new kakao.maps.LatLng(myhotpl.latitude, myhotpl.longitude);
+        var marker = new kakao.maps.Marker({
+            position: position,
+            map: map, // 이미 초기화한 지도 객체를 사용
+            image: imageSrc,
+            clickable: true // 마커를 클릭할 수 있도록 설정
         });
-        list.append(hotplElement); //html 에 추가
-        }
-    }else{
-        }
-    }
-   };//loadplace함수끝
-   xhr.send();
-}
-*/
 
-/*      // data-positions 속성 값 가져오기
-        var dataPositions = mapContainer.getAttribute('data-positions');
-        var positions = JSON.parse(dataPositions);*/
-// ----- 현재위치 보여주기
-//위치고정!!!
-    gps_check(map); // Check GPS and display current location
+        // 마커를 클릭했을 때 이벤트 처리
+        kakao.maps.event.addListener(marker, 'click', function () {
+            var infoWindow = new kakao.maps.InfoWindow({
+            content: myhotpl.hotplacename // 마커에 마우스 오버 시 표시할 내용 설정
+        }); infoWindow.open(map, marker); // 정보 윈도우 열기
+             });
+
+        // 마커에 마우스를 올렸을 때 이벤트 처리
+        kakao.maps.event.addListener(marker, 'mouseover', function () {
+            var infoWindow = new kakao.maps.InfoWindow({
+                content: myhotpl.hotplacename // 마커에 마우스 오버 시 표시할 내용 설정
+            });
+            infoWindow.open(map, marker); // 정보 윈도우 열기
+        });
+
+        // 마커에서 마우스를 벗어났을 때 이벤트 처리
+        kakao.maps.event.addListener(marker, 'mouseout', function () {
+            infoWindow.close(); // 정보 윈도우 닫기
+
+
+
+        // 맛집 카드를 클릭했을 때 선택된 맛집의 마커를 표시하고 나머지 마커를 숨기는 함수
+        function showMarker(selectedIndex, myMarkers, map) {
+            // 모든 마커를 숨깁니다.
+            hideMarkers();
+
+            // 선택된 맛집의 마커만 표시합니다.
+            myMarkers[selectedIndex].setMap(map);
+        }
+
+        // 모든 마커를 지도에서 숨기는 함수
+        function hideMarkers(myMarkers) {
+            setMarkers(myMarkers, null);
+        }
+
+        // 배열에 추가된 마커들을 지도에 표시하거나 삭제하는 함수
+        function setMarkers(myMarkers, null) {
+            for (var i = 0; i < myMarkers.length; i++) {
+                myMarkers[i].setMap(map);
+            }
+        }
+
+        });
+    });
+}
+
+    gps_check(); // Check GPS and display current location
 
 // GeoLocation을 이용해서 접속 위치를 얻어옵니다
 
@@ -197,36 +196,3 @@ var gps_lng = null; // 경도
 
 
 
-/*
- 맛집 리스트를 화면에 뿌려주는 함수
-function renderHotplaceList() {
-    var hotplaceListContainer = document.getElementById('hotplaceList');
-    for (var i = 0; i < myHotplList.length; i++) {
-        var hotplace = myHotplList[i];
-        var card = document.createElement('div');
-        card.className = 'card my-2';
-
-        var cardBody = document.createElement('div');
-        cardBody.className = 'card-body';
-
-        var title = document.createElement('h5');
-        title.className = 'card-title';
-        title.textContent = hotplace.hotplaceName;
-
-        var address = document.createElement('p');
-        address.className = 'card-text';
-        address.textContent = hotplace.address;
-
-        var button = document.createElement('button');
-        button.className = 'btn btn-primary';
-        button.textContent = '찜하기';
-
-        cardBody.appendChild(title);
-        cardBody.appendChild(address);
-        cardBody.appendChild(button);
-        card.appendChild(cardBody);
-        hotplaceListContainer.appendChild(card);
-    }
-
-}
-*/

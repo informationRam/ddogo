@@ -1,15 +1,12 @@
 package com.yumpro.ddogo;
 
-import com.yumpro.ddogo.mymap.dto.MymapMarkerDTO;
 import com.yumpro.ddogo.mymap.entity.Hotplace;
 import com.yumpro.ddogo.mymap.repository.MymapMarkerRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

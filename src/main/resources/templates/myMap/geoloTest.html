@@ -1,5 +1,6 @@
+<!--
 <html layout:decorate="~{layout}" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
-<div layout:fragment="content" > <!-- container-fluid-->
+<div layout:fragment="content" > &lt;!&ndash; container-fluid&ndash;&gt;
     <head>
         <title>마이맵</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +9,7 @@
     <body>
 
 
-    <!-- 좌측에 맛집 리스트를 표시하는 부분 -->
+    &lt;!&ndash; 좌측에 맛집 리스트를 표시하는 부분 &ndash;&gt;
     <section class="box">
         <aside class="box-sidebar" id="listContainer" >
             <h2>맛집 리스트</h2>
@@ -23,7 +24,7 @@
                     <button class="btn btn-primary">찜하기</button>
                 </div>
             </div>
-            <!-- 맛집 검색창 -->
+            &lt;!&ndash; 맛집 검색창 &ndash;&gt;
             <div class="input-group my-3">
                 <input type="text" class="form-control" placeholder="맛집 검색">
                 <button class="btn btn-primary" type="button">검색</button>
@@ -34,7 +35,7 @@
         <section class="box-contents" id="mapContainer">
             여기는 지도출력 영역
 
-            <!-- 지도 사이즈 정하기 -->
+            &lt;!&ndash; 지도 사이즈 정하기 &ndash;&gt;
             <div id="map"  style="width:100%;height:100%;"></div>
             <div id="MapControlView">
                 <button id="gpsButton" onclick="gps_check()"> 내 주변보기</button>
@@ -43,14 +44,14 @@
     </section>
 
 
-    <!-----  javascript 영역 --------------->
-    <!-- 지도 api 연동 -->
+    &lt;!&ndash;-&#45;&#45;  javascript 영역 -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&ndash;&gt;
+    &lt;!&ndash; 지도 api 연동 &ndash;&gt;
     <script type="text/javascript"
             src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=820d01b1cce59185ed776419691dab39&libraries=services"></script>
 
 
 
-    <!--db로 마커값 받아오기 -->
+    &lt;!&ndash;db로 마커값 받아오기 &ndash;&gt;
     <script th:inline="javascript">
         /*<![CDATA[*/
         var positions = [
@@ -81,7 +82,7 @@
         gps_check(map); // Check GPS and display current location
 
 
-    <!--------------- 현재위치 보여주기-------------->
+    &lt;!&ndash;-&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45; 현재위치 보여주기&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&ndash;&gt;
 
     // 현재위치정보 받기 변수
     var gps_use = null; //gps의 사용가능 여부
@@ -169,4 +170,4 @@
 
     </body>
 </div>
-</html>
+</html>-->

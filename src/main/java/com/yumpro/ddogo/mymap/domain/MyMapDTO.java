@@ -1,19 +1,18 @@
 package com.yumpro.ddogo.mymap.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-@ToString
+
 // 회원별 저장한 맛집 정보 및 후기 데이터 저장 클래스
 public class MyMapDTO {
 
     //회원별 저장 맛집 리스트 정보를 가져오기 위한 dto
     private int userNo;              // 회원번호
+    private String userName;           //회원이름
     private Integer mapNo;           // 마커생성번호
     private Integer hotplaceNo;      // 맛집번호
     private String hotplaceName;     // 맛집이름
