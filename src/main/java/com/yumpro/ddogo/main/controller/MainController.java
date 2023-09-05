@@ -23,23 +23,7 @@ import java.util.Map;
 public class MainController {
     @Autowired
     private MainService mainService;
-
-
-  /*  //오늘 전국 베스트 찜
-    @RequestMapping("allBestJjim")
-    public String allBestJjim(Model model) throws Exception {
-        //맛집
-        List<HashMap<String, Object>> eatjjim = mainService.eatjjim();
-        //카페
-        List<HashMap<String, Object>> cafejjim = mainService.cafejjim();
-        System.out.println("eatjjim"+eatjjim);
-        System.out.println("cafejjim"+cafejjim);
-
-        model.addAttribute("cafejjim",cafejjim);
-        model.addAttribute("eatjjim",eatjjim);
-        return "main/main"; //나중에 index.html로 바꾸기
-    }*/
-
+    
 
     @GetMapping(value = "main")
     public String main(HttpServletResponse response, Model model) throws Exception {
@@ -77,7 +61,7 @@ public class MainController {
         model.addAttribute("sigunguMap", sigunguMap);
         System.out.println("sigunguMap_test3" + sigunguMap);
 
-        return "main/main4";
+        return "main/main";
 
     }
 
@@ -90,7 +74,7 @@ public class MainController {
     }
 
 
-
+    //파라미터 값가져오기
     @PostMapping(value = "main", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> sidogugunPost(
@@ -115,8 +99,6 @@ public class MainController {
 
         return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }
-
-
 
 
 

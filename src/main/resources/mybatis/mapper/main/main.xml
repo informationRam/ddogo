@@ -4,13 +4,13 @@
 <mapper namespace="main">
 
     <!-- hotplace_no로 감정분석결과평균 불러오기 -->
-    <select id="emoAnalAvg" resultType="double" parameterType="int">
+   <!-- <select id="emoAnalAvg" resultType="double" parameterType="int">
         <![CDATA[
         select avg(emoreview.emo_result)
         from emoreview
         where hotplace_no=#{hotplace_no}
 		]]>
-    </select>
+    </select>-->
 
 
     <!--오늘 전국 베스트 찜(음식점)-->
@@ -57,13 +57,15 @@
 		]]>
     </select>
 
-    <select id="sidogugun" resultType="String">
+    <!--sido가져오기-->
+    <select id="sido" resultType="String">
         <![CDATA[
 		select distinct sido
         from hotplace
 		]]>
     </select>
 
+    <!--sido값으로 gugun가져오기-->
     <select id="gugunList" resultType="String" parameterType="String">
         <![CDATA[
 		select distinct gugun
@@ -72,7 +74,7 @@
 		]]>
     </select>
 
-
+    <!--월별베스트-->
     <select id="monthBest" resultType="hashmap" parameterType="hashmap">
         <![CDATA[
 		with ReviewAverages as (

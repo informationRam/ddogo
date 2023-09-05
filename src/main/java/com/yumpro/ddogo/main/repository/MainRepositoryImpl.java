@@ -26,7 +26,7 @@ public class MainRepositoryImpl implements MainRepository{
 
     @Override
     public List<String> getSelectList() throws DataAccessException{
-        return sqlSession.selectList("main.sidogugun");
+        return sqlSession.selectList("main.sido");
     }
 
     @Override
