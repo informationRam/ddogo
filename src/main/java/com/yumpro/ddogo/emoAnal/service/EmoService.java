@@ -1,6 +1,5 @@
 package com.yumpro.ddogo.emoAnal.service;
 
-import com.yumpro.ddogo.common.entity.EmoReview;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
@@ -12,17 +11,6 @@ import java.net.URL;
 @Service
 @RequiredArgsConstructor
 public class EmoService {
-
-
-    /*리뷰등록(임시)
-    public void updateReview(String reveiw,int hotplace_no,int map_no,double emo_result){
-        EmoReview emoreview = new EmoReview();
-        emoreview.setReview(reveiw);
-        emoreview.setHotplaceNo(hotplace_no);
-        emoreview.setMap_no(map_no);
-        emoreview.setEmo_result(emo_result);
-        emoRepository.save(emoreview);
-    }*/
 
     //감정분석
     public double emoAnal(String review){

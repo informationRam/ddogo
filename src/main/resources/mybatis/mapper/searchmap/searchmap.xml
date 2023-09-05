@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="searchmap">
+    <select id="findHistory" resultType="com.yumpro.ddogo.common.entity.MyMap" parameterType="com.yumpro.ddogo.searchmap.dto.HistoryDTO">
+        <![CDATA[
+        select map_no, hotplace_no, user_no, recom, map_memo, recom_date
+        from ddogo.mymap
+        where user_no=#{userNo} and hotplace_no=#{hotplaceNo}
+        ]]>
+    </select>
+    <select id="selectByLatLng" resultType="com.yumpro.ddogo.common.entity.Hotplace" parameterType="com.yumpro.ddogo.searchmap.dto.HotplaceDTO">
+        <![CDATA[
+        select hotplace_no, sido, gugun, hotplace_name, address, hotplace_cate_no, lat, lng
+        from ddogo.hotplace
+        where lat=#{lat} and lng=#{lng}
+        ]]>
+    </select>
+        <!--	 회원수 조회
+            <select id="유니크한 id명" resultType="자바의 데이터타입"
+            <select id="totalMemberCNT" resultType="int">
+                <![CDATA[
+                    select count(no) from member
+                ]]>
+            </select>
+
+             목록조회 230816 변경
+            resultType="jajva.util.HashMap"으로 작성하는 것이 원칙이나 마이 바티스에서 제공되는 알리아스를 사용하면
+            resultTypd="hashmap"으로 사용가능
+            <select id="selectMemberList" resultType="hashmap" parameterType="hashmap">
+                <![CDATA[
+                    select no, memberid, password, name, regdate, isshow
+                    from member
+                    where isshow='Y'
+                ]]>
+                <if test="hashmap!=null and keyword!=''">
+                    and name like concat('%', #{keyword}, '%') or
+                    memberid like concat('%', #{keyword}, '%')
+                </if>
+            </select>
+
+             id로 회원 정보조회
+            parameterType="java.lang.String"으로 작성하는 것이 원칙이나 마이바티스에 내장되어 제공되는 타입알리아스를 사용하면
+            string으로 작성가능.
+            #{}안에는 get메소드가 들어가는 거임. 근데 이제 get빼고 그다음 대문자를 소문자로 바꾸고 괄호 지워서 필드같아진거임
+            <select id="selectById"
+                    resultType="MemberDTO"
+                    parameterType="java.lang.String">
+                <![CDATA[
+                    select no, memberid, password, name, regdate, isshow
+                    from member
+                    where memberid=#{memberid}
+                ]]>
+            </select>-->
+
+</mapper>

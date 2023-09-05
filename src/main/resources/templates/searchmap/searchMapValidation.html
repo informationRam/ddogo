@@ -30,7 +30,7 @@
                 <h5 class="modal-title" id="exampleModalLabel">'또갈지도?'에 저장</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="/search/add" method="post">
+            <form th:action="@{/search/add}" th:object="${modalForm}" method="post">
                 <input type="hidden" id="markerLat" name="markerLat" value="">
                 <input type="hidden" id="markerLng" name="markerLng" value="">
                 <input type="hidden" id="placeName" name="placeName" value="">
@@ -38,22 +38,26 @@
                 <input type="hidden" id="placeCateCode" name="placeCateCode" value="">
 
                 <div class="modal-body">
-
+                    <div th:replace="~{form_errors::formErrorsFragment}"></div>
                     <div class="mb-3">
-                        <label for="inputReview" class="form-label">Review</label>
-                        <textarea class="form-control" id="inputReview" name="inputReview" placeholder="나만의 후기를 남겨주세요!" rows="6"></textarea>
+                        <label for="inputReview" class="form-label">Review</label> <!-- 유효성검사 메시지 출력해줘야함-->
+                        <textarea class="form-control" th:field="*{inputReview}" placeholder="나만의 후기를 남겨주세요!" rows="6"></textarea> <!--id="inputReview" name="inputReview"-->
                     </div>
                     <div class="mb-3">
                         <label for="inputMemo" class="form-label">Memo</label>
-                        <textarea class="form-control" id="inputMemo" name="inputMemo" placeholder="해당 장소와 관련한 메모를 적어보세요!" rows="6"></textarea>
+                        <textarea class="form-control" th:field="*{inputMemo}" placeholder="해당 장소와 관련한 메모를 적어보세요!" rows="6"></textarea><!--id="inputMemo" name="inputMemo"-->
                     </div>
                     <div class="d-flex justify-content-center">
-                        <div class="btn-group" role="group" aria-label="Radio buttons">
-                            <input type="radio" class="btn-check" name="myRecommend" id="myRecommendY" value="Y" autocomplete="off">
-                            <label class="btn btn-outline-primary mx-1" for="myRecommendY">또갈지도</label>
+                        <!--<div class="btn-group" role="group" aria-label="Radio buttons">
+                            <label class="btn btn-outline-primary mx-1" for="myRecommend1"></label>
+                            <input type="radio" class="btn-check" th:field="*{myRecommend}" th:value="Y" autocomplete="off">
 
-                            <input type="radio" class="btn-check" name="myRecommend" id="myRecommendN" value="N" autocomplete="off">
-                            <label class="btn btn-outline-danger mx-1" for="myRecommendN">안갈지도</label>
+                            <label class="btn btn-outline-danger mx-1" for="myRecommend2"></label>
+                            <input type="radio" class="btn-check" th:field="*{myRecommend}" th:value="N" autocomplete="off">
+                        </div>-->
+                        <div th:each="type: ${myRecommends}" class="btn-group" role="group" aria-label="Radio buttons">
+                            <input type="radio" class="btn-check" th:field="*{myRecommend}" th:value="${type.name()}" autocomplete="off">
+                            <label class="btn btn-outline-primary mx-1" th:for="${#ids.prev('myRecommend')}" th:text="${type.desc}">추천여부</label>
                         </div>
                     </div>
                 </div>

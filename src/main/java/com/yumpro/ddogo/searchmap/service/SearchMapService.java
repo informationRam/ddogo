@@ -1,11 +1,11 @@
 package com.yumpro.ddogo.searchmap.service;
 
 import com.yumpro.ddogo.common.entity.*;
+import com.yumpro.ddogo.searchmap.dto.HistoryDTO;
+import com.yumpro.ddogo.searchmap.dto.HotplaceDTO;
 import com.yumpro.ddogo.searchmap.dto.SearchMapDTO;
-import com.yumpro.ddogo.searchmap.repository.EmoreviewRepository;
-import com.yumpro.ddogo.searchmap.repository.HotplaceCateRepository;
-import com.yumpro.ddogo.searchmap.repository.HotplaceRepository;
-import com.yumpro.ddogo.searchmap.repository.MymapRepository;
+import com.yumpro.ddogo.searchmap.repository.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,16 +19,19 @@ public class SearchMapService {
     private final HotplaceCateRepository hotplaceCateRepository;
     private final MymapRepository mymapRepository;
     private final EmoreviewRepository emoreviewRepository;
+    private final SearchmapMapper mapper;
 
     @Autowired
     public SearchMapService(HotplaceRepository hotplaceRepository,
                             HotplaceCateRepository hotplaceCateRepository,
                             MymapRepository mymapRepository,
-                            EmoreviewRepository emoreviewRepository) {
+                            EmoreviewRepository emoreviewRepository,
+                            SearchmapMapper mapper) {
         this.hotplaceRepository = hotplaceRepository;
         this.hotplaceCateRepository = hotplaceCateRepository;
         this.mymapRepository = mymapRepository;
         this.emoreviewRepository = emoreviewRepository;
+        this.mapper = mapper;
     }
 
     // 1) hotplace 테이블에 insert
@@ -74,4 +77,57 @@ public class SearchMapService {
         System.out.println("emoReview입력 완");
     }
 
+    /* 해당 핫플레이스 번호와 유저 번호가 같은 기록이 mymap에 있는지 확인
+    // 있으면 중복하여 저장할 수 없도록.
+    public boolean hasHistory(User user, SearchMapDTO deliverHotplace){
+        //return mymapRepository.findBy();
+        MyMap myMap = searchMapMapper.hasHistory(user.getUser_no(), deliverHotplace.getHotplaceNo());
+        System.out.println("mapNo:"+myMap.getMapNo());
+        if(myMap!=null){
+            return true;
+        } else {
+            return false;
+        }
+    }*/
+
+    // 해당 핫플레이스 번호와 유저 번호가 같은 기록이 mymap에 있는지 확인
+    public SearchMapDTO findHistory(User user, SearchMapDTO hotplaceResult) {
+        HistoryDTO historyDTO = new HistoryDTO();
+        historyDTO.setUserNo(user.getUser_no());
+        historyDTO.setHotplaceNo(hotplaceResult.getHotplaceNo());
+        return deliverMMNo(mapper.hasHistory(historyDTO));
+        //둘다 인티저
+
+    }
+
+    // 해당 좌표로 저장된 장소가 있는지 확인
+    /*public SearchMapDTO findByLatAndLng(double lat, double lng) {
+        HotplaceDTO hotplaceDTO = new HotplaceDTO();
+        hotplaceDTO.setLat(lat);
+        hotplaceDTO.setLng(lng);
+        return deliverNo(mapper.selectByLatLng(hotplaceDTO));
+    }*/
+    public SearchMapDTO findByLatAndLng(double lat, double lng) {
+        HotplaceDTO hotplaceDTO = new HotplaceDTO();
+        hotplaceDTO.setLat(lat);
+        hotplaceDTO.setLng(lng);
+        return deliverNo(mapper.selectByLatLng(hotplaceDTO));
+    }
+
+    //맛집번호 DTO로 변환
+    public SearchMapDTO deliverNo (Hotplace hotplace){ //hotplace가 null??
+        SearchMapDTO searchMapDTO = new SearchMapDTO();
+        searchMapDTO.setHotplaceNo(hotplace.getHotplaceNo());
+        return searchMapDTO;
+    }
+
+    //mymap DTO로 변환
+    public SearchMapDTO deliverMMNo (MyMap myMap){
+        SearchMapDTO searchMapDTO = new SearchMapDTO();
+        searchMapDTO.setMapNo(myMap.getMapNo());
+        return searchMapDTO;
+    }
+
+
+    //MyMap hasHistory(Integer userNo, Integer hotplaceNo);
 }

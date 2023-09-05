@@ -9,6 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 public class SearchMapDTO {
     //hotplace
+    private Integer hotplaceNo; //pk
     private double lng; //경도
     private double lat; //위도
     private String placeName; //상호명
@@ -21,6 +22,7 @@ public class SearchMapDTO {
     private String inputReview; //리뷰
 
     //mymap
+    private Integer mapNo; //pk
     private char myRecommend; //추천여부
     private String inputMemo; //메모
 
