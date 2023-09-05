@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<table border="1">
+    <tr>
+        <th>순위</th>
+        <th>전국 오늘의 맛집</th>
+        <th>리뷰온도</th>
+    </tr>
+    <tr th:each="eatjjim, idx : ${eatjjim}">
+        <td th:text="${idx.index + 1}"></td> <!-- 순위 출력 -->
+        <td th:text="${eatjjim.hotplace_name}"></td>
+        <td>
+            <span th:if="${eatjjim.avg_emo_result != null}" th:text="${eatjjim.avg_emo_result}"></span>
+            <span th:if="${eatjjim.avg_emo_result == null}"></span>
+        </td>
+        <!--<td th:text="${eatjjim.avg_emo_result}"></td>-->
+    </tr>
+</table>
+<br/>
+<table border="1">
+    <tr>
+        <th>순위</th>
+        <th>전국 오늘의 카페</th>
+        <th>리뷰온도</th>
+    </tr>
+    <tr th:each="cafejjim, idx : ${cafejjim}">
+        <td th:text="${idx.index + 1}"></td> <!-- 순위 출력 -->
+        <td th:text="${cafejjim.hotplace_name}"></td>
+        <td th:text="${cafejjim.avg_emo_result}"></td>
+    </tr>
+</table>
+
+<!-- 시도 select -->
+<br/>
+<div>이번달 Best</div>
+<div>
+    <div>
+        <!-- 시도와 구군 선택 상자 및 버튼 -->
+        <form id="frm">
+            <label for="sido">시/도</label>
+            <select name="sido" id="sido">
+                <option value="">선택하세요</option>
+                <!-- 시도 목록을 Thymeleaf 반복문을 사용하여 출력 -->
+            </select>
+
+            <label for="gugun">구/군</label>
+            <select name="gugun" id="gugun">
+                <option value="">선택하세요</option>
+            </select>
+
+            <label for="category">카테고리</label>
+            <select name="category" id="category">
+                <option value="1">음식점</option>
+                <option value="2">카페</option>
+            </select>
+
+
+        </form>
+        <button id="sendButton">검색</button>
+    </div>
+</div>
+
+
+<div id="result">
+    <table border="1">
+        <thead>
+        <tr>
+            <th>가게이름</th>
+            <th>리뷰온도</th>
+        </tr>
+        </thead>
+        <tbody id="tableBody">
+        <!-- 데이터는 JavaScript로 동적으로 추가 -->
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
+
+<!-- 자바스크립트 -->
+<script layout:fragment="script">
+// 페이지 로드 시 초기 데이터를 가져와서 선택 상자를 생성
+  document.addEventListener("DOMContentLoaded", function () {
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", "http://localhost/initialData", true);
+      xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+      xhr.onload = function () {
+          if (xhr.status === 200) {
+              try {
+                  var response = JSON.parse(xhr.responseText);
+                  console.log(response);
+
+                  var sidoSelect = document.getElementById("sido");
+                  var gugunSelect = document.getElementById("gugun");
+
+                  // 시도 목록 초기화
+                  for (var sido in response) {
+                      var option = document.createElement("option");
+                      option.value = sido;
+                      option.textContent = sido;
+                      sidoSelect.appendChild(option);
+                  }
+
+                  // 초기 시/도 선택
+                  sidoSelect.addEventListener("change", function () {
+                      var selectedSido = this.value; // 선택한 시/도 값을 가져옴
+                      var gugunArr = response[selectedSido];
+
+                      // 구군 목록 초기화
+                      gugunSelect.innerHTML = '<option value="">선택하세요</option>';
+                      if (gugunArr) {
+                          for (var i = 0; i < gugunArr.length; i++) {
+                              var option = document.createElement("option");
+                              option.value = gugunArr[i];
+                              option.textContent = gugunArr[i];
+                              gugunSelect.appendChild(option);
+                          }
+                      }
+                  });
+
+                  // 초기 시/도 선택
+                  sidoSelect.dispatchEvent(new Event("change"));
+              } catch (error) {
+                  console.error("JSON 파싱 오류:", error);
+              }
+          } else {
+              console.log("Error:", xhr.statusText);
+              alert("no~" + xhr.statusText);
+          }
+      };
+
+      xhr.onerror = function () {
+          console.log("Network Error");
+          alert("Network Error");
+      };
+
+      xhr.send();
+  });
+
+ var sendButton = document.getElementById("sendButton");
+ sendButton.addEventListener("click", function () {
+     var selectedSido = document.getElementById("sido").value;
+     var selectedGugun = document.getElementById("gugun").value;
+     var selectedCategory = parseInt(document.getElementById("category").value); // 선택한 카테고리 값을 가져옴
+
+     var formData = new FormData();
+     formData.append("sido", selectedSido);
+     formData.append("gugun", selectedGugun);
+     formData.append("hotplace_cate_no", selectedCategory); // 카테고리 값을 추가
+
+     var xhr = new XMLHttpRequest();
+     xhr.open("POST", "http://localhost/main", true);
+     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+
+     xhr.onload = function () {
+         if (xhr.status === 200) {
+             try {
+                 var response = JSON.parse(xhr.responseText);
+                 console.log(response);
+
+                 // 여기서 response 객체를 활용하여 필요한 처리를 수행할 수 있습니다.
+                 // 테이블 업데이트 코드 추가
+                 var tableBody = document.getElementById("tableBody");
+                 tableBody.innerHTML = ""; // 기존 데이터 삭제
+
+                 if (response.monthBestList.length === 0) {
+                     // 결과가 없을 때 메시지를 표시
+                     var noDataMessage = document.createElement("p");
+                     noDataMessage.textContent = "이번달에 저장된 가게가 없습니다.";
+                     tableBody.appendChild(noDataMessage);
+                 } else {
+                     // 결과가 있을 때 테이블에 데이터 추가
+                     for (var i = 0; i < response.monthBestList.length; i++) {
+                         var entry = response.monthBestList[i];
+                         var row = document.createElement("tr");
+                         var nameCell = document.createElement("td");
+                         var avgCell = document.createElement("td");
+                         nameCell.textContent = entry.hotplace_name;
+                         avgCell.textContent = entry.avg_emo_result;
+                         row.appendChild(nameCell);
+                         row.appendChild(avgCell);
+                         tableBody.appendChild(row);
+                     }
+                 }
+             } catch (error) {
+                 console.error("JSON 파싱 오류:", error);
+             }
+         } else {
+             console.log("Error:", xhr.statusText);
+             alert("no~" + xhr.statusText);
+         }
+     };
+
+     xhr.onerror = function () {
+         console.log("Network Error");
+         alert("Network Error");
+     };
+     xhr.send("sido=" + selectedSido + "&gugun=" + selectedGugun + "&hotplace_cate_no=" + selectedCategory); // 원하는 매개변수를 전달하세요.
+ });
+
+</script>

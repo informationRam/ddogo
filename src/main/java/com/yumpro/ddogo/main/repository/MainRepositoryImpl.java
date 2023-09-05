@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class MainRepositoryImpl implements MainRepository{
@@ -23,5 +24,21 @@ public class MainRepositoryImpl implements MainRepository{
         return sqlSession.selectList("main.allBestCafeJjim");
     }
 
+    @Override
+    public List<String> getSelectList() throws DataAccessException{
+        return sqlSession.selectList("main.sidogugun");
+    }
+
+    @Override
+    public List<String> gugunList(String sido) throws DataAccessException{
+        List<String> gugunList = sqlSession.selectList("main.gugunList",sido);
+        return gugunList;
+    }
+
+
+    @Override
+    public List<HashMap<String, Object>> monthBest(Map<String, Object> paramMap) {
+        return sqlSession.selectList("main.monthBest", paramMap);
+    }
 
 }
