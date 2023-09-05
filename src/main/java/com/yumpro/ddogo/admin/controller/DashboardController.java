@@ -41,7 +41,8 @@ public class DashboardController {
         double RecentEmoAvg=dashboardService.RecentEmoAvg();
         int nowActiveUser=dashboardService.nowActiveUser();
 
-        double activeParcent=((double)nowActiveUser/userTotal)*100;
+        double activePercent = ((double) nowActiveUser / userTotal) * 100;
+        activePercent = Math.round(activePercent * 100.0) / 100.0;
 
         //그래프
         List<ActiveUser> activeUser=activeUserService.findByYear(year);
@@ -59,7 +60,7 @@ public class DashboardController {
         model.addAttribute("emoAvg",emoAvg);
         model.addAttribute("RecentEmoAvg",RecentEmoAvg);
         model.addAttribute("nowActiveUser",nowActiveUser);
-        model.addAttribute("activeParcent",activeParcent);
+        model.addAttribute("activeParcent",activePercent);
 
         //그래프
         model.addAttribute("activeUser",activeUser);
