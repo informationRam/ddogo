@@ -3,6 +3,7 @@ package com.yumpro.ddogo.searchmap.controller;
 import com.yumpro.ddogo.common.entity.Hotplace;
 import com.yumpro.ddogo.common.entity.User;
 import com.yumpro.ddogo.searchmap.dto.SearchMapDTO;
+import com.yumpro.ddogo.searchmap.exception.HotplaceNotFoundException;
 import com.yumpro.ddogo.searchmap.repository.HotplaceRepository;
 import com.yumpro.ddogo.searchmap.repository.MymapRepository;
 import com.yumpro.ddogo.searchmap.service.SearchMapService;
@@ -43,7 +44,7 @@ public class SearchMapController {
                               @RequestParam String placeName, @RequestParam String placeAddress,
                               @RequestParam String placeCateCode, @RequestParam char myRecommend,
                               @RequestParam String inputReview, @RequestParam String inputMemo,
-                              Principal principal ){
+                              Principal principal ) throws Exception {
 
         //1. 파라미터받기
         //로그인한 유저 정보 가져오기
@@ -51,6 +52,9 @@ public class SearchMapController {
         //DB에 저장된 데이터가 있는지 확인
         Hotplace hotplace = hotplaceRepository.findByLatAndLng(markerLat, markerLng);
 
+        if(hotplace != null && checkRecord(hotplace, user)!=null){
+            System.out.println("내 지도에 이미 입력된 경우.");
+        }
         if(hotplace != null && checkRecord(hotplace, user) == null){
             System.out.println("DB엔 있지만 내 지도엔 없는 경우. hotplace_no:"+hotplace.getHotplaceNo());
             // 1) DB에는 있지만 내지도에 저장된 적 없는 경우
@@ -58,15 +62,12 @@ public class SearchMapController {
             double emoResult = emoService.emoAnal(inputReview); //감정분석결과
             searchMapService.insertEmoReview(mapNo, hotplace.getHotplaceNo(), inputReview, emoResult);
         }
-        if(hotplace == null && checkRecord(hotplace, user)==null){
-            System.out.println("DB에도 없고 내 지도에도 없는 경우.");
+        if(hotplace == null){
+            System.out.println("DB에 입력된 적 없는 경우. 새로 등록 진행");
             int hotplaceNo = addHotplace(markerLat, markerLng, placeName, placeAddress, placeCateCode);
             int mapNo = addMymap2(hotplaceNo, user, inputMemo, myRecommend);
             double emoResult = emoService.emoAnal(inputReview);
-            searchMapService.insertEmoReview(mapNo, hotplace.getHotplaceNo(), inputReview, emoResult);
-        }
-        if(hotplace != null && checkRecord(hotplace, user)!=null){
-            System.out.println("내 지도에 이미 입력된 경우.");
+            searchMapService.insertEmoReview(mapNo, hotplaceNo, inputReview, emoResult);
         }
 
         //3. 모델 4. 뷰
@@ -120,12 +121,12 @@ public class SearchMapController {
 
     //내지도에 저장된적 있는지 확인
     //저장됐으면 mymapNo를 리턴.
-    private Integer checkRecord(Hotplace hotplace, User user) {
-            //MyBatis시도 -성공
-            Map<String, Object> map = new HashMap<>();
-            map.put("user_no", user.getUser_no());
-            map.put("hotplace_no", hotplace.getHotplaceNo());
-            return searchMapService.findHistory(map);
+    private Integer checkRecord(Hotplace hotplace, User user) throws HotplaceNotFoundException{
+        //MyBatis시도 -성공
+        Map<String, Object> map = new HashMap<>();
+        map.put("user_no", user.getUser_no());
+        map.put("hotplace_no", hotplace.getHotplaceNo());
+        return searchMapService.findHistory(map);
     }
 
 }

@@ -23,14 +23,14 @@
 </div>
 
 <!--모달-->
-<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="myModal" onsubmit="return false;" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">'또갈지도?'에 저장</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="/search/add" method="post">
+            <form id="modalForm" action="/search/add" method="post">
                 <input type="hidden" id="markerLat" name="markerLat" value="">
                 <input type="hidden" id="markerLng" name="markerLng" value="">
                 <input type="hidden" id="placeName" name="placeName" value="">
@@ -41,12 +41,14 @@
 
                     <div class="mb-3">
                         <label for="inputReview" class="form-label">Review</label>
+                        <div id="error1"></div>
                         <textarea class="form-control" id="inputReview" name="inputReview" placeholder="나만의 후기를 남겨주세요!" rows="6"></textarea>
                     </div>
                     <div class="mb-3">
                         <label for="inputMemo" class="form-label">Memo</label>
                         <textarea class="form-control" id="inputMemo" name="inputMemo" placeholder="해당 장소와 관련한 메모를 적어보세요!" rows="6"></textarea>
                     </div>
+                    <div id="error2"></div>
                     <div class="d-flex justify-content-center">
                         <div class="btn-group" role="group" aria-label="Radio buttons">
                             <input type="radio" class="btn-check" name="myRecommend" id="myRecommendY" value="Y" autocomplete="off">
@@ -58,7 +60,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <input type="submit" class="btn btn-primary" data-bs-dismiss="modal"/>
+                    <button type="button" class="btn btn-primary" onclick="saveFormData()">저장</button>
                     <input type="reset" class="btn btn-secondary"/>
                 </div>
             </form>
