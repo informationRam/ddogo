@@ -16,6 +16,7 @@ public class QnaListDTO {
     private String user_id;
     private char qna_solved;
     private LocalDateTime qna_date;
+    private String qna_pwd;
 }
 
 

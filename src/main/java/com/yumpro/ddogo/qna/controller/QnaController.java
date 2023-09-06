@@ -1,18 +1,24 @@
 package com.yumpro.ddogo.qna.controller;
 
 import com.yumpro.ddogo.common.entity.Qna;
+import com.yumpro.ddogo.common.entity.User;
 import com.yumpro.ddogo.qna.domain.QnaListDTO;
 import com.yumpro.ddogo.qna.service.QnaService;
+import com.yumpro.ddogo.admin.service.UserListService;
+import com.yumpro.ddogo.qna.validation.QnaAddForm;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
+
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/qna")
@@ -20,8 +26,10 @@ import java.util.Map;
 public class QnaController {
 
     private final QnaService qnaService;
+    private final UserListService userListService;
 
     //(all)문의글 리스트 보기
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/list")
     public String qnaList(Model model, @RequestParam Map<String, Object> map, @RequestParam(value = "page", defaultValue = "1") int currentPage) {
 
@@ -43,11 +51,36 @@ public class QnaController {
 
         return "qna/qna_list";
     }
-}
 
     //(유저)문의글 작성 폼
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/add")
+    public String qnaAdd(QnaAddForm qnaAddForm){
+        return "qna/qna_add";
+    }
+
     //(유저)문의글 작성 처리
+    @PreAuthorize("isAuthenticated()")//로그인인증=>로그인이 필요한 기능
+    @PostMapping("/add")
+    public String qnaAdd(@Valid QnaAddForm qnaAddForm, BindingResult bindingResult,
+                         Principal principal) {
+        //1.파라미터받기 qna_title,qna_content,qna_pwd
+        //2.비즈니스로직
+        if(bindingResult.hasErrors()) { //에러가 존재하면
+            return "qna_add";
+        }
+
+        Optional<User> user = userListService.findUserByUserId(principal.getName());//user정보가져오기
+
+        qnaService.add(qnaAddForm.getQna_title(),qnaAddForm.getQna_content(),qnaAddForm.getQna_pwd(),user.get());
+
+        //3.Model&4.View
+        return "redirect:/qna/list"; //(질문목록조회요청을 통한)질문목록페이지로 이동
+    }
+
     //문의글 상세 보기 (비밀번호 확인 / 관리자는 free)
     //(관리자)문의글 답변 달기
     //(관리자)문의글 답변 수정
     //(관리자)문의글 답변 삭제
+}
+
