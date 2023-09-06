@@ -1,7 +1,11 @@
 package com.yumpro.ddogo.searchmap.controller;
 
+import com.yumpro.ddogo.common.entity.Hotplace;
+import com.yumpro.ddogo.common.entity.MyMap;
 import com.yumpro.ddogo.common.entity.User;
 import com.yumpro.ddogo.searchmap.dto.SearchMapDTO;
+import com.yumpro.ddogo.searchmap.repository.HotplaceRepository;
+import com.yumpro.ddogo.searchmap.repository.MymapRepository;
 import com.yumpro.ddogo.searchmap.service.SearchMapService;
 import com.yumpro.ddogo.user.service.UserService;
 import com.yumpro.ddogo.emoAnal.service.EmoService;
@@ -11,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.PrintWriter;
 import java.security.Principal;
+import java.util.HashMap;
+import java.util.Map;
 
 @RequestMapping("/search")
 @RequiredArgsConstructor
@@ -19,7 +25,8 @@ public class SearchMapController {
     private final SearchMapService searchMapService;
     private final UserService userService;
     private final EmoService emoService;
-
+    private final HotplaceRepository hotplaceRepository;
+    private final MymapRepository mymapRepository;
     //검색할 수 있게 지도 띄워줘 요청
     /*요청주소: http://localhost/search
     * 요청방식: get*/
@@ -33,17 +40,34 @@ public class SearchMapController {
     * 요청방식: post*/
     /*form 의 input type="hidden" 으로 값 가져오는 메소드: 됨*/
     @PostMapping("/add")
-    public String testAction2(@RequestParam double markerLat, @RequestParam double markerLng,
+    public String add(@RequestParam double markerLat, @RequestParam double markerLng,
                               @RequestParam String placeName, @RequestParam String placeAddress,
                               @RequestParam String placeCateCode, @RequestParam char myRecommend,
                               @RequestParam String inputReview, @RequestParam String inputMemo,
                               Principal principal ){ //로그인한 유저 정보 가져오기
-        SearchMapDTO searchMapDTO = new SearchMapDTO();
+        Hotplace hotplace = hotplaceRepository.findByLatAndLng(markerLat, markerLng);
+        if(hotplace.getHotplaceNo()==null){
+            return "redirect:/search";
+        }
+        System.out.println("핫플no:"+hotplace.getHotplaceNo());
         //1. 파라미터받아서 DTO에 담기
         //로그인한 유저 정보 가져오기
         User user = userService.getUser(principal.getName());
+        SearchMapDTO searchMapDTO = new SearchMapDTO();
+        //JPA안됨
+        // MyMap myMap = mymapRepository.findByUserNoAndHotplaceNo(user.getUser_no(), hotplace.getHotplaceNo());
+
+        //MyBatis시도
+        Map<String, Object> map = new HashMap<>();
+        map.put("user_no", user.getUser_no());
+        System.out.println("map user_no:"+map.get("user_no"));//됨
+        map.put("hotplace_no", hotplace.getHotplaceNo());
+        System.out.println("map user_no:"+map.get("hotplace_no"));//됨
+
+        searchMapService.findHistory(map);
+        //System.out.println("이미 저장됨. mymapNo:"+myMap.getMapNo());
         //도로명 주소 자르기 예:제주특별자치도->제주 서귀포시
-        String afterSido = placeAddress.substring(placeAddress.indexOf(" ")+1); //첫번째 공백 이후 부터 끝까지.
+        /*String afterSido = placeAddress.substring(placeAddress.indexOf(" ")+1); //첫번째 공백 이후 부터 끝까지.
         String sido = placeAddress.substring(0, 2);
         String gugun = afterSido.substring(0, afterSido.indexOf(" "));
         //DTO에 담기

@@ -2,16 +2,16 @@ package com.yumpro.ddogo.searchmap.service;
 
 import com.yumpro.ddogo.common.entity.*;
 import com.yumpro.ddogo.searchmap.dto.SearchMapDTO;
-import com.yumpro.ddogo.searchmap.repository.EmoreviewRepository;
-import com.yumpro.ddogo.searchmap.repository.HotplaceCateRepository;
-import com.yumpro.ddogo.searchmap.repository.HotplaceRepository;
-import com.yumpro.ddogo.searchmap.repository.MymapRepository;
+import com.yumpro.ddogo.searchmap.mapper.Mapper;
+import com.yumpro.ddogo.searchmap.repository.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
-//@RequiredArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class SearchMapService {
 
@@ -19,17 +19,6 @@ public class SearchMapService {
     private final HotplaceCateRepository hotplaceCateRepository;
     private final MymapRepository mymapRepository;
     private final EmoreviewRepository emoreviewRepository;
-
-    @Autowired
-    public SearchMapService(HotplaceRepository hotplaceRepository,
-                            HotplaceCateRepository hotplaceCateRepository,
-                            MymapRepository mymapRepository,
-                            EmoreviewRepository emoreviewRepository) {
-        this.hotplaceRepository = hotplaceRepository;
-        this.hotplaceCateRepository = hotplaceCateRepository;
-        this.mymapRepository = mymapRepository;
-        this.emoreviewRepository = emoreviewRepository;
-    }
 
     // 1) hotplace 테이블에 insert
     //  리턴: 방금 hotplace에 입력된 pk인 hotplace_no의 값
@@ -74,4 +63,8 @@ public class SearchMapService {
         System.out.println("emoReview입력 완");
     }
 
+    public void findHistory(Map<String, Object>map){
+        Mapper mapper = new Mapper();
+        mapper.findByUserNoAndHotplaceNo(map);
+    }
 }
