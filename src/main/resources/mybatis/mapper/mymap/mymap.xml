@@ -38,5 +38,15 @@ GROUP BY
     ]]>
     </select>
 
-
+    <delete id="deleteHotpl" parameterType="Integer">
+        <![CDATA[
+        DELETE FROM MYMAP
+        WHERE map_no = #{map_no}
+            ]]>
+    </delete>
 </mapper>
+
+
+
+
+

@@ -1,5 +1,6 @@
 package com.yumpro.ddogo.mymap.controller;
 
+import com.yumpro.ddogo.common.entity.MyMap;
 import com.yumpro.ddogo.common.entity.User;
 import com.yumpro.ddogo.mymap.domain.MyMapDTO;
 import com.yumpro.ddogo.mymap.service.MymapService;
@@ -22,25 +23,24 @@ public class MymapController {
     private final MymapService myMapService;
     private final UserService userService;
 
-    
-    
-
-
-
 
     //회원 맛집 목록 삭제
     @GetMapping("/delete/{mapNo}")
-    public String deleteHotpl(@PathVariable("mapNo") Integer mapNo) {
+    public String deleteHotplList(@PathVariable("mapNo") Integer mapNo,
+                                  Principal principal) {
+        User loginUser = userService.getUser(principal.getName());
+
+        //1. 파라미터 받기 - mapNo
         // 서비스를 호출하여 해당 항목 삭제
-        myService.deleteItem(mapNo);
+        MyMap mymap = myMapService.deleteHotpl(mapNo);
+
+        if (!mymap.getUserNo().equals(loginUser.getUser_no())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
+        }
         return "redirect:/mymap/{user_id}"; // 삭제 후 리다이렉트
     }
 
-    
-    
-    
-    
-    
+
     // 회원별 지도를 보여줄 페이지 및 JSON 데이터를 반환
     @GetMapping("/{user_id}")
     public ModelAndView showUserMyMap(@PathVariable("user_id") String user_id, Model model, Principal principal) {
@@ -62,10 +62,10 @@ public class MymapController {
         return modelAndView;
     }
 
-    // JSON 데이터를 반환할 엔드포인트
+    // JSON 데이터를 반환할 엔드포인트 =>
     @GetMapping("/hotplaces/{user_id}")
     @ResponseBody
-    public List<MyMapDTO> myMapHotplList(@RequestParam("user_id") String user_id, Principal principal,Model model) {
+    public List<MyMapDTO> myMapHotplList(@PathVariable("user_id") String user_id, Principal principal) {
         User loginUser = userService.getUser(principal.getName());
         int userNo = loginUser.getUser_no();
 
@@ -73,11 +73,9 @@ public class MymapController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 사용자의 맛집지도에 접근할 권한이 없습니다");
         }
         List<MyMapDTO> myHotplList = myMapService.getHotplacesByUserNo(userNo);
-        model.addAttribute("myHotplList", myHotplList);
 
         return myHotplList; // JSON 데이터 반환
     }
-}
 
-//json 데이터 myHotplList
-//
+
+}

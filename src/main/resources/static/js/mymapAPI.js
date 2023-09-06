@@ -25,7 +25,6 @@ function loadPlaces() {
                       card.innerHTML = `
                            <div class='card my-2'>
                                          <div class="card-body">
-                                             <h6 class="card-subtitle mb-2 text-muted">${myhotpl.sido}</h6>
                                              <h5 class="card-title">${myhotpl.hotplaceName}</h5>
                                              <p class="card-text">${myhotpl.address}</p>
                                              <p class="card-text text-right" style="height: 100%;">${myhotpl.avgEmoResult}%</p>

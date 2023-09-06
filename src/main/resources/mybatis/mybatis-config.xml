@@ -6,4 +6,12 @@
     <typeAliases>
             <typeAlias alias="MyMapDTO" type="com.yumpro.ddogo.mymap.domain.MyMapDTO"/>
     </typeAliases>
+
+    @Bean
+    public RestMemberController restApi(){
+    RestMemberController cont = new RestMemberController();
+    cont.setMemberDao(memberDao);
+    cont.setRegisterService(memberRegSvc);
+    return cont;
+    }
 </configuration>

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="/css/mymapCSS.css">
   </head>
-  <body>
+    <body>
 
   <!-- 좌측에 맛집 리스트를 표시하는 부분 -->
 <div class="container-fluid">
@@ -45,11 +45,14 @@
 <!-- 지도 영역 시작   -->
   <div class="column" id="mapContainer">
       <div class="col-md-9">
-         여기는 지도출력 영역
 
-        <!-- 지도 사이즈 정하기 -->
+
+        <!-- 지도를 표시할 div -->
+          지도출력영역
+        <p style="margin-top:10px"></p>
         <div id="map"  style="width:100%;height:100%;"></div>
-        <!-- 현재위치 버튼 -->
+
+          <!-- 현재위치 버튼 -->
         <div id="MapControlView">
           <button id="gpsButton" onclick="gps_check()"> 내 주변보기</button>
         </div>
@@ -66,24 +69,109 @@
           src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=820d01b1cce59185ed776419691dab39&libraries=services"></script>
 
   <!--db로 마커값 받아오기 -->
-  <script th:inline="javascript">
-    /*<![CDATA[*/
-    var positions = [
-        /*[# th:each="myhotpl : ${myHotplList}"]*/
-        {
-            title: /*[[${myhotpl.hotplaceName}]]*/,
-            latlng: new kakao.maps.LatLng(/*[[${myhotpl.lat}]]*/, /*[[${myhotpl.lng}]]*/)
-        },
-        /*[/]*/
-    ];
-    /*]]>*/
+<script type="text/javascript" th:inline="javascript">
+    // Thymeleaf를 이용하여 사용자 ID를 가져와서 JavaScript 변수로 설정
+    var userId = /*[[${user_id}]]*/
+    var userName = /*[[${user_name}]]*/
+
+    // 현재 위치 확인 및 지도 표시
+    gps_check();
+</script>
+
+ <script th:inline="javascript">
+     //지도 생성 스크립트
+     /*<![CDATA[*/
+       var mapContainer = document.getElementById('map'),
+           mapOption = {
+               center: new kakao.maps.LatLng(37.506016526623334, 127.10691218161601),
+               level: 3
+           };
+
+       //지도 생성
+       var map = new kakao.maps.Map(mapContainer, mapOption);
+
+       //db저장 정보 마커표시
+
+       /*<![CDATA[*/
+       var positions = [
+           /*[# th:each="myhotpl : ${myHotplList}"]*/
+           {
+               title: /*[[${myhotpl.hotplaceName}]]*/,
+               latlng: new kakao.maps.LatLng(/*[[${myhotpl.lat}]]*/, /*[[${myhotpl.lng}]]*/)
+           },
+           /*[/]*/
+       ];
+       /*]]>*/
+
+      // 마커 이미지의 이미지 주소
+        var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
+
+        for (var i = 0; i < positions.length; i++) {
+            var imageSize = new kakao.maps.Size(24, 35);
+            var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+
+            var marker = new kakao.maps.Marker({
+                map: map,
+                position: positions[i].latlng,
+                title: positions[i].title
+            });
+        }
+        // 마커가 지도 위에 표시되도록 설정합니다
+        marker.setMap(map);
+  </script>
+  <script>
+      //gps로 위치 불러오기 : gps_check()함수
+      gps_check();
+       function gps_check(){
+           if (navigator.geolocation) {
+               var options = {timeout:60000};
+               navigator.geolocation.getCurrentPosition(showLocation, errorHandler, options);
+           } else {
+               alert("GPS_추적이 불가합니다.");
+               gps_use = false;
+           }
+       }
+       // 이용 가능하면, 위도와 경도를 반환하는 showlocation함수.
+        function showLocation(pos) {
+                console.log(pos);
+                gps_use = true;
+                gps_lat = pos.coords.latitude;
+                gps_lng = pos.coords.longitude;
+                // 위치 정보가 확인되었으므로 이제 gps_tracking 함수 호출 가능
+                gps_tracking();
+            }
+            // error발생 시 에러의 종류를 알려주는 함수.
+            function errorHandler(error) {
+                if(error.code == 1) {
+                    alert("접근차단");
+                } else if( err.code == 2) {
+                    alert("위치를 반환할 수 없습니다.");
+                }
+                gps_use = false;
+            }
+      //현재위치 마커 표시
+       function gps_tracking(){
+            if (gps_use) {
+                map.panTo(new kakao.maps.LatLng(gps_lat,gps_lng));  //카카오api 사용자 좌표로 부드럽게 이동
+                 // 마커 이미지의 이미지 크기 입니다
+                //var gps_content = new kakao.maps.Size(20, 20);
+                var gps_content = '<div><img class="pulse" draggable="false" unselectable="on" src="https://ssl.pstatic.net/static/maps/m/pin_rd.png" alt="" style="width: 20px; height: 20px;"></div>';
+                var currentOverlay = new kakao.maps.CustomOverlay({   //마커를 사용자의 위도와 경도 좌표에 찍어준다.
+                    position: new kakao.maps.LatLng(gps_lat,gps_lng),
+                    content: gps_content,
+                    map: map
+                });
+                currentOverlay.setMap(map);
+            } else {
+              alert("접근차단하신 경우 새로고침, 아닌 경우 잠시만 기다려주세요.");
+              gps_check();
+            }
+        }
   </script>
 
 
-  <!-- mymapAPI.js 파일을 포함 -->
-  <script type="text/javascript" src="/js/mymapAPI.js"></script>
-
-
+<!--  &lt;!&ndash; mymapAPI.js 파일을 포함 &ndash;&gt;-->
+<!--  <script type="text/javascript" src="/js/mymapAPI.js"></script>-->
 
 
 

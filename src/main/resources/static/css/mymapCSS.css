@@ -4,9 +4,9 @@
 
 .container-fluid  {
        display: flex;
-       flex-basis: 0;
+/*       flex-basis: 0;*/
        flex-direction: row;
-       flex-wrap: nowrap;
+      /*  flex-wrap: nowrap;*/
    }
 
 
@@ -23,7 +23,7 @@
      flex-grow: 1; /* .mapContainer의 가로 넓이 가변으로 설정 */
      position: relative; /* 내용이 넘칠 경우 스크롤 표시 */
      padding: 20px;
-     height: 100%;
+     height: 100100vh;
   }
 
  /* 임시용 감정 출력 영역 */
@@ -40,4 +40,7 @@
     margin-left: 10px; /* 왼쪽 여백 조절 */
     font-size: 20px; /* 원하는 폰트 크기로 설정합니다. */
     font-weight: bold; /* 원하는 폰트 굵기로 설정합니다. */
+}
+.modal{
+ display: none;
 }
