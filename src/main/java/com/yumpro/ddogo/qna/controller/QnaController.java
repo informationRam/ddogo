@@ -183,6 +183,25 @@ public class QnaController {
     }
 
     //답변수정처리
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/solve/modify/{id}")
+    public String qnaSolveMofiy(@PathVariable int id,QnaSolveAddForm qnaSolveAddForm,Model ){
+
+
+
+
+        //3.Model
+        /*
+        model.addAttribute("qnaSolve",qnaSolve1);
+        model.addAttribute("qna",qna1);
+        model.addAttribute("user",principal.getName());
+
+         */
+
+        //4.View
+        return "qna/qna_detail";
+    }
+
     //답변 삭제
 
 }
