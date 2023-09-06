@@ -37,10 +37,10 @@
                 </div>
             </div>
         </div>
-    </div>
     <!-- 답변 등록 폼 -->
-    <div th:if="${userRole === 'admin'} and ${qnaSolve === null}">
+    <div th:if="${userRole == 'admin'} and ${qnaSolve == null}">
         <form id="answer" class="my-3" th:action="@{|/qna/solve/add/${qna.qnaNo}|}" th:object="${qnaSolveAddForm}" method="post">
+            <!--th:field="*{content}"-->
             <input type="text" th:field="*{qnaSolveTitle}" rows="8" class="form-control"/>
             <span class="error-text" th:if="${#fields.hasErrors('qnaSolveTitle')}" th:errors="*{qnaSolveTitle}"></span>
             <textarea th:field="*{qnaSolveContent}" rows="8" class="form-control"></textarea>
@@ -48,4 +48,5 @@
             <input type="submit" value="답변등록" class="btn btn-primary my-2"/>
         </form>
     </div>
+</div>
 </html>
