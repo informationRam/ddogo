@@ -10,7 +10,6 @@
                     <option value="qna_title">제목</option>
                     <option value="qna_content">내용</option>
                     <option value="user_id">작성자</option>
-                    <option value="qna_solved">해결상태</option>
                 </select>
                 <input type="text" class="form-control" name="search" placeholder="문의사항 검색">
                 <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i></button>
@@ -23,6 +22,14 @@
         <table class="table table-striped">
             <thead>
             <tr>
+                <th>상태
+                    <a href="#" th:href="@{${sortField == 'qna_solved' and sortOrder == 'asc' ? '?sortField=qna_solved&sortOrder=desc' : '?sortField=qna_solved&sortOrder=asc'}}" class="ddo-a">
+                        <i class="bi bi-arrow-down-short ddo-icon-class"></i>
+                    </a>
+                    <a href="#" th:href="@{${sortField == 'qna_solved' and sortOrder == 'desc' ? '?sortField=qna_solved&sortOrder=asc' : '?sortField=qna_solved&sortOrder=desc'}}" class="ddo-a">
+                        <i class="bi bi-arrow-up-short ddo-icon-class"></i>
+                    </a>
+                </th>
                 <th>제목
                     <a href="#" th:href="@{${sortField == 'qna_title' and sortOrder == 'asc' ? '?sortField=qna_title&sortOrder=desc' : '?sortField=qna_title&sortOrder=asc'}}" class="ddo-a">
                         <i class="bi bi-arrow-down-short ddo-icon-class"></i>
@@ -47,22 +54,33 @@
                         <i class="bi bi-arrow-up-short ddo-icon-class"></i>
                     </a>
                 </th>
-                <th>해결상태
-                    <a href="#" th:href="@{${sortField == 'qna_solved' and sortOrder == 'asc' ? '?sortField=qna_solved&sortOrder=desc' : '?sortField=qna_solved&sortOrder=asc'}}" class="ddo-a">
-                        <i class="bi bi-arrow-down-short ddo-icon-class"></i>
-                    </a>
-                    <a href="#" th:href="@{${sortField == 'qna_solved' and sortOrder == 'desc' ? '?sortField=qna_solved&sortOrder=asc' : '?sortField=qna_solved&sortOrder=desc'}}" class="ddo-a">
-                        <i class="bi bi-arrow-up-short ddo-icon-class"></i>
-                    </a>
-                </th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="qna : ${qnaList}">
-                <td th:text="${qna.qna_title}"></td>
+                <td>
+                    <span class="badge rounded-pill"
+                          th:class="${qna.qna_solved == 'Y'} ? 'rounded-pill bg-success' : 'rounded-pill bg-warning'"
+                          th:text="${qna.qna_solved == 'Y'} ? '답변완료' : '답변전'">
+                    </span>
+                </td>
+                <td th:text="${qna.qna_title}" onclick="showCard()"></td>
                 <td th:text="${qna.user_id}"></td>
                 <td th:text="${#temporals.format(qna.qna_date.toLocalDate(), 'yyyy/MM/dd')}"></td>
-                <td th:text="${qna.qna_solved}"></td>
+                <div id="hiddenCard" class="card" style="display: none;">
+                    <div class="card-body">
+                        <form id="passwordForm" th:action="@{|/qna/detail/${qna.qna_no}|}" method="post">
+                            <label for="inputPwd">비밀번호:</label>
+                            <input type="password" id="inputPwd" name="inputPwd">
+                            <button type="submit" class="btn btn-primary">확인</button>
+                        </form>
+                    </div>
+                </div>
+                <div style="display: none;">
+                    <form id="qnaDetailForm" th:action="@{|/qna/detail/${qna.qna_no}|}" method="post">
+                        <input type="hidden" name="inputPwd" value=" ">
+                    </form>
+                </div>
             </tr>
             <tr th:if="${#lists.isEmpty(qnaList)}">
                 <td colspan="4" class="text-center">검색 결과가 없습니다.</td>
@@ -113,6 +131,19 @@
                 updateUrlParam("search", search);
             });
         });
+
+
+    </script>
+    <script th:inline="javascript">
+        var userId = /*[[${userId}]]*/;
+
+     function showCard() {
+        if(userId==='admin'){
+            document.getElementById('qnaDetailForm').submit();
+        } else{
+            document.getElementById('hiddenCard').style.display = 'block';
+        }
+    }
     </script>
 </div>
 </html>

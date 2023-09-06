@@ -1,7 +1,5 @@
 <html layout:decorate="~{layout}" xmlns:th="http://www.thymeleaf.org">
 <div layout:fragment="content" class="container my-3">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" />
-    <link rel="stylesheet" href="/css/admin/ddostyle.css" />
     <h5 class="my-3 border-bottom pb-2">질문등록</h5>
     <form id="questionForm" th:object="${qnaAddForm}" th:action="@{/qna/add}" method="post">
         <div class="mb-3">

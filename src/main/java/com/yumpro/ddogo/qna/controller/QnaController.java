@@ -9,11 +9,13 @@ import com.yumpro.ddogo.qna.validation.QnaAddForm;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
 import java.util.List;
@@ -31,9 +33,9 @@ public class QnaController {
     //(all)문의글 리스트 보기
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/list")
-    public String qnaList(Model model, @RequestParam Map<String, Object> map, @RequestParam(value = "page", defaultValue = "1") int currentPage) {
+    public String qnaList(Model model, @RequestParam Map<String, Object> map, @RequestParam(value = "page", defaultValue = "1") int currentPage, Principal principal) {
 
-        int limit = 1; // 페이지당 보여줄 아이템 개수
+        int limit = 15; // 페이지당 보여줄 아이템 개수
         int offset = (currentPage - 1) * limit;
 
         map.put("limit", limit);
@@ -48,6 +50,7 @@ public class QnaController {
         model.addAttribute("currentPage", currentPage);
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("qnaList",qnaList);
+        model.addAttribute("userId",principal.getName());
 
         return "qna/qna_list";
     }
@@ -79,8 +82,25 @@ public class QnaController {
     }
 
     //문의글 상세 보기 (비밀번호 확인 / 관리자는 free)
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/detail/{id}")
+    public String qnaDetail(@PathVariable int id, @RequestParam String inputPwd, Model model, Principal principal){
+
+        Qna qna = qnaService.getQnaById(id);
+
+        if(!principal.getName().equals("admin")){
+            if(!qna.getQnaPwd().equals(inputPwd)){
+                return "redirect:/qna/list";
+            }
+        }
+        model.addAttribute("qna",qna);
+        return "qna/qna_detail";
+    }
+
     //(관리자)문의글 답변 달기
+
     //(관리자)문의글 답변 수정
+
     //(관리자)문의글 답변 삭제
 }
 
