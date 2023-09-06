@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import java.util.Random;
 
 @Service
 @AllArgsConstructor
@@ -47,4 +48,21 @@ public class EmailService {
         }
         return str;
     }
+
+
+    //랜덤ID생성 K-000 (000은 숫자랜덤임)
+    public String generateRandomID() {
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        StringBuilder randomID = new StringBuilder("K-");
+
+        Random random = new Random();
+
+        // Generate a random three-digit number
+        int randomNumber = random.nextInt(900) + 100; // This generates a number between 100 and 999
+
+        randomID.append(randomNumber);
+
+        return randomID.toString();
+    }
+
 }

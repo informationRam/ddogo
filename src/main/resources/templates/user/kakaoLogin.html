@@ -9,9 +9,52 @@
 
 <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
 
+
+<script>
+    Kakao.init("5a378555d1b9b81713af9609ce071c9d");
+
+        function kakaoLogin() {
+            Kakao.Auth.login({
+                scope: 'profile_nickname,account_email,gender,age_range,birthday',
+                success: function (authObj) {
+                    console.log('authObj:', authObj);
+                    Kakao.API.request({
+                        url: '/v2/user/me',
+                        success: function (res) {
+                            const kakao_account = res.kakao_account;
+                            console.log('kakao_account:', kakao_account);
+
+                            // Create a data object with the information you want to send
+                            const data = {
+                                authObj: authObj,
+                                kakao_account: kakao_account
+                            };
+
+                            // Send the data to your server via AJAX POST request
+                            const xhr = new XMLHttpRequest();
+                            xhr.open('POST', '/user/kakao', true);
+                            xhr.setRequestHeader('Content-Type', 'application/json');
+                            xhr.send(JSON.stringify(data));
+                        }
+                    });
+                }
+            });
+        }
+
+
+
+
+</script>
+
+
+
+
+
+
+<!--
 <script>
 
-    Kakao.init("31feb9463857fd32db15e3bc8bc1b3d1");
+    Kakao.init("5a378555d1b9b81713af9609ce071c9d");
 
    function kakaoLogin() {
      Kakao.Auth.login({
@@ -34,7 +77,7 @@
          }
      });
  }
-</script>
+</script>-->
 <!--<script>
     Kakao.init("31feb9463857fd32db15e3bc8bc1b3d1");
 

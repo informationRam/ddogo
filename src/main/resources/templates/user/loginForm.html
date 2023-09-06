@@ -270,11 +270,6 @@ footer a {
         <div class="form-container sign-up-container">
             <form id="join" class="my-2" th:object="${userCreateForm}" th:action="@{/user/join}" method="post">
                 <h1>Create Account</h1>
-                <div class="social-container">
-                    <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
-                    <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
-                </div>
                 <span>or use your email for registration</span>
                 <!-- 오류시 보여주는 문구-->
                 <div th:replace="~{form_errors::formErrorsFragment}"></div>
@@ -292,7 +287,7 @@ footer a {
                 <input type="date" th:field="*{birth}" th:format="'yyyy-MM-dd'">
                 <input type="password" th:field="*{pwd1}" placeholder="비밀번호">
                 <input type="password" th:field="*{pwd2}" placeholder="비밀번호확인">
-                <button type="submit">Sign Up</button>
+                <button type="submit" id="toSignUp">Sign Up</button>
             </form>
         </div>
         <!-- 로그인 -->
@@ -390,6 +385,9 @@ signInButton.addEventListener('click', () => {
   container.classList.remove("right-panel-active");
 
 });
+
+
+
 </script>
 
 </html>

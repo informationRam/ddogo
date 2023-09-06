@@ -1,25 +1,35 @@
 package com.yumpro.ddogo.user.service;
 
 import com.yumpro.ddogo.common.entity.User;
+import com.yumpro.ddogo.kakao.entity.KakaoAccount;
+import com.yumpro.ddogo.kakao.entity.KakaoUser;
+import com.yumpro.ddogo.mail.service.EmailService;
 import com.yumpro.ddogo.user.DTO.UserDTO;
 import com.yumpro.ddogo.user.reprository.UserRepository;
 import com.yumpro.ddogo.user.validation.UserCreateForm;
 
 import com.yumpro.ddogo.user.validation.UserModifyForm;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.json.ParseException;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.Date;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class UserService{
 
     private final UserRepository userRepository;
     private final PasswordEncoder PasswordEncoder;
+    private final EmailService emailService;
 
     //회원가입처리
     public void userJoin(UserCreateForm userCreateForm){
@@ -31,7 +41,6 @@ public class UserService {
         user.setGender(userCreateForm.getGender());
         user.setJoinDate(LocalDateTime.now());
         user.setEmail(userCreateForm.getEmail());
-        user.setPwd(userCreateForm.getPwd1());
         user.setPwd(PasswordEncoder.encode(userCreateForm.getPwd1()));
         userRepository.save(user);
     }
@@ -92,9 +101,9 @@ public class UserService {
     //아이디값 넣어서 회원정보 가져오기
     public User getUser(String user_id){
         System.out.println("getUser진입");
-        Optional<User> user = userRepository.findByUserId(user_id);
-        if (user.isPresent()) {
-            return user.get();
+        User user = userRepository.findByUserId(user_id);
+        if (user != null) {
+            return user;
         }
         return null;
     }
@@ -115,6 +124,8 @@ public class UserService {
     public void userDelete(User user){
         userRepository.delete(user);
     }
+
+
 
     //DTO -> Entity로 변경
     public User toEntity(UserDTO userDTO){
@@ -144,13 +155,13 @@ public class UserService {
 
     // user -> UserCreateForm 변경
     public UserCreateForm toUserCreateForm(String user_id){
-        Optional<User> user = userRepository.findByUserId(user_id);
+        User user = userRepository.findByUserId(user_id);
         UserCreateForm userCreateForm = new UserCreateForm();
-        userCreateForm.setUser_name(user.get().getUser_name());
-        userCreateForm.setUser_id(user.get().getUserId());
-        userCreateForm.setBirth(user.get().getBirth());
-        userCreateForm.setGender(user.get().getGender());
-        userCreateForm.setEmail(user.get().getEmail());
+        userCreateForm.setUser_name(user.getUser_name());
+        userCreateForm.setUser_id(user.getUserId());
+        userCreateForm.setBirth(user.getBirth());
+        userCreateForm.setGender(user.getGender());
+        userCreateForm.setEmail(user.getEmail());
         return userCreateForm;
     }
 
@@ -177,4 +188,51 @@ public class UserService {
         userModifyForm.setPwd2(pwd2);
         return userModifyForm;
     }
+    // ---------------- 카카오 -------------------------
+
+    //kakao회원가입처리
+    public void kakaoJoin(String accessToken, KakaoAccount kakaoAccount) throws ParseException, java.text.ParseException {
+        System.out.println("kakaouserjoin서비스진입!");
+        User user = new User();
+        //받아오지 못한 기본값들 세팅
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date defaultBirthDate = dateFormat.parse("9999-01-01");
+
+        // 랜덤 아이디 생성
+        String randomID = null;
+        boolean isUniqueId = false;
+
+        while (!isUniqueId) {
+            randomID = emailService.generateRandomID(); //랜덤 아이디 중복 없을때 저장
+            isUniqueId = !checkUserIdDuplication(randomID);
+        }
+
+        String gender = kakaoAccount.getGender();
+        System.out.println("gender:" +gender);
+        // 성별 받아온 값 첫자리 F,M 으로 출력하기 -> 에러는 E로 저장
+        if (gender != null && !gender.isEmpty()) {
+            String firstCharacter = String.valueOf(gender.charAt(0));
+            System.out.println("firstCharacter : "+firstCharacter);
+            if (firstCharacter.equalsIgnoreCase("f")) {
+                user.setGender("F");
+            } else if (firstCharacter.equalsIgnoreCase("m")) {
+                user.setGender("M");
+            } else {
+                user.setGender("E"); // 에러
+            }
+        } else {
+            user.setGender("E"); // 에러
+        }
+
+        user.setUser_name(randomID);
+        user.setUserId(randomID);
+        user.setBirth(defaultBirthDate);
+        user.setJoinDate(LocalDateTime.now());
+        user.setEmail(kakaoAccount.getEmail());
+        user.setPwd(PasswordEncoder.encode(emailService.getTempPassword()));    //비밀번호도 랜덤으로 저장
+        userRepository.save(user);
+    }
+
+
+
 }

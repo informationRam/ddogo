@@ -1,4 +1,4 @@
-package com.yumpro.ddogo.user.service;
+package com.yumpro.ddogo.user.security;
 
 import lombok.Getter;
 
