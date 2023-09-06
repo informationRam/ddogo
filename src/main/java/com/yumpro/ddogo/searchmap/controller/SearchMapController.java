@@ -1,7 +1,6 @@
 package com.yumpro.ddogo.searchmap.controller;
 
 import com.yumpro.ddogo.common.entity.Hotplace;
-import com.yumpro.ddogo.common.entity.MyMap;
 import com.yumpro.ddogo.common.entity.User;
 import com.yumpro.ddogo.searchmap.dto.SearchMapDTO;
 import com.yumpro.ddogo.searchmap.repository.HotplaceRepository;
@@ -13,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.PrintWriter;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,6 +25,7 @@ public class SearchMapController {
     private final EmoService emoService;
     private final HotplaceRepository hotplaceRepository;
     private final MymapRepository mymapRepository;
+
     //검색할 수 있게 지도 띄워줘 요청
     /*요청주소: http://localhost/search
     * 요청방식: get*/
@@ -44,35 +43,52 @@ public class SearchMapController {
                               @RequestParam String placeName, @RequestParam String placeAddress,
                               @RequestParam String placeCateCode, @RequestParam char myRecommend,
                               @RequestParam String inputReview, @RequestParam String inputMemo,
-                              Principal principal ){ //로그인한 유저 정보 가져오기
-        Hotplace hotplace = hotplaceRepository.findByLatAndLng(markerLat, markerLng);
-        if(hotplace.getHotplaceNo()==null){
-            return "redirect:/search";
-        }
-        System.out.println("핫플no:"+hotplace.getHotplaceNo());
-        //1. 파라미터받기
-        // 1) 먼저 입력한 적 있는지 확인. 이미 저장된 맛집입니다.
-        //  (1) 위도, 경도로 hotplace 검색. DB에 입력된 적 있는지 확인. 중복입력방지
-        //파라미터로 넘어온 위도 경도로 select.
+                              Principal principal ){
 
-        //  (2) 회원번호: mymap 검색할 때 필요.
+        //1. 파라미터받기
         //로그인한 유저 정보 가져오기
         User user = userService.getUser(principal.getName());
+        //DB에 저장된 데이터가 있는지 확인
+        Hotplace hotplace = hotplaceRepository.findByLatAndLng(markerLat, markerLng);
+
+        if(hotplace != null && checkRecord(hotplace, user) == null){
+            System.out.println("DB엔 있지만 내 지도엔 없는 경우. hotplace_no:"+hotplace.getHotplaceNo());
+            // 1) DB에는 있지만 내지도에 저장된 적 없는 경우
+            int mapNo = addMymap(hotplace, user, inputMemo, myRecommend); //방금입력된 mymap의 pk
+            double emoResult = emoService.emoAnal(inputReview); //감정분석결과
+            searchMapService.insertEmoReview(mapNo, hotplace.getHotplaceNo(), inputReview, emoResult);
+        }
+        if(hotplace == null && checkRecord(hotplace, user)==null){
+            System.out.println("DB에도 없고 내 지도에도 없는 경우.");
+            int hotplaceNo = addHotplace(markerLat, markerLng, placeName, placeAddress, placeCateCode);
+            int mapNo = addMymap2(hotplaceNo, user, inputMemo, myRecommend);
+            double emoResult = emoService.emoAnal(inputReview);
+            searchMapService.insertEmoReview(mapNo, hotplace.getHotplaceNo(), inputReview, emoResult);
+        }
+        if(hotplace != null && checkRecord(hotplace, user)!=null){
+            System.out.println("내 지도에 이미 입력된 경우.");
+        }
+
+        //3. 모델 4. 뷰
+        //성공했으면, 잘 저장되었다고 alret하나 띄워줬으면..*/
+
+        return String.format("redirect:/search");
+    }
+    //DB에도 없고 내지도에도 없는 장소를 저장 -2(내지도에)
+    private int addMymap2(int hotplaceNo, User user, String inputMemo, char myRecommend) {
         SearchMapDTO searchMapDTO = new SearchMapDTO();
-        //JPA안됨
-        // MyMap myMap = mymapRepository.findByUserNoAndHotplaceNo(user.getUser_no(), hotplace.getHotplaceNo());
+        searchMapDTO.setMyRecommend(myRecommend);
+        searchMapDTO.setInputMemo(inputMemo);
+        return searchMapService.insertMyMap(user, hotplaceNo, searchMapDTO);
+    }
 
-        //MyBatis시도
-        Map<String, Object> map = new HashMap<>();
-        map.put("user_no", user.getUser_no());
-        System.out.println("map user_no:"+map.get("user_no"));//됨
-        map.put("hotplace_no", hotplace.getHotplaceNo());
-        System.out.println("map user_no:"+map.get("hotplace_no"));//됨
-
-        searchMapService.findHistory(map);
-        //System.out.println("이미 저장됨. mymapNo:"+myMap.getMapNo());
+    // 1) hotplace 테이블에 insert DB에도 없고 내지도에도 없는 장소를 저장 -1(핫플에)
+    //리턴: 방금입력된 hotplace_no
+    private int addHotplace(double markerLat, double markerLng,
+                            String placeName, String placeAddress, String placeCateCode) {
+        SearchMapDTO searchMapDTO = new SearchMapDTO();
         //도로명 주소 자르기 예:제주특별자치도->제주 서귀포시
-        /*String afterSido = placeAddress.substring(placeAddress.indexOf(" ")+1); //첫번째 공백 이후 부터 끝까지.
+        String afterSido = placeAddress.substring(placeAddress.indexOf(" ")+1); //첫번째 공백 이후 부터 끝까지.
         String sido = placeAddress.substring(0, 2);
         String gugun = afterSido.substring(0, afterSido.indexOf(" "));
         //DTO에 담기
@@ -82,39 +98,34 @@ public class SearchMapController {
         searchMapDTO.setAddress(placeAddress);//전체도로명주소
         searchMapDTO.setSido(sido); //시, 도
         searchMapDTO.setGugun(gugun); //시,군,구
-        searchMapDTO.setInputReview(inputReview);
-        searchMapDTO.setInputMemo(inputMemo);
-        searchMapDTO.setMyRecommend(myRecommend);
+
         // DTO placeCateNo필드에 코드에 따라 no부여
         if(placeCateCode.equals("FD6")){
             searchMapDTO.setPlaceCateNo(1);
         } else {
             searchMapDTO.setPlaceCateNo(2);
         }
+        return searchMapService.insertHotpalce(searchMapDTO);
+    }
 
-        //2. 비즈니스로직처리
-        // 1) hotplace 테이블에 insert
-        //  리턴: 방금 hotplace에 입력된 pk인 hotplace_no의 값
-        int hotplaceNo = searchMapService.insertHotpalce(searchMapDTO);
+    // 2) mymap 테이블에 insert DB에 있지만 내 지도엔 없음
+    //리턴: 방금입력된 map_no
+    private int addMymap(Hotplace hotplace, User user, String inputMemo, char myRecommend) {
+        SearchMapDTO searchMapDTO = new SearchMapDTO();
+        searchMapDTO.setHotplaceNo(hotplace.getHotplaceNo());
+        searchMapDTO.setInputMemo(inputMemo);
+        searchMapDTO.setMyRecommend(myRecommend);
+        return searchMapService.insertMyMap(user, hotplace.getHotplaceNo(), searchMapDTO);
+    }
 
-        // 2) mymap 테이블에 insert
-        // 파라미터: 로그인한 유저번호, 방금 hotplace에 입력된 pk인 hotplace_no의 값
-        //  리턴: 방금 mymap에 입력된 pk인 map_no의 값
-        int mapNo = searchMapService.insertMyMap(user, hotplaceNo, searchMapDTO);
-
-        // 3) 입력받은 review감정분석
-        // 파라미터: form에 입력받은 review
-        //  리턴: 감정분석결과
-        double emoResult = emoService.emoAnal(searchMapDTO.getInputReview());
-
-        // 4) 분설결과와 함께 emoreview 테이블에 insert
-        // 파라미터: 분석결과, 방금 입력한 hotplace_no, 방금 입력한 map_no
-        searchMapService.insertEmoReview(emoResult, hotplaceNo, mapNo, searchMapDTO);
-
-        //3. 모델 4. 뷰
-        //성공했으면, 잘 저장되었다고 alret하나 띄워줬으면..*/
-
-        return String.format("redirect:/search");
+    //내지도에 저장된적 있는지 확인
+    //저장됐으면 mymapNo를 리턴.
+    private Integer checkRecord(Hotplace hotplace, User user) {
+            //MyBatis시도 -성공
+            Map<String, Object> map = new HashMap<>();
+            map.put("user_no", user.getUser_no());
+            map.put("hotplace_no", hotplace.getHotplaceNo());
+            return searchMapService.findHistory(map);
     }
 
 }
