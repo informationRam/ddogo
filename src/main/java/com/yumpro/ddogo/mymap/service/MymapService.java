@@ -1,14 +1,11 @@
 package com.yumpro.ddogo.mymap.service;
 
-import com.yumpro.ddogo.common.entity.MyMap;
-import com.yumpro.ddogo.mymap.common.DataNotFoundException;
 import com.yumpro.ddogo.mymap.domain.MyMapDTO;
 import com.yumpro.ddogo.mymap.mapper.MyMapMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -28,13 +25,10 @@ public class MymapService {
     }
 
     //저장한 맛집(마커) 삭제
-      public MyMap deleteHotpl(Integer mapNo) {
-          Optional<MyMap> myMap = myMapMapper.deleteMyHotpl(mapNo);
-          if(myMap.isPresent()){
-              return myMap.get();
-          }else{
-              throw new DataNotFoundException("mapNo not Found");
-          }
+      public void deleteHotpl(Integer mapNo) {
+          myMapMapper.deleteMyHotpl(mapNo);
+
+
       }
 }
 

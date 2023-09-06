@@ -1,6 +1,5 @@
 package com.yumpro.ddogo.mymap.controller;
 
-import com.yumpro.ddogo.common.entity.MyMap;
 import com.yumpro.ddogo.common.entity.User;
 import com.yumpro.ddogo.mymap.domain.MyMapDTO;
 import com.yumpro.ddogo.mymap.service.MymapService;
@@ -32,11 +31,8 @@ public class MymapController {
 
         //1. 파라미터 받기 - mapNo
         // 서비스를 호출하여 해당 항목 삭제
-        MyMap mymap = myMapService.deleteHotpl(mapNo);
-
-        if (!mymap.getUserNo().equals(loginUser.getUser_no())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
-        }
+        myMapService.deleteHotpl(mapNo);
+       // return "redirect:/mymap/" + principal.getName(); // 삭제 후 리다이렉트
         return "redirect:/mymap/{user_id}"; // 삭제 후 리다이렉트
     }
 

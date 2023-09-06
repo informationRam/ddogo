@@ -1,10 +1,12 @@
 <html layout:decorate="~{layout}" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <div layout:fragment="content" > <!-- container-fluid-->
-  <head>
-    <title>마이맵</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="/css/mymapCSS.css">
-  </head>
+    <head>
+        <title>마이맵</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css"
+              href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
+        <link rel="stylesheet" type="text/css" href="/css/mymapCSS.css">
+    </head>
     <body>
 
   <!-- 좌측에 맛집 리스트를 표시하는 부분 -->
@@ -33,7 +35,7 @@
               </div>
 
               <div class="justify-content-end">
-                  <a href="#" class="btn btn-outline-secondary btn-sm">삭제</a> <!-- 삭제 -->
+                  <a href="#" class="btn btn-outline-secondary btn-sm btn-delete" data-toggle="modal" data-target="#deleteModal" th:attr="data-map-id=${myhotpl.mapNo}">삭제</a> <!-- 삭제 -->
                 <a href="#" class="btn btn-outline-danger btn-sm">찜</a> <!-- 찜 아이콘 -->
                 <a href="#" class="btn btn-outline-success btn-sm">내 후기</a> <!-- 내 후기 -->
               </div>
@@ -41,67 +43,89 @@
           </div>
         </div>
       </div>  <!-- col-md-3 -->
+        <!-- 맛집 리스트 삭제 모달 -->
+        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteModalLabel">맛집 삭제 확인</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        해당 맛집을 삭제하시겠습니까?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+                        <button type="button" class="btn btn-danger" id="confirmDelete">삭제</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <!-- 삭제 확인용 모달창 끝 -->
     </div><!-- listContainer 끝 -->
 <!-- 지도 영역 시작   -->
-  <div class="column" id="mapContainer">
+  <div class="column" id="myMapContents">
       <div class="col-md-9">
-
-
         <!-- 지도를 표시할 div -->
           지도출력영역
-        <p style="margin-top:10px"></p>
-        <div id="map"  style="width:100%;height:100%;"></div>
+           <div id="map" style="width:90%;height:500px;"></div>
+          <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=820d01b1cce59185ed776419691dab39"></script>
 
-          <!-- 현재위치 버튼 -->
-        <div id="MapControlView">
-          <button id="gpsButton" onclick="gps_check()"> 내 주변보기</button>
-        </div>
-      </div>
-  </div>
-</div>
+          <!--db로 마커값 받아오기 -->
+          <script th:inline="javascript">
+              //지도 생성 스크립트
+                  var mapContainer = document.getElementById('map'), //지도를 표시할 div
+                        mapOption = {
+                        center: new kakao.maps.LatLng(37.506016526623334, 127.10691218161601),  //기본 중심좌표 :석촌
+                        level: 3
+                    };
+
+                //지도 생성
+                var map = new kakao.maps.Map(mapContainer, mapOption);
+
+                //db저장 정보 마커표시, 변수 가져오기
+
+                /*<![CDATA[*/
+                var positions = [
+                    /*[# th:each="myhotpl : ${myHotplList}"]*/
+                    {
+                        title: /*[[${myhotpl.hotplaceName}]]*/,
+                        latlng: new kakao.maps.LatLng(/*[[${myhotpl.lat}]]*/, /*[[${myhotpl.lng}]]*/)
+                    },
+                    /*[/]*/
+                ];
+                /*]]>*/
+          </script>
+        <!--  <script type="text/javascript" src="/js/mymapAPI.js"></script>-->
+
+          <!------------- 현위치 표시 api------- -->
+
+          <div id="MapControlView">
+                   <button id="gpsBtn" class="btn-outline-danger gpsBtn" onclick="gps_check()"> 내 주변보기</button>
+                 </div>
+               </div>
+           </div>
+         </div>
 
 
 
+         </body>
+<!-----  javascript 영역 --------------->
+           <!-- 지도 api 연동 -->
+   <!--db로 마커값 받아오기 -->
+ <script type="text/javascript" th:inline="javascript">
+     // Thymeleaf를 이용하여 사용자 ID를 가져와서 JavaScript 변수로 설정
+     var userId = /*[[${user_id}]]*/
+     var userName = /*[[${user_name}]]*/
+     var mapNo= /*[[${mapNo}]]*/
 
-      <!-----  javascript 영역 --------------->
-  <!-- 지도 api 연동 -->
-  <script type="text/javascript"
-          src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=820d01b1cce59185ed776419691dab39&libraries=services"></script>
-
-  <!--db로 마커값 받아오기 -->
-<script type="text/javascript" th:inline="javascript">
-    // Thymeleaf를 이용하여 사용자 ID를 가져와서 JavaScript 변수로 설정
-    var userId = /*[[${user_id}]]*/
-    var userName = /*[[${user_name}]]*/
-
-    // 현재 위치 확인 및 지도 표시
-    gps_check();
 </script>
+<script>
+<!--     // 현재 위치 확인 및 지도 표시
+     gps_check();-->
 
- <script th:inline="javascript">
-     //지도 생성 스크립트
-     /*<![CDATA[*/
-       var mapContainer = document.getElementById('map'),
-           mapOption = {
-               center: new kakao.maps.LatLng(37.506016526623334, 127.10691218161601),
-               level: 3
-           };
-
-       //지도 생성
-       var map = new kakao.maps.Map(mapContainer, mapOption);
-
-       //db저장 정보 마커표시
-
-       /*<![CDATA[*/
-       var positions = [
-           /*[# th:each="myhotpl : ${myHotplList}"]*/
-           {
-               title: /*[[${myhotpl.hotplaceName}]]*/,
-               latlng: new kakao.maps.LatLng(/*[[${myhotpl.lat}]]*/, /*[[${myhotpl.lng}]]*/)
-           },
-           /*[/]*/
-       ];
-       /*]]>*/
 
       // 마커 이미지의 이미지 주소
         var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
@@ -114,10 +138,10 @@
                 map: map,
                 position: positions[i].latlng,
                 title: positions[i].title
+                image: markerImage // 마커 이미지
             });
         }
-        // 마커가 지도 위에 표시되도록 설정합니다
-        marker.setMap(map);
+
   </script>
   <script>
       //gps로 위치 불러오기 : gps_check()함수
@@ -168,13 +192,51 @@
             }
         }
   </script>
+<!-- 맛집 리스트 삭제 모달용 -->
+<script>
+    // 모든 삭제 버튼에 대한 이벤트 리스너 등록
+  var deleteButtons = document.querySelectorAll('.btn-delete');
 
+  deleteButtons.forEach(function (button) {
+      button.addEventListener('click', function () {
+          var mapId = this.getAttribute('data-map-id');
+          document.getElementById('deleteModal').setAttribute('data-map-id', mapId);
+      });
+  });
+
+  // 삭제 확인 버튼 클릭 시 해당 맛집 삭제
+  document.getElementById('confirmDelete').addEventListener('click', function () {
+      var mapId = document.getElementById('deleteModal').getAttribute('data-map-id');
+
+      // 서버로 삭제 요청을 보내는 XMLHttpRequest 객체 생성
+      var xhr = new XMLHttpRequest();
+
+      xhr.open('GET', '/mymap/delete/' + mapId, true);
+
+      xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4) {
+              if (xhr.status === 200) {
+                  // 삭제 성공 시 해당 맛집 카드를 화면에서 제거
+                  var cardToDelete = document.querySelector('.card[data-map-id="' + mapId + '"]');
+                  if (cardToDelete) {
+                      cardToDelete.parentNode.removeChild(cardToDelete);
+                  }
+                  document.getElementById('deleteModal').style.display = 'none'; // 모달 창 닫기
+              } else {
+                  // 삭제 실패 시 처리
+                  alert('삭제 실패');
+                  document.getElementById('deleteModal').style.display = 'none'; // 모달 창 닫기
+              }
+          }
+      };
+
+      xhr.send();
+  });
+
+</script>
+</div>
+</html>
 
 <!--  &lt;!&ndash; mymapAPI.js 파일을 포함 &ndash;&gt;-->
 <!--  <script type="text/javascript" src="/js/mymapAPI.js"></script>-->
 
-
-
-
-  </body>
-</html>

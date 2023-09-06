@@ -5,7 +5,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Setter
+@Setter 
 
 // 회원별 저장한 맛집 정보 및 후기 데이터 저장 클래스
 public class MyMapDTO {
