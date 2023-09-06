@@ -74,4 +74,14 @@ public class QnaService {
         qna.setQnaSolved('Y');
         qnaJpaRepository.save(qna);
     }
+
+    public QnaSolve getQnaSolveById(int id) {
+        Optional<QnaSolve> optionalQnaSolve = qnaSolveRepository.findById(id);
+
+        if(optionalQnaSolve.isPresent()){
+            return optionalQnaSolve.get();
+        }else{
+            throw new DataNotFoundException();
+        }
+    }
 }

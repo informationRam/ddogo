@@ -89,11 +89,6 @@ public class QnaController {
     public String qnaDetail(@PathVariable int id, @RequestParam String inputPwd, Model model, Principal principal, QnaSolveAddForm qnaSolveAddForm){
 
         Qna qna = qnaService.getQnaById(id);
-        
-        System.out.println("유저 아이디"+principal.getName());
-        System.out.println("보려는 글번호"+id);
-        System.out.println("입력 비번"+inputPwd);
-        System.out.println("문의 비번"+qna.getQnaPwd());
 
         if(!principal.getName().equals("admin")){
             if(!qna.getQnaPwd().equals(inputPwd)){
@@ -110,6 +105,9 @@ public class QnaController {
         }else{
             userRole="user";
         }
+
+        System.out.println(userRole);
+        System.out.println(qnaSolve);
 
         model.addAttribute("qnaSolve",qnaSolve);
         model.addAttribute("qna",qna);
@@ -163,6 +161,29 @@ public class QnaController {
         //4.View
         return "qna/qna_detail";
     }
+
+    //답변 수정 폼 보여줘
+    @PreAuthorize("isAuthenticated()")//로그인인증
+    @GetMapping("/solve/modify/{id}")
+    public String qnaSolveMofiFrom(@PathVariable int id, Model model, Principal principal, QnaSolveAddForm qnaSolveAddForm){
+
+        Qna qna = qnaService.getQnaById(id);
+        QnaSolve qnaSolve = qnaService.getQnaSolveByQna(qna);
+
+        if(!principal.getName().equals("admin")){
+            return "redirect:/qna/list";
+        }
+
+        qnaSolveAddForm.setQnaSolveTitle(qnaSolve.getQnaSolveTitle());
+        qnaSolveAddForm.setQnaSolveContent(qnaSolve.getQnaSolveContent());
+
+        model.addAttribute("qna",qna);
+
+        return "qna/qna_modify";
+    }
+
+    //답변수정처리
+    //답변 삭제
 
 }
 
