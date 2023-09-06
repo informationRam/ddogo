@@ -20,7 +20,7 @@ public class SearchMapService {
     private final MymapRepository mymapRepository;
     private final EmoreviewRepository emoreviewRepository;
 
-    // 1) hotplace 테이블에 insert
+        // 1) hotplace 테이블에 insert
     //  리턴: 방금 hotplace에 입력된 pk인 hotplace_no의 값
     public int insertHotpalce(SearchMapDTO searchMapDTO) {
         Hotplace hotplace = new Hotplace();

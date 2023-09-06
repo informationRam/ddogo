@@ -35,11 +35,11 @@ public class SearchMapController {
         return "searchmap/searchMap";
     }
 
-    //마커를 클릭했을 때, 해당 장소를 내 지도에 저장해줘 요청
+    //(유효성검사 자바스크립트로)마커를 클릭했을 때, 해당 장소를 내 지도에 저장해줘 요청
     /*요청주소: http://localhost/search/add
     * 요청방식: post*/
-    /*form 의 input type="hidden" 으로 값 가져오는 메소드: 됨*/
     @PostMapping("/add")
+    //@PreAuthorize("isAuthenticated()") //로그인한 사람만 저장 가능
     public String add(@RequestParam double markerLat, @RequestParam double markerLng,
                               @RequestParam String placeName, @RequestParam String placeAddress,
                               @RequestParam String placeCateCode, @RequestParam char myRecommend,
@@ -50,7 +50,12 @@ public class SearchMapController {
             return "redirect:/search";
         }
         System.out.println("핫플no:"+hotplace.getHotplaceNo());
-        //1. 파라미터받아서 DTO에 담기
+        //1. 파라미터받기
+        // 1) 먼저 입력한 적 있는지 확인. 이미 저장된 맛집입니다.
+        //  (1) 위도, 경도로 hotplace 검색. DB에 입력된 적 있는지 확인. 중복입력방지
+        //파라미터로 넘어온 위도 경도로 select.
+
+        //  (2) 회원번호: mymap 검색할 때 필요.
         //로그인한 유저 정보 가져오기
         User user = userService.getUser(principal.getName());
         SearchMapDTO searchMapDTO = new SearchMapDTO();
