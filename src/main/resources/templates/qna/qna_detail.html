@@ -1,5 +1,16 @@
 <html layout:decorate="~{layout}" xmlns:th="http://www.thymeleaf.org">
 <div layout:fragment="content" class="container my-3">
-
+    <div class="border-bottom py-2">
+        <h3 th:text="${qna.qnaTitle}"></h3>
+    </div>
+    <div class="card my-3">
+        <div class="card-body">
+            <div class="card-text" style="white-space:pre-line;" th:text="${qna.qnaContent}"></div>
+            <div class="d-flex justify-content-end">
+                <div class="badge bg-light text-dark p-2 text-start" th:text="${qna.user.user_no}"></div>
+                <div class="badge bg-light text-dark p-2 text-start" th:text="${#temporals.format(qna.qna_date,'yyyy/MM/dd HH:mm')}"></div>
+            </div>
+    </div>
+</div>
 </div>
 </html>
