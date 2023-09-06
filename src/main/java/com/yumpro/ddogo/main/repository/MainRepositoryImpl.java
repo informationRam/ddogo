@@ -1,5 +1,6 @@
 package com.yumpro.ddogo.main.repository;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -10,9 +11,9 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
+@RequiredArgsConstructor
 public class MainRepositoryImpl implements MainRepository{
-    @Autowired
-    private SqlSession sqlSession;
+    private final SqlSession sqlSession;
 
     @Override
     public List<HashMap<String, Object>> eatjjim(){

@@ -12,7 +12,6 @@
 		]]>
     </select>-->
 
-
     <!--오늘 전국 베스트 찜(음식점)-->
     <select id="allBestEatJjim" resultType="com.yumpro.ddogo.main.dto.BestJjimDTO">
         <![CDATA[
@@ -30,7 +29,7 @@
           and m.recom = 'Y'
           and h.hotplace_cate_no = 1
         group by h.hotplace_name, h.hotplace_no, ra.avg_emo_result
-        order by jjim desc
+        order by jjim desc,avg_emo_result desc
         limit 3
 		]]>
     </select>
@@ -52,7 +51,7 @@
           and m.recom = 'Y'
           and h.hotplace_cate_no = 2
         group by h.hotplace_name, h.hotplace_no, ra.avg_emo_result
-        order by jjim desc
+        order by jjim desc,avg_emo_result desc
         limit 3
 		]]>
     </select>
@@ -87,17 +86,15 @@
         from hotplace h
         left join mymap m on h.hotplace_no = m.hotplace_no
         left join ReviewAverages ra on h.hotplace_no = ra.hotplace_no
-        where year(m.recom_date) = year(NOW()) AND month(m.recom_date) = month(NOW())
+        where year(m.recom_date) = year(now()) and month(m.recom_date) = month(now())
           and m.recom = 'Y'
           and h.hotplace_cate_no =#{hotplace_cate_no}
           and h.sido=#{sido}
           and h.gugun=#{gugun}
         group by h.hotplace_name, h.hotplace_no, ra.avg_emo_result
-        order by jjim desc
-        limit 3
+        order by jjim desc,avg_emo_result desc
+        limit 5
 		]]>
     </select>
-
-
 
 </mapper>

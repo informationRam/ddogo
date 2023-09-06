@@ -1,6 +1,7 @@
 package com.yumpro.ddogo.main.service;
 
 import com.yumpro.ddogo.main.repository.MainRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,9 +10,9 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class MainService {
-    @Autowired
-    private MainRepository mainRepository;
+    private final MainRepository mainRepository;
 
 
     public List<HashMap<String, Object>> eatjjim() throws Exception{

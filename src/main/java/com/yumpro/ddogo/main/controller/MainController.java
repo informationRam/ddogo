@@ -2,6 +2,7 @@ package com.yumpro.ddogo.main.controller;
 
 import com.yumpro.ddogo.main.service.MainService;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,25 +21,22 @@ import java.util.Map;
 
 @SpringBootApplication
 @Controller
+@RequiredArgsConstructor
 public class MainController {
-    @Autowired
-    private MainService mainService;
+    private final MainService mainService;
     
-
     @GetMapping(value = "main")
     public String main(HttpServletResponse response, Model model) throws Exception {
         //일별 베스트
-        //맛집
-        List<HashMap<String, Object>> eatjjim = mainService.eatjjim();
-        //카페
-        List<HashMap<String, Object>> cafejjim = mainService.cafejjim();
+        List<HashMap<String, Object>> eatjjim = mainService.eatjjim(); //맛집
+        List<HashMap<String, Object>> cafejjim = mainService.cafejjim(); //카페
         System.out.println("eatjjim"+eatjjim);
         System.out.println("cafejjim"+cafejjim);
 
         model.addAttribute("cafejjim",cafejjim);
         model.addAttribute("eatjjim",eatjjim);
 
-        //월별베스트
+        //월별 베스트
         Map<String, List<String>> sigunguMap = mainService.getsidogungu();
         JSONObject obj = new JSONObject();
         response.setContentType("text/html; charset=UTF-8");
@@ -61,7 +59,7 @@ public class MainController {
         model.addAttribute("sigunguMap", sigunguMap);
         System.out.println("sigunguMap_test3" + sigunguMap);
 
-        return "main/main";
+        return "main/main2";
 
     }
 
@@ -87,7 +85,6 @@ public class MainController {
         System.out.println("selectedGugun=" + selectedGugun);
         System.out.println("hotplace_cate_no=" + selectedCategory);
 
-        // mainService.monthBest(selectedSido, selectedGugun)을 실행하여 원하는 데이터를 가져옴
         List<HashMap<String, Object>> monthBestList = mainService.monthBest(selectedSido, selectedGugun, selectedCategory);
         System.out.println("monthBestList=" + monthBestList);
 
