@@ -20,14 +20,31 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableMethodSecurity(prePostEnabled = true)//@PreAuthorize("isAuthenticated()")//로그인인증가 동작할 수 있기 위함
 public class SecurityConfig {
 
-/*
-    @Configuration
-    @EnableWebSecurity
-    @EnableMethodSecurity(prePostEnabled = true)//@PreAuthorize("isAuthenticated()")//로그인인증가 동작할 수 있기 위함
-    public class SecurityConfig {
-        @Bean
-        SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-          http.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
+    @Bean
+    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.
+                csrf().disable() // CSRF 보호 비활성화
+                        /*csrf().and()*/ // CSRF 보호 활성화
+                .authorizeHttpRequests();
+        http.authorizeHttpRequests()
+                .requestMatchers(new AntPathRequestMatcher("/user/modifyForm/**")).authenticated()
+                .requestMatchers(new AntPathRequestMatcher("/manager/**")).hasAnyRole("MANAGER", "ADMIN")
+                .requestMatchers(new AntPathRequestMatcher("/admin/**")).hasRole("ADMIN")
+                .anyRequest().permitAll()
+                .and().formLogin().
+                loginPage("/user/login").usernameParameter("user_id").passwordParameter("pwd").defaultSuccessUrl("/")
+                .and().logout().
+                logoutRequestMatcher(new AntPathRequestMatcher("/user/logout")).logoutSuccessUrl("/").invalidateHttpSession(true)
+                .and().exceptionHandling().accessDeniedPage("/common/ddoError")
+                .and()
+                .exceptionHandling() // 예외 처리 설정을 추가합니다.
+                .accessDeniedPage("/common/ddoError.html"); // 403 에러 발생 시 커스텀 에러 페이지로 리디렉션합니다.
+
+        return http.build();
+  }
+   /* @Bean  ->기존내용
+    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
                         .requestMatchers(new AntPathRequestMatcher("/**")).permitAll())
                 .csrf((csrf) -> csrf
                         .ignoringRequestMatchers(new AntPathRequestMatcher("/h2-console/**")))
@@ -43,27 +60,25 @@ public class SecurityConfig {
                 .exceptionHandling().accessDeniedPage("/common/ddoError");
         ;
         return http.build();
-    }
-*/
-
+    }*/
+    /*    @Bean  -> 403 에러 방지
+        SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+            http.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
+                            .requestMatchers(new AntPathRequestMatcher("/**")).permitAll())
+                    .csrf().disable()
+                    .formLogin((formLogin) -> formLogin.loginPage("/user/login").usernameParameter("user_id")
+                            .passwordParameter("pwd")
+                            .defaultSuccessUrl("/"))
+                    .logout((logout) -> logout
+                            .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
+                            .logoutSuccessUrl("/")
+                            .invalidateHttpSession(true))   //세션날리기
+                    .exceptionHandling().accessDeniedPage("/common/ddoError");
+            ;
+            return http.build();
+        }*/
     @Bean
-    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
-                        .requestMatchers(new AntPathRequestMatcher("/**")).permitAll())
-                .csrf().disable()
-                .formLogin((formLogin) -> formLogin.loginPage("/user/login").usernameParameter("user_id")
-                        .passwordParameter("pwd")
-                        .defaultSuccessUrl("/"))
-                .logout((logout) -> logout
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
-                        .logoutSuccessUrl("/")
-                        .invalidateHttpSession(true))   //세션날리기
-                .exceptionHandling().accessDeniedPage("/common/ddoError");
-        ;
-        return http.build();
-    }
-    @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         /*BCryptPasswordEncoder클래스는 스프링 시큐리티에서 제공되는 클래스이다.이 클래스이용해서  패스워드를 암호화해서 처리하도록 한다.
         bcrypt는 패스워크드를 저장하는 용도로 설계된 해시 함수로
         특정 문자열을 암호화하고,
@@ -81,6 +96,7 @@ public class SecurityConfig {
     AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
+}
 
   /*  protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
@@ -104,5 +120,5 @@ public class SecurityConfig {
     }
 */
 
-}
+
 

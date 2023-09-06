@@ -1,11 +1,13 @@
 package com.yumpro.ddogo.user.controller;
 
-import com.yumpro.ddogo.common.entity.KakaoAccount;
+
 import com.yumpro.ddogo.common.entity.User;
-import com.yumpro.ddogo.common.entity.KakaoUser;
+import com.yumpro.ddogo.kakao.entity.KakaoAccount;
+import com.yumpro.ddogo.kakao.entity.KakaoData;
+import com.yumpro.ddogo.kakao.entity.Kakaouser;
+import com.yumpro.ddogo.kakao.service.Kakaoservice;
 import com.yumpro.ddogo.mail.service.EmailService;
 
-import com.yumpro.ddogo.user.service.UserSecurityService;
 import com.yumpro.ddogo.user.service.UserService;
 import com.yumpro.ddogo.user.validation.LoginVaildation;
 import com.yumpro.ddogo.user.validation.UserCreateForm;
@@ -13,9 +15,11 @@ import com.yumpro.ddogo.user.validation.UserModifyForm;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.json.ParseException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -39,8 +43,11 @@ public class UserController {
     private final UserService userService;
     // 메일발송 서비스
     private final EmailService emailService;
-    //세션값 담기(1)
-    private final UserSecurityService userSecurityService;
+
+
+
+    // 카카오 서비스
+    private final Kakaoservice kakaoservice;
 
     //회원가입 폼
     @GetMapping("/joinForm")
@@ -49,39 +56,7 @@ public class UserController {
         return "/user/joinForm";
     }
 
-
-
-    //회원가입처리 후 로그인페이지로 이동
-    @PostMapping("/join")
-    public String userJoin(@Valid UserCreateForm userCreateForm, BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) {
-            return "/user/loginForm";
-        }
-
-        // 아이디 중복 여부체크
-        if (userService.checkUserIdDuplication(userCreateForm.getUser_id())) {
-            bindingResult.rejectValue("user_id", "User_idInCorrect", "이미 사용중인 아이디입니다.");
-            return "/user/loginForm";
-        }
-
-        // 이메일 중복 여부체크
-        if (userService.checkEmailDuplication(userCreateForm.getEmail())) {
-            bindingResult.rejectValue("email", "EmailInCorrect", "이미 사용중인 이메일 입니다.");
-            return "/user/loginForm";
-        }
-
-        // 비밀번호, 비밀번호 확인 동일 체크
-        if (!userCreateForm.getPwd1().equals(userCreateForm.getPwd2())) {
-            bindingResult.rejectValue("pwd2", "pwdInCorrect", "비밀번호 확인 값이 다릅니다.");
-            return "/user/loginForm";
-        } else {
-            userService.userJoin(userCreateForm);
-            return "redirect:/user/login";
-        }
-    }
-
-
-  /*  //회원가입처리 후 로그인페이지로 이동
+ //회원가입처리 후 로그인페이지로 이동
     @PostMapping("/join")
     public String userJoin(@Valid UserCreateForm userCreateForm, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
@@ -109,7 +84,7 @@ public class UserController {
             return "redirect:/user/login";
         }
     }
-*/
+
     //로그인 화면(get)
     @GetMapping("/login")
     public String loginForm(LoginVaildation loginVaildation,Model model,UserCreateForm userCreateForm) {
@@ -243,13 +218,105 @@ public class UserController {
         return "redirect:/user/logout";    //목록으로이동
     }
 
-
+// ----------------- 카카오 테스트 중 ------------------
 
     //카카오 테스트폼
-    @GetMapping("/kakao")
+    @GetMapping("/kakao2")
     public String kakao() {
-        return "/user/kakaoLogin";
+        return "/user/kakao2";
     }
+
+
+
+
+    //카카오 로그인
+    @PostMapping("/kakao")
+    public String kakaoLogin(@RequestBody KakaoData kakaoData) throws ParseException, java.text.ParseException {
+        Kakaouser user;
+        // 카카오 인증 정보를 사용하여 사용자 인증 처리
+        UserDetails userDetails = userService.loadUserByKakaoToken(kakaoData.getAuthObj().getAccess_token());
+
+        // 사용자 인증 성공 시 Spring Security의 Authentication에 사용자 정보 설정
+        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        // Now you can access the data in the KakaoData object
+        System.out.println("Access Token: " + kakaoData.getAuthObj().getAccess_token());
+        System.out.println("Expires In: " + kakaoData.getAuthObj().getExpires_in());
+        String accessToken = kakaoData.getAuthObj().getAccess_token();
+
+        // Access Kakao Account data
+        KakaoAccount kakaoAccount = kakaoData.getKakao_account();
+        System.out.println("Age Range: " + kakaoAccount.getAge_range());
+        System.out.println("Birthday: " + kakaoAccount.getBirthday());
+        System.out.println("Email: " + kakaoAccount.getEmail());
+        System.out.println("Gender: " + kakaoAccount.getGender());
+        String email = kakaoAccount.getEmail();
+
+        // 사용자 정보 조회
+        user = kakaoservice.getUser(accessToken);
+
+        if (user != null) {
+            // 사용자가 이미 존재하는 경우 중복 처리를 할 수 있음
+            if (email.equals(user.getEmail())) {
+                return "/user/kalogin";
+            } else {
+                // 중복값이 없으면 DB에 저장한다.
+                kakaoservice.add(kakaoData.getAuthObj().getAccess_token(), kakaoAccount);
+                userService.kakaoJoin(kakaoData.getAuthObj().getAccess_token(), kakaoAccount);
+                return "/user/kalogin";
+            }
+        } else {
+            // 사용자가 없는 경우 DB에 등록한다.
+            kakaoservice.add(kakaoData.getAuthObj().getAccess_token(), kakaoAccount);
+            userService.kakaoJoin(kakaoData.getAuthObj().getAccess_token(), kakaoAccount);
+            return "/user/kalogin";
+        }
+    }
+
+
+
+    @RequestMapping("/kalogin")
+    public String authtest(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model) {
+
+        System.out.println("MDTO : "+principalDetails.getMdto());
+        model.addAttribute("user", principalDetails.getMdto());
+        return "login/authtest";
+    }
+    /*
+    @PostMapping("/kakao")
+    public String kakaoLogin(@RequestBody KakaoAccount kakaoAccount) {
+        System.out.println("받음!@");
+
+        System.out.println("kakaoAccount:"+kakaoAccount);
+
+
+        *//*kakaoAccount = kakaoUser.getKakao_account();*//*
+     *//*   if(kakaoAccount != null){
+            userService.kakaoJoin(kakaoAccount);
+        }*//*
+        String profileNickname = kakaoAccount.getProfileNickname();
+        String gender = kakaoAccount.getGender();
+        String ageRange = kakaoAccount.getAgeRange();
+        String birthday = kakaoAccount.getBirthday();
+        String email = kakaoAccount.getEmail();
+
+        // 사용자 정보를 출력하거나 원하는 작업을 수행합니다.
+        System.out.println("Profile Nickname: " + profileNickname);
+        System.out.println("Gender: " + gender);
+        System.out.println("Age Range: " + ageRange);
+        System.out.println("Birthday: " + birthday);
+        System.out.println("email: " + email);
+
+
+        // 원하는 로직을 수행한 후 응답을 반환합니다.
+        return "카카오 로그인 완료";
+    }*/
+
+
+/*
+
+
 
     @PostMapping("/kakao")
     public String kakaoLogin(@RequestBody KakaoAccount kakaoAccount,@RequestBody Map<String, String> data) {
@@ -258,9 +325,12 @@ public class UserController {
         System.out.println("kakaoAccount:"+kakaoAccount);
         String nickname = data.get("nickname");
 
-      /*  kakaoAccount = kakaoUser.getKakao_account();*/
+        */
+/*  kakaoAccount = kakaoUser.getKakao_account();*//*
 
-
+        if(kakaoAccount != null){
+            userService.kakaoJoin(kakaoAccount);
+        }
         String profileNickname = kakaoAccount.getProfileNickname();
         String gender = kakaoAccount.getGender();
         String ageRange = kakaoAccount.getAgeRange();
@@ -278,6 +348,8 @@ public class UserController {
         // 원하는 로직을 수행한 후 응답을 반환합니다.
         return "카카오 로그인 완료";
     }
+
+*/
 
 
     //카카오 테스트폼
