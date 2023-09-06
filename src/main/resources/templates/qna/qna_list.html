@@ -18,6 +18,8 @@
         </form>
         <!-- 총 개수 표시 -->
         <div class="mb-2">총 개수: <span th:text="${totalCnt}"></span></div>
+        <a href="/qna/add" class="btn btn-primary">질문작성</a>
+        <a href="/qna/list" class="btn btn-primary ms-2"><i class="bi bi-arrow-repeat"></i></a>
         <table class="table table-striped">
             <thead>
             <tr>
@@ -67,7 +69,6 @@
             </tr>
             </tbody>
         </table>
-        <a href="/qna/list" class="btn btn-primary ms-2"><i class="bi bi-arrow-repeat"></i></a>
         <!--페이지네이션-->
         <nav th:if="${#lists.size(qnaList)} > 0">
             <ul class="pagination">
