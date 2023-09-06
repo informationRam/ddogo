@@ -40,7 +40,7 @@ public class UserListController {
     //리스트 보여주기(검색 정렬 페이지네이션)
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/user/list")
-    public String userList(Model model, @RequestParam Map<String, Object> map, @RequestParam(value = "page", defaultValue = "1") int currentPage) {
+    public String userList(Model model, @RequestParam Map<String, Object> map, @RequestParam(value = "page", defaultValue = "1") int currentPage,Principal principal) {
 
         int limit = 10; // 페이지당 보여줄 아이템 개수
         int offset = (currentPage - 1) * limit;
@@ -48,6 +48,9 @@ public class UserListController {
         map.put("limit", limit);
         map.put("offset", offset);
 
+        if ( !principal.getName().equals("admin") ) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"권한이 없습니다.");
+        }
         List<UserDTO> userList = userService.userList(map);
 
         int totalPages = (int) Math.ceil((double) userList.size() / limit);
@@ -81,10 +84,14 @@ public class UserListController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/user/modify/{userNo}")
     public String userUpdate(Model model, @Valid UserModiForm userModiForm,
-                             BindingResult bindingResult, @PathVariable int userNo) {
+                             BindingResult bindingResult, @PathVariable int userNo,Principal principal) {
 
         User user = userService.getUser(userNo);
         model.addAttribute("userModiForm", userModiForm);
+
+        if ( !principal.getName().equals("admin") ) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"수정권한이 없습니다.");
+        }
 
         if (bindingResult.hasErrors()) {
             System.out.println(bindingResult.getModel());

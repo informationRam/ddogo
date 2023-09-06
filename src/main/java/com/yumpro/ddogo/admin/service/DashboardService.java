@@ -4,18 +4,29 @@ import com.yumpro.ddogo.admin.repository.ActiveUserRepository;
 import com.yumpro.ddogo.admin.repository.DashboardRepository;
 import com.yumpro.ddogo.common.entity.ActiveUser;
 import lombok.RequiredArgsConstructor;
+import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class DashboardService {
     private final DashboardRepository dashboardRepository;
     private final ActiveUserRepository activeUserRepository;
+
+    public List<ActiveUser> findByYear(int year) throws NotFoundException {
+        Optional<List<ActiveUser>> oa = activeUserRepository.findByYear(year);
+        if (oa.isPresent()) {
+            return oa.get();
+        } else {
+            throw new NotFoundException("정보가 없습니다");
+        }
+    }
 
     public int getUserTotal(){
         return dashboardRepository.getUserTotal();

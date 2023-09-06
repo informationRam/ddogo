@@ -1,15 +1,18 @@
 package com.yumpro.ddogo.admin.controller;
 
-import com.yumpro.ddogo.admin.service.ActiveUserService;
 import com.yumpro.ddogo.admin.service.DashboardService;
 import com.yumpro.ddogo.common.entity.ActiveUser;
 import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.javassist.NotFoundException;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.security.Principal;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
@@ -19,13 +22,15 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class DashboardController {
     private final DashboardService dashboardService;
-    private final ActiveUserService activeUserService;
-
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/admin")
-    public String dashBoardWithoutYear(Model model) throws NotFoundException {
+    public String dashBoardWithoutYear(Model model, Principal principal) throws NotFoundException {
+        if ( !principal.getName().equals("admin") ) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"권한이 없습니다");
+        }
         return dashBoard(Optional.empty(), model);
     }
-
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/admin/{uYear}")
     public String dashBoard(@PathVariable Optional<Integer> uYear, Model model) throws NotFoundException {
         // 1. get param
@@ -45,7 +50,8 @@ public class DashboardController {
         activePercent = Math.round(activePercent * 100.0) / 100.0;
 
         //그래프
-        List<ActiveUser> activeUser=activeUserService.findByYear(year);
+        //List<ActiveUser> activeUser=activeUserService.findByYear(year);
+        List<ActiveUser> activeUser=dashboardService.findByYear(year);
         List<HashMap<String, Object>> localHotplaceCnt=dashboardService.localHotplaceCnt();
 
         //리스트
