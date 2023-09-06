@@ -3,7 +3,6 @@ package com.yumpro.ddogo.user.service;
 import com.yumpro.ddogo.common.entity.User;
 import com.yumpro.ddogo.kakao.entity.KakaoAccount;
 import com.yumpro.ddogo.kakao.entity.KakaoUser;
-import com.yumpro.ddogo.kakao.entity.Kakaouser;
 import com.yumpro.ddogo.mail.service.EmailService;
 import com.yumpro.ddogo.user.DTO.UserDTO;
 import com.yumpro.ddogo.user.reprository.UserRepository;
@@ -26,7 +25,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class UserService implements UserDetails {
+public class UserService{
 
     private final UserRepository userRepository;
     private final PasswordEncoder PasswordEncoder;
@@ -102,9 +101,9 @@ public class UserService implements UserDetails {
     //아이디값 넣어서 회원정보 가져오기
     public User getUser(String user_id){
         System.out.println("getUser진입");
-        Optional<User> user = userRepository.findByUserId(user_id);
-        if (user.isPresent()) {
-            return user.get();
+        User user = userRepository.findByUserId(user_id);
+        if (user != null) {
+            return user;
         }
         return null;
     }
@@ -234,25 +233,6 @@ public class UserService implements UserDetails {
         userRepository.save(user);
     }
 
-
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // 여기서는 카카오 인증 토큰을 사용하여 사용자 정보를 가져오는 로직을 구현
-        // username은 카카오에서 제공한 고유한 식별자(예: 카카오 사용자 ID)가 될 수 있음
-        KakaoUser kakaoUser = userRepository.findByKakaoId(username);
-        if (kakaoUser == null) {
-            throw new UsernameNotFoundException("User not found with username: " + username);
-        }
-
-        // 사용자 정보를 UserDetails 객체로 변환하여 반환
-        return new User(kakaoUser.getUsername(), kakaoUser.getPassword(), Collections.emptyList());
-    }
-
-    // 카카오 토큰을 사용하여 사용자 정보를 로드하는 메서드
-    public UserDetails loadUserByKakaoToken(String kakaoAccessToken) {
-        // 사용자 정보를 가져오는 로직을 구현
-        // 사용자 정보를 UserDetails 객체로 변환하여 반환
-
-    }
 
 
 }
