@@ -1,11 +1,13 @@
 package com.yumpro.ddogo.qna.controller;
 
 import com.yumpro.ddogo.common.entity.Qna;
+import com.yumpro.ddogo.common.entity.QnaSolve;
 import com.yumpro.ddogo.common.entity.User;
 import com.yumpro.ddogo.qna.domain.QnaListDTO;
 import com.yumpro.ddogo.qna.service.QnaService;
 import com.yumpro.ddogo.admin.service.UserListService;
 import com.yumpro.ddogo.qna.validation.QnaAddForm;
+import com.yumpro.ddogo.qna.validation.QnaSolveAddForm;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -70,7 +72,7 @@ public class QnaController {
         //1.파라미터받기 qna_title,qna_content,qna_pwd
         //2.비즈니스로직
         if(bindingResult.hasErrors()) { //에러가 존재하면
-            return "qna_add";
+            return "qna/qna_add";
         }
 
         Optional<User> user = userListService.findUserByUserId(principal.getName());//user정보가져오기
@@ -84,23 +86,83 @@ public class QnaController {
     //문의글 상세 보기 (비밀번호 확인 / 관리자는 free)
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/detail/{id}")
-    public String qnaDetail(@PathVariable int id, @RequestParam String inputPwd, Model model, Principal principal){
+    public String qnaDetail(@PathVariable int id, @RequestParam String inputPwd, Model model, Principal principal, QnaSolveAddForm qnaSolveAddForm){
 
         Qna qna = qnaService.getQnaById(id);
+        
+        System.out.println("유저 아이디"+principal.getName());
+        System.out.println("보려는 글번호"+id);
+        System.out.println("입력 비번"+inputPwd);
+        System.out.println("문의 비번"+qna.getQnaPwd());
 
         if(!principal.getName().equals("admin")){
             if(!qna.getQnaPwd().equals(inputPwd)){
                 return "redirect:/qna/list";
             }
         }
+
+        QnaSolve qnaSolve = qnaService.getQnaSolveByQna(qna);
+
+        String userId=principal.getName();
+        String userRole=null;
+        if(userId.equals("admin")){
+            userRole="admin";
+        }else{
+            userRole="user";
+        }
+
+        model.addAttribute("qnaSolve",qnaSolve);
         model.addAttribute("qna",qna);
+        model.addAttribute("userRole",userRole);
         return "qna/qna_detail";
     }
 
-    //(관리자)문의글 답변 달기
+    //답변 등록 처리
+    @PreAuthorize("isAuthenticated()")//로그인인증
+    @PostMapping("/solve/add/{id}")
+    public String addAnswer(@PathVariable("id") Integer id,
+                            @Valid QnaSolveAddForm qnaSolveAddForm, BindingResult bindingResult,
+                            Model model, Principal principal){
+        //1.파라미터 받기
+        //2.비지니스로직
+        //아이디로 질문 가져오기
+        Qna qna = qnaService.getQnaById(id);
+        QnaSolve qnaSolve = qnaService.getQnaSolveByQna(qna);
 
-    //(관리자)문의글 답변 수정
+        if ( !principal.getName().equals("admin") ) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"권한이 없습니다.");
+        }
+        String userId=principal.getName();
+        String userRole=null;
+        if(userId.equals("admin")){
+            userRole="admin";
+        }else{
+            userRole="user";
+        }
+        if(bindingResult.hasErrors()) {
+            bindingResult.getAllErrors().forEach(error -> {
+                System.out.println(error.getDefaultMessage());
+            });
+            model.addAttribute("qna",qna);
+            model.addAttribute("qnaSolve",qnaSolve);
+            model.addAttribute("user",principal.getName());
+            model.addAttribute("userRole",userRole);
+            return "qna/qna_detail";
+        }
 
-    //(관리자)문의글 답변 삭제
+        //답변 저장 로직+질문 상태변경
+        qnaService.Solveadd(qnaSolveAddForm.getQnaSolveTitle(),qnaSolveAddForm.getQnaSolveContent(),qna);
+        Qna qna1 = qnaService.getQnaById(id);
+        QnaSolve qnaSolve1 = qnaService.getQnaSolveByQna(qna1);
+
+        //3.Model
+        model.addAttribute("qnaSolve",qnaSolve1);
+        model.addAttribute("qna",qna1);
+        model.addAttribute("user",principal.getName());
+
+        //4.View
+        return "qna/qna_detail";
+    }
+
 }
 

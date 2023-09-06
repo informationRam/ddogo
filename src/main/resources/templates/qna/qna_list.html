@@ -64,12 +64,12 @@
                           th:text="${qna.qna_solved == 'Y'} ? '답변완료' : '답변전'">
                     </span>
                 </td>
-                <td th:text="${qna.qna_title}" onclick="showCard()"></td>
+                <td th:text="${qna.qna_title}" th:onclick="'showCard(\'' + ${qna.qna_no} + '\')'"></td>
                 <td th:text="${qna.user_id}"></td>
                 <td th:text="${#temporals.format(qna.qna_date.toLocalDate(), 'yyyy/MM/dd')}"></td>
-                <div id="hiddenCard" class="card" style="display: none;">
+                <div th:id="'hiddenCard' + ${qna.qna_no}" class="card" style="display: none;">
                     <div class="card-body">
-                        <form id="passwordForm" th:action="@{|/qna/detail/${qna.qna_no}|}" method="post">
+                        <form th:id="'passwordForm' + ${qna.qna_no}" th:action="@{|/qna/detail/${qna.qna_no}|}" method="post">
                             <label for="inputPwd">비밀번호:</label>
                             <input type="password" id="inputPwd" name="inputPwd">
                             <button type="submit" class="btn btn-primary">확인</button>
@@ -77,7 +77,7 @@
                     </div>
                 </div>
                 <div style="display: none;">
-                    <form id="qnaDetailForm" th:action="@{|/qna/detail/${qna.qna_no}|}" method="post">
+                    <form th:id="'qnaDetailForm' + ${qna.qna_no}" th:action="@{|/qna/detail/${qna.qna_no}|}" method="post">
                         <input type="hidden" name="inputPwd" value=" ">
                     </form>
                 </div>
@@ -137,13 +137,20 @@
     <script th:inline="javascript">
         var userId = /*[[${userId}]]*/;
 
-     function showCard() {
-        if(userId==='admin'){
-            document.getElementById('qnaDetailForm').submit();
-        } else{
-            document.getElementById('hiddenCard').style.display = 'block';
+        function showCard(qnaNo) {
+            if(userId==='admin'){
+                document.getElementById('qnaDetailForm' + qnaNo).submit();
+            } else{
+                // 모든 카드를 숨깁니다.
+                document.querySelectorAll('.card').forEach(function(card) {
+                    card.style.display = 'none';
+                });
+
+                // 선택한 카드만 표시합니다.
+                document.getElementById('hiddenCard' + qnaNo).style.display = 'block';
+            }
         }
-    }
+
     </script>
 </div>
 </html>

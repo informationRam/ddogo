@@ -2,10 +2,13 @@ package com.yumpro.ddogo.qna.service;
 
 import com.yumpro.ddogo.admin.exception.DataNotFoundException;
 import com.yumpro.ddogo.common.entity.Qna;
+import com.yumpro.ddogo.common.entity.QnaSolve;
 import com.yumpro.ddogo.common.entity.User;
 import com.yumpro.ddogo.qna.domain.QnaListDTO;
 import com.yumpro.ddogo.qna.repository.QnaJpaRepository;
 import com.yumpro.ddogo.qna.repository.QnaRepository;
+import com.yumpro.ddogo.qna.repository.QnaSolveRepository;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +23,8 @@ import java.util.Optional;
 public class QnaService {
     public final QnaRepository qnaRepository;
     public final QnaJpaRepository qnaJpaRepository;
+    public final QnaSolveRepository qnaSolveRepository;
+
     public List<QnaListDTO> getQnaList(Map<String,Object> map) {
         return qnaRepository.findQnaList(map);
     }
@@ -47,5 +52,26 @@ public class QnaService {
         } else{
             throw new DataNotFoundException();
         }
+    }
+
+    public QnaSolve getQnaSolveByQna(Qna qna){
+        Optional<QnaSolve> optionalQnaSolve =qnaSolveRepository.findByQna(qna);
+
+        if(optionalQnaSolve.isPresent()){
+            return optionalQnaSolve.get();
+        }else {
+            return null;
+        }
+    }
+
+    public void Solveadd(String qnaSolveTitle,String qnaSolveContent,Qna qna) {
+        QnaSolve qnaSolve = new QnaSolve();
+        qnaSolve.setQnaSolveTitle(qnaSolveTitle);
+        qnaSolve.setQnaSolveContent(qnaSolveContent);
+        qnaSolve.setQna(qna);
+        qnaSolve.setQnaSolveDate(LocalDateTime.now());
+        qnaSolveRepository.save(qnaSolve);
+        qna.setQnaSolved('Y');
+        qnaJpaRepository.save(qna);
     }
 }
