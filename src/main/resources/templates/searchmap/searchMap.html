@@ -11,9 +11,9 @@
         <div class="option">
             <div>
                 <form onsubmit="searchPlaces(); return false;">
-                    <span>키워드 : <input class="form-control" type="text" value="이태원 맛집" id="keyword" size="15">
-                        <button type="submit" class="btn btn-outline-danger">검색</button>
-                    </span>
+                    키워드 : <input class="" type="text" value="이태원 맛집" id="keyword" size="15">
+                        <button type="submit" class="btn btn-outline-danger" style="width:35px;">검색</button>
+
                 </form>
             </div>
         </div>
@@ -70,6 +70,6 @@
     </div>
 </div>
 
-<script src="/js/searchmap/map.js" th:src="@{/js/searchmap/map.js}"></script>
+<script src="/js/searchmap/map.js" th:src="@{/js/searchmap/map.js}" th:inline="javascript"></script>
 </div>
 </html>

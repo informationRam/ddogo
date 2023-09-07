@@ -10,12 +10,15 @@ import com.yumpro.ddogo.searchmap.repository.MymapRepository;
 import com.yumpro.ddogo.searchmap.service.SearchMapService;
 import com.yumpro.ddogo.user.service.UserService;
 import com.yumpro.ddogo.emoAnal.service.EmoService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,14 +37,24 @@ public class SearchMapController {
     /*요청주소: http://localhost/search
     * 요청방식: get*/
     @GetMapping("")
-    public String showMap(){
+    public String showMap(RedirectAttributes redirectAttributes){
+
         return "searchmap/searchMap";
     }
 
-    @RequestMapping("/ddo")
+    //모델로 넘기는 거 안해.
+    /*@RequestMapping("/ddo")
     public String showBeforeMap(RedirectAttributes redirectAttributes){
         redirectAttributes.addFlashAttribute("beforeLocation");
-        return "searchmap/searchMap2";
+        return "redirect:/search";
+    }*/
+    //요청파라미터에 담아서 넘기기
+    @RequestMapping("lat={lat}&lng={lng}")
+    //public String showBeforeMap(@RequestParam String lat, @RequestParam String lng){
+    public String showBeforeMap(@RequestParam String lat, @RequestParam String lng, Model model){
+        model.addAttribute("lat", lat);
+        model.addAttribute("lng", lng);
+        return "/searchmap/searchMap3";
     }
     //(유효성검사 자바스크립트로)마커를 클릭했을 때, 해당 장소를 내 지도에 저장해줘 요청
     /*요청주소: http://localhost/search/add
@@ -51,7 +64,7 @@ public class SearchMapController {
     public String add(@RequestParam double markerLat, @RequestParam double markerLng, @RequestParam String placeName,
                       @RequestParam String placeRoadAddress, @RequestParam String placeJibunAddress, @RequestParam String placeCateCode,
                       @RequestParam char myRecommend, @RequestParam String inputReview, @RequestParam String inputMemo,
-                      Principal principal, Model model ) throws Exception {
+                      Principal principal) throws Exception {
 
         //1. 파라미터받기
         //로그인한 유저 정보 가져오기
@@ -63,8 +76,13 @@ public class SearchMapController {
         //DB에 저장된 데이터가 있는지 확인
         Hotplace hotplace = hotplaceRepository.findByLatAndLng(markerLat, markerLng);
 
+        String strLat = String.valueOf(markerLat);
+        String strLng = String.valueOf(markerLng);
+
         if(hotplace != null && checkRecord(hotplace, user)!=null){
             System.out.println("내 지도에 이미 입력된 경우.");
+            //alert(response, "이미 내 지도에 저장된 장소입니다.", String.format("redirect:/search?lat=%1$s&lng=%2$s", strLat, strLng));
+            return String.format("redirect:/search?lat=%1$s&lng=%2$s", strLat, strLng); //lat와 lng를 문자열로 요청파라미터로 넣기
         }
         if(hotplace != null && checkRecord(hotplace, user) == null){
             System.out.println("DB엔 있지만 내 지도엔 없는 경우. hotplace_no:"+hotplace.getHotplaceNo());
@@ -89,12 +107,18 @@ public class SearchMapController {
 
         //3. 모델 4. 뷰
         //성공했으면, 잘 저장되었다고 alret하나 띄워줬으면..*/
-        BeforeLocation beforeLocation = new BeforeLocation(markerLat, markerLng);
+        //BeforeLocation beforeLocation = new BeforeLocation(markerLat, markerLng);
+//        Map<String, Double> map = new HashMap<>();
+//        map.put("lat", markerLat);
+//        map.put("lng", markerLng);
+        //double beforeLocation = markerLat;
+        //model.addAttribute("beforeLocation",beforeLocation);
 
-        model.addAttribute("beforeLocation",beforeLocation);
-
-        return "redirect:/search/ddo";
+        //return "redirect:/search/ddo";
+        //alert(response, "저장이 완료되었습니다.", String.format("redirect:/search?lat=%1$s&lng=%2$s", strLat, strLng));
+        return String.format("redirect:/search?lat=%1$s&lng=%2$s", strLat, strLng); //lat와 lng를 문자열로 요청파라미터로 넣기
     }
+
     //DB에도 없고 내지도에도 없는 장소를 저장 -2(내지도에)
     private int addMymap2(int hotplaceNo, User user, String inputMemo, char myRecommend) {
         SearchMapDTO searchMapDTO = new SearchMapDTO();
@@ -141,7 +165,7 @@ public class SearchMapController {
 
     //내지도에 저장된적 있는지 확인
     //저장됐으면 mymapNo를 리턴.
-    private Integer checkRecord(Hotplace hotplace, User user) throws HotplaceNotFoundException{
+    private Integer checkRecord(Hotplace hotplace, User user) {
         //MyBatis시도 -성공
         Map<String, Object> map = new HashMap<>();
         map.put("user_no", user.getUser_no());

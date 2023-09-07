@@ -1,21 +1,19 @@
 <html layout:decorate="~{layout}" xmlns:th="http://www.thymeleaf.org">
-<div th:if="${beforeLocation != null}" layout:fragment="content">
+<div layout:fragment="content">
 <link rel="stylesheet" type="text/css" href="/css/searchmap/map.css" th:href="@{/css/searchmap/map.css}" />
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=820d01b1cce59185ed776419691dab39&libraries=services"></script>
 
 <!--지도 영역-->
-<div class="map_wrap" style="width:100%;height:93vh;" >
+<div class="map_wrap" style="width:100%;height:93vh;">
     <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
     <!--검색결과 목록-->
     <div id="menu_wrap" class="bg_white">
         <div class="option">
             <div>
-                <div th:text="${beforeLocation.lat}"></div>
-                <div th:text="${beforeLocation.lng}"></div>
                 <form onsubmit="searchPlaces(); return false;">
-                    <span>키워드 : <input class="form-control" type="text" value="이태원 맛집" id="keyword" size="15">
-                        <button type="submit" class="btn btn-outline-danger">검색</button>
-                    </span>
+                    키워드 : <input class="" type="text" value="이태원 맛집" id="keyword" size="15">
+                        <button type="submit" class="btn btn-outline-danger" style="width:35px;">검색</button>
+
                 </form>
             </div>
         </div>
@@ -71,7 +69,14 @@
         </div>
     </div>
 </div>
+<script th:inline="javascript">
+/*<![CDATA[*/
+   var lat = "/*[[${lat}]]*/";
+   var lng = "/*[[${lng}]]*/";
+        alert(lat);
+/*]]>*/
 
-<script src="/js/searchmap/map.js" th:src="@{/js/searchmap/map2.js}"></script>
+</script>
+<script src="/js/searchmap/map3.js" th:src="@{/js/searchmap/map3.js}" th:inline="javascript"></script>
 </div>
 </html>
