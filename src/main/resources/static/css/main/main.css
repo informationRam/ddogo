@@ -9,7 +9,12 @@ body {
 
 .c-details span {
     font-weight: 300;
-    font-size: 9px
+    font-size: 13px
+    font-family: "MALANGMALANGB";
+}
+
+.c-details{
+    font-family: "MALANR";
 }
 
 .icon {
@@ -24,10 +29,10 @@ body {
 }
 
 .badge span {
-    font-size: 10px;
+    font-size: 14px;
     background-color: #ffc0cb;
-    width: 50px;
-    height: 20px;
+    width: 65px;
+    height: 30px;
     padding-bottom: 3px;
     border-radius: 5px;
     display: flex;
@@ -36,21 +41,60 @@ body {
     align-items: center
 }
 
+.badge{
+font-family: "MALANGMALANGB";
+}
+
 .progress {
     height: 10px;
     border-radius: 10px
 }
 
+
 .progress div {
     background-color: red
 }
 
+
 .text1 {
-    font-size: 12px;
+    font-size: 15px;
     font-weight: 600
 }
 
 .text2 {
-    font-size: 12px;
-    color: #a5aec0
+    font-size: 15px;
+    color: #808080
+}
+
+.container2 {
+    display: flex;
+    justify-content: center;
+}
+
+.row{
+    justify-content: center;
+
+}
+
+@font-face{
+    font-family: "MALANGMALANGB";
+    src:url("/css/main/MALANGMALANGB.TTF");
+}
+
+@font-face{
+    font-family: "MALANR";
+    src:url("/css/main/MALANGMALANGR.TTF");
+}
+
+.title{
+    font-family: "MALANGMALANGB";
+}
+
+.heading{
+    font-family: "MALANGMALANGB";
+}
+
+.form-label{
+    font-family: "MALANR";
+    font-size: 20px;
 }
