@@ -2,6 +2,7 @@ package com.yumpro.ddogo.searchmap.controller;
 
 import com.yumpro.ddogo.common.entity.Hotplace;
 import com.yumpro.ddogo.common.entity.User;
+import com.yumpro.ddogo.searchmap.dto.BeforeLocation;
 import com.yumpro.ddogo.searchmap.dto.SearchMapDTO;
 import com.yumpro.ddogo.searchmap.exception.HotplaceNotFoundException;
 import com.yumpro.ddogo.searchmap.repository.HotplaceRepository;
@@ -11,7 +12,9 @@ import com.yumpro.ddogo.user.service.UserService;
 import com.yumpro.ddogo.emoAnal.service.EmoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.util.HashMap;
@@ -35,20 +38,28 @@ public class SearchMapController {
         return "searchmap/searchMap";
     }
 
+    @RequestMapping("/ddo")
+    public String showBeforeMap(RedirectAttributes redirectAttributes){
+        redirectAttributes.addFlashAttribute("beforeLocation");
+        return "searchmap/searchMap2";
+    }
     //(유효성검사 자바스크립트로)마커를 클릭했을 때, 해당 장소를 내 지도에 저장해줘 요청
     /*요청주소: http://localhost/search/add
     * 요청방식: post*/
     @PostMapping("/add")
     //@PreAuthorize("isAuthenticated()") //로그인한 사람만 저장 가능
-    public String add(@RequestParam double markerLat, @RequestParam double markerLng,
-                              @RequestParam String placeName, @RequestParam String placeAddress,
-                              @RequestParam String placeCateCode, @RequestParam char myRecommend,
-                              @RequestParam String inputReview, @RequestParam String inputMemo,
-                              Principal principal ) throws Exception {
+    public String add(@RequestParam double markerLat, @RequestParam double markerLng, @RequestParam String placeName,
+                      @RequestParam String placeRoadAddress, @RequestParam String placeJibunAddress, @RequestParam String placeCateCode,
+                      @RequestParam char myRecommend, @RequestParam String inputReview, @RequestParam String inputMemo,
+                      Principal principal, Model model ) throws Exception {
 
         //1. 파라미터받기
         //로그인한 유저 정보 가져오기
         User user = userService.getUser(principal.getName());
+
+        if(!placeCateCode.equals("FD6") && !placeCateCode.equals("CE7")) { //음식점도 아니고 카페도 아닌 경우
+            return "redirect:/search/cantSave";
+        }
         //DB에 저장된 데이터가 있는지 확인
         Hotplace hotplace = hotplaceRepository.findByLatAndLng(markerLat, markerLng);
 
@@ -64,6 +75,12 @@ public class SearchMapController {
         }
         if(hotplace == null){
             System.out.println("DB에 입력된 적 없는 경우. 새로 등록 진행");
+            String placeAddress = "";
+            if(placeRoadAddress=="" || placeRoadAddress==null){ //도로명주소가 없는 경우
+                placeAddress = placeJibunAddress;
+            } else {
+                placeAddress = placeRoadAddress;
+            }
             int hotplaceNo = addHotplace(markerLat, markerLng, placeName, placeAddress, placeCateCode);
             int mapNo = addMymap2(hotplaceNo, user, inputMemo, myRecommend);
             double emoResult = emoService.emoAnal(inputReview);
@@ -72,8 +89,11 @@ public class SearchMapController {
 
         //3. 모델 4. 뷰
         //성공했으면, 잘 저장되었다고 alret하나 띄워줬으면..*/
+        BeforeLocation beforeLocation = new BeforeLocation(markerLat, markerLng);
 
-        return String.format("redirect:/search");
+        model.addAttribute("beforeLocation",beforeLocation);
+
+        return "redirect:/search/ddo";
     }
     //DB에도 없고 내지도에도 없는 장소를 저장 -2(내지도에)
     private int addMymap2(int hotplaceNo, User user, String inputMemo, char myRecommend) {
@@ -129,4 +149,9 @@ public class SearchMapController {
         return searchMapService.findHistory(map);
     }
 
+    /*저장할 수 없다 페이지*/
+    @GetMapping("/cantSave")
+    public String cantSave(){
+        return "/searchmap/cantSave";
+    }
 }

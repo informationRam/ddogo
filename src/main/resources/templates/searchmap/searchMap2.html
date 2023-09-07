@@ -1,15 +1,17 @@
 <html layout:decorate="~{layout}" xmlns:th="http://www.thymeleaf.org">
-<div layout:fragment="content">
+<div th:if="${beforeLocation != null}" layout:fragment="content">
 <link rel="stylesheet" type="text/css" href="/css/searchmap/map.css" th:href="@{/css/searchmap/map.css}" />
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=820d01b1cce59185ed776419691dab39&libraries=services"></script>
 
 <!--지도 영역-->
-<div class="map_wrap" style="width:100%;height:93vh;">
+<div class="map_wrap" style="width:100%;height:93vh;" >
     <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
     <!--검색결과 목록-->
     <div id="menu_wrap" class="bg_white">
         <div class="option">
             <div>
+                <div th:text="${beforeLocation.lat}"></div>
+                <div th:text="${beforeLocation.lng}"></div>
                 <form onsubmit="searchPlaces(); return false;">
                     <span>키워드 : <input class="form-control" type="text" value="이태원 맛집" id="keyword" size="15">
                         <button type="submit" class="btn btn-outline-danger">검색</button>
@@ -69,6 +71,26 @@
         </div>
     </div>
 </div>
+    <script th:inline="javascript">
+        // onload 이벤트 핸들러 함수
+        function setMapCenter() {
+            // 여기에서 모델로부터 받은 위도와 경도 값을 사용하여 중심을 설정합니다.
+            var lat = [[${beforeLocation.lat}]]; // 모델로부터 받은 위도
+            var lng = [[${beforeLocation.lng}]]; // 모델로부터 받은 경도
+
+            // 카카오 맵 초기화
+            var container = document.getElementById('map');
+            var options = {
+                center: new kakao.maps.LatLng(lat, lng), // 중심 좌표 설정
+                level: 3 // 지도의 확대 레벨
+                // 기타 맵 옵션 설정 (확대 레벨 등)
+            };
+            var map = new kakao.maps.Map(container, options);
+        }
+
+        // onload 이벤트에 함수 연결
+        window.onload = setMapCenter();
+    </script>
 
 <script src="/js/searchmap/map.js" th:src="@{/js/searchmap/map.js}"></script>
 </div>

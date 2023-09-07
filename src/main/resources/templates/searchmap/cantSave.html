@@ -1,0 +1,12 @@
+<html layout:decorate="~{layout}" xmlns:th="http://www.thymeleaf.org">
+<div layout:fragment="content" class="container my-3">
+    <div class="justify-content-center my-5">
+        <div class="spinner-border text-danger justify-content-center"></div>
+        <h2 class="my-5">해당 장소는 '또갈지도'에 저장할 수 없는 장소입니다. </h2>
+        <h6 class="my-5">현재 '또갈지도'는 음식점 및 카페만 저장하는 기능을 제공하고 있습니다.</h6>
+        <div class="d-grid">
+            <button class="btn btn-danger btn-block"><a th:href="@{/search}" style="text-decoration:none; color: white;">검색화면으로 돌아가기</a></button>
+        </div>
+    </div>
+</div>
+</html>

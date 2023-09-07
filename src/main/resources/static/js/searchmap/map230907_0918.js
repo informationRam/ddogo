@@ -76,7 +76,7 @@ var marker; //마커를 전역변수로 선언
             }
             (function(marker, places) {
                 kakao.maps.event.addListener(marker, 'click', function(){ //커스텀오버레이호출.
-                    displayMyOverlay(marker, places[i]); //검색 결과를 인자로 넣어준다.
+                    displayMyOverlay(marker, places); //검색 결과를 인자로 넣어준다.
                 });
                 kakao.maps.event.addListener(marker, 'mouseover', function() {
                     displayInfowindow(marker, places);
@@ -187,7 +187,7 @@ var marker; //마커를 전역변수로 선언
     }
 
     // 마커를 클릭한 경우 커스텀오버레이를 띄우기 위해 호출되는 함수.
-    function displayMyOverlay(clickedMarker, clickedPlaces[i]){
+    function displayMyOverlay(clickedMarker, clickedPlaces){
         marker = clickedMarker;
         places = clickedPlaces;
         var overlayContent = '<div class="co-wrap">'+
@@ -200,7 +200,7 @@ var marker; //마커를 전역변수로 선언
                                          } else if(places.category_group_code === 'FD6'){
                                             overlayContent += '<span id="placeCode" class="badge bg-warning mx-2">음식점</span></div>';
                                          }
-                                         overlayContent += '<div class="co-body my-2">'+
+                  overlayContent += '<div class="co-body my-2">'+
                                          '<div class="co-desc">'+
                                              '<div class="ellipsis">'+places.road_address_name+'</div>'+
                                              '<div class="jibun ellipsis">'+places.address_name+'</div>'+
