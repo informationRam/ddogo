@@ -48,8 +48,6 @@ public class QnaController {
         int totalCount = qnaService.getQnaListCount(map); // 전체 데이터 수를 가져오는 메서드를 추가해야 합니다.
         int totalPages = (int) Math.ceil((double) totalCount / limit);
 
-        System.out.println("답변여부"+qnaList.get(4));
-
         model.addAttribute("totalCnt",totalCount);
         model.addAttribute("currentPage", currentPage);
         model.addAttribute("totalPages", totalPages);
@@ -108,9 +106,6 @@ public class QnaController {
             userRole="user";
         }
 
-        System.out.println(userRole);
-        System.out.println(qnaSolve);
-
         model.addAttribute("qnaSolve",qnaSolve);
         model.addAttribute("qna",qna);
         model.addAttribute("userRole",userRole);
@@ -140,9 +135,6 @@ public class QnaController {
             userRole="user";
         }
         if(bindingResult.hasErrors()) {
-            bindingResult.getAllErrors().forEach(error -> {
-                System.out.println(error.getDefaultMessage());
-            });
             model.addAttribute("qna",qna);
             model.addAttribute("qnaSolve",qnaSolve);
             model.addAttribute("user",principal.getName());
