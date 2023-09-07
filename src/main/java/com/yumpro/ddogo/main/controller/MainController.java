@@ -25,7 +25,7 @@ import java.util.Map;
 public class MainController {
     private final MainService mainService;
     
-    @GetMapping(value = "main")
+    @GetMapping(value = "/")
     public String main(HttpServletResponse response, Model model) throws Exception {
         //일별 베스트
         List<HashMap<String, Object>> eatjjim = mainService.eatjjim(); //맛집
@@ -59,7 +59,7 @@ public class MainController {
         model.addAttribute("sigunguMap", sigunguMap);
         System.out.println("sigunguMap_test3" + sigunguMap);
 
-        return "main/main2";
+        return "index";
 
     }
 
