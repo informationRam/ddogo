@@ -19,7 +19,7 @@
     <ul>
         <li> <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/joinForm}">회원가입</a></li>
         <li> <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/login}">로그인</a></li>
-        <li><a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/user/logout}">로그아웃(기능구현x)</a></li>
+        <li><a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/user/logout}">로그아웃</a></li>
         <li>
             <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{|/user/modifyForm/${#authentication.principal.username}|}">
                 정보수정
