@@ -93,7 +93,9 @@ public class QnaService {
         qnaSolveRepository.save(qnaSolve);
     }
 
-    public void delete(QnaSolve qnaSolve) {
+    public void delete(QnaSolve qnaSolve,Qna qna) {
         qnaSolveRepository.delete(qnaSolve);
+        qna.setQnaSolved('N');
+        qnaJpaRepository.save(qna);
     }
 }

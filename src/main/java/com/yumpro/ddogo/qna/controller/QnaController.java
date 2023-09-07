@@ -224,7 +224,7 @@ public class QnaController {
         Qna qna=qnaService.getQnaById(id);
         QnaSolve qnaSolve=qnaService.getQnaSolveByQna(qna);
 
-        qnaService.delete(qnaSolve);
+        qnaService.delete(qnaSolve,qna);
 
         return "redirect:/qna/list";
     }
