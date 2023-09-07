@@ -16,7 +16,7 @@
         <div class="mb-3">
             <label for="qna_pwd" class="form-label">비밀번호 확인</label>
             <input type="password" th:field="*{qna_pwd}" class="form-control"/>
-            <span class="ddo-error-text" th:if="${#fields.hasErrors('qna_pwd')}" th:errors="*{qna_pwd}"></span>
+            <span class="ddo-error-text" th:if="${#fields.hasErrors('qna_pwd')}" th:errors="*{qna_pwd}"></span>  <!-- 변경된 부분 -->
         </div>
         <input type="submit" value="질문 등록" class="btn btn-primary my-2"/>
     </form>

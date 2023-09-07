@@ -229,7 +229,7 @@ public class QnaController {
         return "redirect:/qna/list";
     }
 
-    //문의사항 수정
+    //문의사항 수정폼
     @PreAuthorize("isAuthenticated()")
     @GetMapping("modify/{id}")
     public String qnaModiForm(QnaAddForm QnaAddForm,@PathVariable("id") Integer id,Principal principal,Model model){
