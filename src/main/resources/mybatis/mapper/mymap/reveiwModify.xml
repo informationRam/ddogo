@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yumpro.ddogo.mymap.mapper.reveiwModify">
+    <!-- 수정 쿼리 -->
+    <update id="updateReview" parameterType="map">
+        <!-- mymap 테이블의 recomm 및 memo 필드 수정 -->
+        UPDATE mymap
+        SET recomm = #{recomm},
+        memo = #{memo}
+        WHERE mapNo = #{mapNo}
+    </update>
+
+    <update id="updateEmoReview" parameterType="map">
+        <!-- emoreview 테이블의 review 필드 수정 -->
+        UPDATE emoreview
+        SET review = #{review}
+        WHERE reviewNo = #{reviewNo}
+    </update>
+
+</mapper>

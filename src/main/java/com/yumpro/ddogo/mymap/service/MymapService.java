@@ -13,8 +13,6 @@ public class MymapService {
 
 
     private final MyMapMapper myMapMapper;
-/*    private final MyMapRepository myMapRepository;*/
-
 
 
 
@@ -24,12 +22,16 @@ public class MymapService {
         return HotplList;
     }
 
-    //저장한 맛집(마커) 삭제
-      public void deleteHotpl(Integer mapNo) {
-          myMapMapper.deleteMyHotpl(mapNo);
+    // 저장한 맛집(마커) 삭제
+    public void deleteHotpl(Integer mapNo) {
+        try {
+            myMapMapper.deleteMyHotpl(mapNo);
 
-
-      }
+        } catch (Exception e) {
+            // RuntimeException으로 예외 던지기
+            throw new RuntimeException("맛집 삭제 중 오류가 발생했습니다. 다시 시도해주세요.");
+        }
+    }
 }
 
 /*

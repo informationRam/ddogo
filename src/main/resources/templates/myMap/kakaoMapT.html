@@ -1,77 +1,249 @@
 <html layout:decorate="~{layout}" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <div layout:fragment="content" > <!-- container-fluid-->
-    <head>
-        <title>마이맵</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" type="text/css"
               href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
         <link rel="stylesheet" type="text/css" href="/css/mymapCSS.css">
-    </head>
-    <body>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css">
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=820d01b1cce59185ed776419691dab39"></script>
+
+<body>
 
   <!-- 좌측에 맛집 리스트를 표시하는 부분 -->
 <div class="container-fluid">
     <div id="listContainer" class="column">
-      <div class="col-md-3">
+      <div class="cardBox">
+          <div class="useInfo">
          <h2><span th:text="${user.user_name}"></span>님의 맛집 리스트</h2>
-
+        </div>
           <!-- 맛집 검색창 -->
           <div class="input-group my-3">
-            <input type="text" class="form-control" placeholder="맛집 검색">
-            <button class="btn btn-primary" type="button">검색</button>
+              <input type="text" class="form-control" placeholder="맛집 검색" id="searchInput">
+              <button class="btn btn-danger" onclick="search()">검색</button>
+          </div>
+
+          <!-- 카테고리 버튼 -->
+          <div class="container-fluid">
+              <div class="button-container">
+                  <!-- 음식점 버튼 -->
+                  <button id="restaurantButton" class="btn btn-danger btn-lg" data-cate-no="1" onclick="filterCards(1)">음식점</button>
+                  <!-- 카페 버튼 -->
+                  <button id="cafeButton" class="btn btn-danger btn-lg" data-cate-no="2" onclick="filterCards(2)">카페</button>
+              </div>
           </div>
 
         <!-- 카드로 목록 출력 -->
-        <div class="card my-2" th:each="myhotpl : ${hotplList}">
-            <div class="card-body">
+          <div class="card my-2" th:each="myhotpl : ${hotplList}" th:attr="data-cate-no=${myhotpl.hotplaceCateNo}">
+              <div class="card-body" >
+                  <!--<h6 class="card-subtitle mb-2 text-muted" th:text="$${myhotpl.hotplaceName}"></h6>-->
+                  <h5 class="card-title" th:text="${myhotpl.hotplaceName}"></h5>
+                  <p class="card-text" th:text="${myhotpl.address}"></p>
 
-              <!--<h6 class="card-subtitle mb-2 text-muted" th:text="$${myhotpl.hotplaceName}"></h6>-->
-              <h5 class="card-title" th:text="${myhotpl.hotplaceName}"></h5>
-               <p class="card-text" th:text="${myhotpl.address}"></p>
+                  <!-- 감정결과 박스 -->
+                  <div class="square">
+                      <p th:text="${myhotpl.avgEmoResult != null ? myhotpl.avgEmoResult.toString() : ''}"></p>
+                  </div>
 
-              <!-- 감정결과 박스 -->
-              <div class="square" >
-                <p th:text="${myhotpl.avgEmoResult != null ? myhotpl.avgEmoResult.toString() : ''}"></p>
+                  <div class="justify-content-end">
+
+                      <a th:href="@{'/mymap/delete/'+${myhotpl.mapNo}}" class="btn btn-outline-secondary btn-sm btn-delete"
+                         data-toggle="modal" data-target="#deleteModal"
+                         th:attr="data-map-id=${myhotpl.mapNo}" onclick="return false;">삭제</a>
+                      <!--   <a class="btn btn-outline-secondary btn-delete" onclick="return false;"
+                             data-toggle="modal" data-target="#deleteModal">삭제</a>-->
+                      <!-- 모달 열기 버튼 -->
+                      <button type="button" class="btn btn-outline-success btn-sm btn-update-review"
+                              data-bs-toggle="modal" data-bs-target="#myModal"
+                              th:attr="data-review-no=${myhotpl.mapNo}">내 후기 수정
+                      </button>
+                      <i class="bi bi-bookmark-heart-fill"></i>
+                  </div>
+
               </div>
-
-              <div class="justify-content-end">
-                  <a href="#" class="btn btn-outline-secondary btn-sm btn-delete" data-toggle="modal" data-target="#deleteModal" th:attr="data-map-id=${myhotpl.mapNo}">삭제</a> <!-- 삭제 -->
-                <a href="#" class="btn btn-outline-danger btn-sm">찜</a> <!-- 찜 아이콘 -->
-                <a href="#" class="btn btn-outline-success btn-sm">내 후기</a> <!-- 내 후기 -->
-              </div>
-
           </div>
-        </div>
-      </div>  <!-- col-md-3 -->
-        <!-- 맛집 리스트 삭제 모달 -->
-        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
+
+      </div>  <!-- cardBox : 스크롤 내려도 고정되게 구현필요 -->
+
+<!-- 카테고리별 카드 출력 -->
+        <script>
+
+        function filterCards(category) {
+          // 모든 카드를 숨깁니다.
+          var cards = document.querySelectorAll('.card');
+          cards.forEach(function (card) {
+              card.style.display = 'none';
+          });
+
+          // 선택한 카테고리에 해당하는 카드만 보여줍니다.
+          var filteredCards = document.querySelectorAll('.card[data-cate-no="' + category + '"]');
+          filteredCards.forEach(function (card) {
+              card.style.display = 'block';
+          });
+        }
+
+                </script>
+                <!-- 맛집 카드 삭제 -->
+                <script>
+                    const deleteButtons = document.querySelectorAll('.btn-delete');
+
+                    deleteButtons.forEach(function(button) {
+                        button.addEventListener('click', function() {
+                            if (confirm('정말로 삭제할까요?')) {
+                                const mapId = this.getAttribute('data-map-id');
+                                window.location.href = '/mymap/delete/' + mapId;
+                            }
+                        });
+                    });
+                </script>
+
+        <!-- 후기 수정 모달 버튼 -->
+        <div class="modal fade" id="myModal" tabindex="-1" aria-hidden="true">
+            <!-- 모달 내용 -->
+            <div class="modal-dialog">
                 <div class="modal-content">
+                    <!-- 모달 헤더 -->
                     <div class="modal-header">
-                        <h5 class="modal-title" id="deleteModalLabel">맛집 삭제 확인</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                        <h5 class="modal-title" id="titleModalLabel">내 후기 수정</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
+                    <!-- 모달 본문 -->
                     <div class="modal-body">
-                        해당 맛집을 삭제하시겠습니까?
+                        <!-- 후기 입력 폼 -->
+                        <form id="updateReviewForm">
+                            <div class="mb-3">
+                                <label for="inputReview" class="form-label">Review</label>
+                                <div id="error1"></div>
+                                <textarea class="form-control" id="inputReview" name="inputReview" rows="6"></textarea>
+                            </div>
+                            <!-- 메모 입력 필드 -->
+                            <div class="mb-3">
+                                <label for="inputMemo" class="form-label">메모</label>
+                                <textarea class="form-control" id="inputMemo" name="inputMemo" rows="6"></textarea>
+                            </div>
+                            <!-- 추천 비추천 수정 -->
+                            <!-- 라디오 버튼 -->
+                            <div id="error2"></div>
+                            <div class="d-flex justify-content-center">
+                                <div class="btn-group" role="group" aria-label="Radio buttons">
+                                    <input class="btn-check" type="radio" name="myRecommend" id="myRecommendY" value="Y">
+                                    <label class="btn btn-outline-primary mx-1" for="myRecommendY">또갈지도</label>
+
+
+                                        <input class="btn-check" type="radio" name="myRecommend" id="myRecommendN" value="N">
+                                    <label class="btn btn-outline-danger mx-1" for="myRecommendN">안갈지도</label>
+                                </div>
+                            </div>
+                        </form>
                     </div>
+                    <!-- 모달 푸터 -->
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-                        <button type="button" class="btn btn-danger" id="confirmDelete">삭제</button>
+                        <button type="button" class="btn btn-primary" onclick="updateReview()">저장</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
                     </div>
                 </div>
             </div>
         </div>
-    <!-- 삭제 확인용 모달창 끝 -->
+
+        <!-- 후기 정보 가져오기 -->
+        <script>
+            // '내 후기 수정' 버튼을 클릭했을 때
+      document.querySelectorAll('.btn-update-review').forEach(function(button) {
+       button.addEventListener('click', function() {
+           // mapNo 값을 동적으로 설정
+           var mapNo = this.getAttribute('data-review-no');
+           console.log(mapNo);// 값출력 확인 완료
+           // AJAX 요청을 이용하여 서버에서 저장된 후기 정보를 가져오기
+           var xhr = new XMLHttpRequest();
+           xhr.onreadystatechange = function () {
+               if (xhr.readyState === 4) {
+                   if (xhr.status === 200) {
+                       var savedReviewInfo = JSON.parse(xhr.responseText);
+
+                       // 저장된 후기 정보 표시
+                       if (savedReviewInfo != null) {
+                           // 예시로 표시
+                           document.getElementById('inputReview').textContent = savedReviewInfo.review;
+                           document.getElementById('inputMemo').textContent = savedReviewInfo.memo;
+
+                           // recomm 값을 확인하여 라디오 버튼 표시 설정
+                           if (savedReviewInfo.recomm === 'Y') {
+                               document.getElementById('returnYes').checked = true;
+                           } else if (savedReviewInfo.recomm === 'N') {
+                               document.getElementById('returnNo').checked = true;
+                           }
+                       }
+
+                       // 모달 창 열기
+                       $('#myModal').modal('show');
+                   } else {
+                       alert('후기 조회 중 오류가 발생했습니다.');
+                   }
+               }
+           };
+           // 서버로 mapNo 값을 전달하여 저장된 후기 정보 조회
+           xhr.open('GET', '/mymap/getReview/' + mapNo, true);
+           xhr.send();
+       });
+   });
+
+        </script>
+
+        <!-- 후기 모달 수정 -->
+        <script>
+            function updateReview() {
+                // 폼 데이터 가져오기
+                var form = document.getElementById('updateReviewForm');
+                var formData = new FormData(form);
+
+                // mapNo 값을 가져오기
+                var mapNo =  this.getAttribute('data-review-no');
+
+                // AJAX 요청을 이용하여 서버에 폼 데이터를 전송하고 후기를 업데이트합니다.
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '/mymap/updateReview/' + mapNo, true); // 수정 컨트롤러 엔드포인트 경로 설정
+                xhr.setRequestHeader('Content-Type', 'application/json');
+
+                // AJAX 요청 완료 후의 처리
+                xhr.onload = function () {
+                    if (xhr.status === 200) {
+                        alert('후기가 성공적으로 수정되었습니다.');
+                        // 모달을 닫으려면 다음과 같은 코드를 사용하세요.
+                        $('#myModal').modal('hide');
+                    } else {
+                        alert('후기 수정 중 오류가 발생했습니다.');
+                    }
+                };
+
+                // 폼 데이터를 JSON 문자열로 변환하여 전송
+                var formDataJson = {};
+                formData.forEach(function (value, key) {
+                    formDataJson[key] = value;
+                });
+                var jsonData = JSON.stringify(formDataJson);
+
+                // 서버에 요청 전송
+                xhr.send(jsonData);
+            }
+        </script>
+
+
+
+
+
+
     </div><!-- listContainer 끝 -->
+<script>
+
+
+</script>
+
 <!-- 지도 영역 시작   -->
   <div class="column" id="myMapContents">
-      <div class="col-md-9">
+      <div class="mapBox" style="width:100%; height:93vh;">
         <!-- 지도를 표시할 div -->
-          지도출력영역
-           <div id="map" style="width:90%;height:500px;"></div>
-          <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=820d01b1cce59185ed776419691dab39"></script>
+
+          <button id="gpsBtn" class="btn btn-danger mb-2" onclick="gps_check()"> 내 주변보기</button>
+           <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
 
           <!--db로 마커값 받아오기 -->
           <script th:inline="javascript">
@@ -97,146 +269,101 @@
                     /*[/]*/
                 ];
                 /*]]>*/
+
           </script>
-        <!--  <script type="text/javascript" src="/js/mymapAPI.js"></script>-->
-
-          <!------------- 현위치 표시 api------- -->
-
-          <div id="MapControlView">
-                   <button id="gpsBtn" class="btn-outline-danger gpsBtn" onclick="gps_check()"> 내 주변보기</button>
-                 </div>
-               </div>
-           </div>
-         </div>
+             </div>
+       </div>
+ </div> <!-- containerFluid-->
 
 
+       <!-----  javascript 영역 --------------->
+       <!-- 지도 api 연동 -->
+       <!--db로 마커값 받아오기 -->
+         <script type="text/javascript" th:inline="javascript">
+             // Thymeleaf를 이용하여 사용자 ID를 가져와서 JavaScript 변수로 설정
+             var userId = /*[[${user_id}]]*/
+             var userName = /*[[${user_name}]]*/
+             var mapNo= /*[[${mapNo}]]*/
+             var reviewNo= /*[[${reviewNo}]]*/
 
-         </body>
-<!-----  javascript 영역 --------------->
-           <!-- 지도 api 연동 -->
-   <!--db로 마커값 받아오기 -->
- <script type="text/javascript" th:inline="javascript">
-     // Thymeleaf를 이용하여 사용자 ID를 가져와서 JavaScript 변수로 설정
-     var userId = /*[[${user_id}]]*/
-     var userName = /*[[${user_name}]]*/
-     var mapNo= /*[[${mapNo}]]*/
-
-</script>
-<script>
-<!--     // 현재 위치 확인 및 지도 표시
-     gps_check();-->
-
-
-      // 마커 이미지의 이미지 주소
-        var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
-
-        for (var i = 0; i < positions.length; i++) {
-            var imageSize = new kakao.maps.Size(24, 35);
-            var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
-
-            var marker = new kakao.maps.Marker({
-                map: map,
-                position: positions[i].latlng,
-                title: positions[i].title
-                image: markerImage // 마커 이미지
-            });
-        }
-
-  </script>
+         </script>
   <script>
-      //gps로 위치 불러오기 : gps_check()함수
-      gps_check();
-       function gps_check(){
-           if (navigator.geolocation) {
-               var options = {timeout:60000};
-               navigator.geolocation.getCurrentPosition(showLocation, errorHandler, options);
-           } else {
-               alert("GPS_추적이 불가합니다.");
-               gps_use = false;
-           }
-       }
-       // 이용 가능하면, 위도와 경도를 반환하는 showlocation함수.
-        function showLocation(pos) {
-                console.log(pos);
-                gps_use = true;
-                gps_lat = pos.coords.latitude;
-                gps_lng = pos.coords.longitude;
-                // 위치 정보가 확인되었으므로 이제 gps_tracking 함수 호출 가능
-                gps_tracking();
-            }
-            // error발생 시 에러의 종류를 알려주는 함수.
-            function errorHandler(error) {
-                if(error.code == 1) {
-                    alert("접근차단");
-                } else if( err.code == 2) {
-                    alert("위치를 반환할 수 없습니다.");
-                }
-                gps_use = false;
-            }
-      //현재위치 마커 표시
-       function gps_tracking(){
-            if (gps_use) {
-                map.panTo(new kakao.maps.LatLng(gps_lat,gps_lng));  //카카오api 사용자 좌표로 부드럽게 이동
-                 // 마커 이미지의 이미지 크기 입니다
-                //var gps_content = new kakao.maps.Size(20, 20);
-                var gps_content = '<div><img class="pulse" draggable="false" unselectable="on" src="https://ssl.pstatic.net/static/maps/m/pin_rd.png" alt="" style="width: 20px; height: 20px;"></div>';
-                var currentOverlay = new kakao.maps.CustomOverlay({   //마커를 사용자의 위도와 경도 좌표에 찍어준다.
-                    position: new kakao.maps.LatLng(gps_lat,gps_lng),
-                    content: gps_content,
-                    map: map
-                });
-                currentOverlay.setMap(map);
-            } else {
-              alert("접근차단하신 경우 새로고침, 아닌 경우 잠시만 기다려주세요.");
-              gps_check();
-            }
-        }
-  </script>
-<!-- 맛집 리스트 삭제 모달용 -->
-<script>
-    // 모든 삭제 버튼에 대한 이벤트 리스너 등록
-  var deleteButtons = document.querySelectorAll('.btn-delete');
-
-  deleteButtons.forEach(function (button) {
-      button.addEventListener('click', function () {
-          var mapId = this.getAttribute('data-map-id');
-          document.getElementById('deleteModal').setAttribute('data-map-id', mapId);
-      });
-  });
-
-  // 삭제 확인 버튼 클릭 시 해당 맛집 삭제
-  document.getElementById('confirmDelete').addEventListener('click', function () {
-      var mapId = document.getElementById('deleteModal').getAttribute('data-map-id');
-
-      // 서버로 삭제 요청을 보내는 XMLHttpRequest 객체 생성
-      var xhr = new XMLHttpRequest();
-
-      xhr.open('GET', '/mymap/delete/' + mapId, true);
-
-      xhr.onreadystatechange = function () {
-          if (xhr.readyState === 4) {
-              if (xhr.status === 200) {
-                  // 삭제 성공 시 해당 맛집 카드를 화면에서 제거
-                  var cardToDelete = document.querySelector('.card[data-map-id="' + mapId + '"]');
-                  if (cardToDelete) {
-                      cardToDelete.parentNode.removeChild(cardToDelete);
+        //gps로 위치 불러오기 : gps_check()함수
+        gps_check();
+         function gps_check(){
+             if (navigator.geolocation) {
+                 var options = {timeout:60000};
+                 navigator.geolocation.getCurrentPosition(showLocation, errorHandler, options);
+             } else {
+                 alert("GPS_추적이 불가합니다.");
+                 gps_use = false;
+             }
+         }
+         // 이용 가능하면, 위도와 경도를 반환하는 showlocation함수.
+          function showLocation(pos) {
+                  console.log(pos);
+                  gps_use = true;
+                  gps_lat = pos.coords.latitude;
+                  gps_lng = pos.coords.longitude;
+                  // 위치 정보가 확인되었으므로 이제 gps_tracking 함수 호출 가능
+                  gps_tracking();
+              }
+              // error발생 시 에러의 종류를 알려주는 함수.
+              function errorHandler(error) {
+                  if(error.code == 1) {
+                      alert("접근차단");
+                  } else if( err.code == 2) {
+                      alert("위치를 반환할 수 없습니다.");
                   }
-                  document.getElementById('deleteModal').style.display = 'none'; // 모달 창 닫기
+                  gps_use = false;
+              }
+        //현재위치 마커 표시
+         function gps_tracking(){
+              if (gps_use) {
+                  map.panTo(new kakao.maps.LatLng(gps_lat,gps_lng));  //카카오api 사용자 좌표로 부드럽게 이동
+                   // 마커 이미지의 이미지 크기 입니다
+                  //var gps_content = new kakao.maps.Size(20, 20);
+                  var gps_content = '<div><img class="pulse" draggable="false" unselectable="on" src="https://ssl.pstatic.net/static/maps/m/pin_rd.png" alt="" style="width: 20px; height: 20px;"></div>';
+                  var currentOverlay = new kakao.maps.CustomOverlay({   //마커를 사용자의 위도와 경도 좌표에 찍어준다.
+                      position: new kakao.maps.LatLng(gps_lat,gps_lng),
+                      content: gps_content,
+                      map: map
+                  });
+                  currentOverlay.setMap(map);
               } else {
-                  // 삭제 실패 시 처리
-                  alert('삭제 실패');
-                  document.getElementById('deleteModal').style.display = 'none'; // 모달 창 닫기
+                alert("접근차단하신 경우 새로고침, 아닌 경우 잠시만 기다려주세요.");
+                gps_check();
               }
           }
-      };
+    </script>
+  <!--   mymapAPI.js 파일을 포함 -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+  <script type="text/javascript" src="/js/mymapAPI.js"></script>
 
-      xhr.send();
-  });
-
-</script>
+</body>
 </div>
 </html>
 
-<!--  &lt;!&ndash; mymapAPI.js 파일을 포함 &ndash;&gt;-->
-<!--  <script type="text/javascript" src="/js/mymapAPI.js"></script>-->
+        <!--      맛집 리스트 삭제 모달 -->
+<!--        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">-->
+<!--            <div class="modal-dialog" role="document">-->
+<!--                <div class="modal-content">-->
+
+<!--                    <div class="modal-header">-->
+<!--                        <h5 class="modal-title" id="deleteModalLabel">맛집 삭제 확인</h5>-->
+<!--                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+<!--                    </div>-->
+
+<!--                    <div class="modal-body">-->
+<!--                        해당 맛집을 삭제하시겠습니까?-->
+<!--                    </div>-->
+
+<!--                    <div class="modal-footer">-->
+<!--                        <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>-->
+<!--                        <button type="button" class="btn btn-danger" id="confirmDelete">삭제</button>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>    &lt;!&ndash; 삭제 확인용 모달창html 끝 &ndash;&gt;-->
+
 

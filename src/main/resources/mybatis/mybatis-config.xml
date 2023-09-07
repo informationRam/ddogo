@@ -6,7 +6,10 @@
     <typeAliases>
             <typeAlias alias="MyMapDTO" type="com.yumpro.ddogo.mymap.domain.MyMapDTO"/>
     </typeAliases>
-
+    <!-- 매퍼 파일 추가 -->
+    <mappers>
+        <mapper resource="com/yumpro/ddogo/mymap/mapper/MyMapMapper.xml"/>
+    </mappers>
     @Bean
     public RestMemberController restApi(){
     RestMemberController cont = new RestMemberController();
