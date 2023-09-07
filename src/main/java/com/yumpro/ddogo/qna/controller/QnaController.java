@@ -48,6 +48,8 @@ public class QnaController {
         int totalCount = qnaService.getQnaListCount(map); // 전체 데이터 수를 가져오는 메서드를 추가해야 합니다.
         int totalPages = (int) Math.ceil((double) totalCount / limit);
 
+        System.out.println("답변여부"+qnaList.get(4));
+
         model.addAttribute("totalCnt",totalCount);
         model.addAttribute("currentPage", currentPage);
         model.addAttribute("totalPages", totalPages);
