@@ -8,6 +8,7 @@ import com.yumpro.ddogo.qna.domain.QnaListDTO;
 import com.yumpro.ddogo.qna.repository.QnaJpaRepository;
 import com.yumpro.ddogo.qna.repository.QnaRepository;
 import com.yumpro.ddogo.qna.repository.QnaSolveRepository;
+import com.yumpro.ddogo.qna.validation.QnaSolveAddForm;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -83,5 +84,16 @@ public class QnaService {
         }else{
             throw new DataNotFoundException();
         }
+    }
+
+    public void moidfy(QnaSolve qnaSolve, String title, String content) {
+        qnaSolve.setQnaSolveTitle(title);
+        qnaSolve.setQnaSolveContent(content);
+        qnaSolve.setQnaSolveDate(LocalDateTime.now());
+        qnaSolveRepository.save(qnaSolve);
+    }
+
+    public void delete(QnaSolve qnaSolve) {
+        qnaSolveRepository.delete(qnaSolve);
     }
 }

@@ -185,24 +185,49 @@ public class QnaController {
     //답변수정처리
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/solve/modify/{id}")
-    public String qnaSolveMofiy(@PathVariable int id,QnaSolveAddForm qnaSolveAddForm,Model ){
+    public String qnaSolveMofiy(@PathVariable int id,@Valid QnaSolveAddForm qnaSolveAddForm,BindingResult bindingResult,Model model,Principal principal){
+        if(!principal.getName().equals("admin")){
+            return "redirect:/qna/list";
+        }
 
+        if(bindingResult.hasErrors()){  //유효성검사시 에러가 발생하면
+            return "question_form"; //question_form.html문서로 이동
+        }
 
+        Qna qna = qnaService.getQnaById(id);
+        QnaSolve qnaSolve = qnaService.getQnaSolveByQna(qna);
+        String title=qnaSolveAddForm.getQnaSolveTitle();
+        String content=qnaSolveAddForm.getQnaSolveContent();
 
+        qnaService.moidfy(qnaSolve,title,content);
+
+        QnaSolve qnaSolve1 = qnaService.getQnaSolveByQna(qna);
 
         //3.Model
-        /*
         model.addAttribute("qnaSolve",qnaSolve1);
-        model.addAttribute("qna",qna1);
+        model.addAttribute("qna",qna);
         model.addAttribute("user",principal.getName());
-
-         */
 
         //4.View
         return "qna/qna_detail";
     }
 
     //답변 삭제
+    ///solve/delete/${qna.qnaNo}
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/solve/delete/{id}")
+    public String qnaSolveDelete(@PathVariable("id") Integer id,Principal principal){
+        if(!principal.getName().equals("admin")){
+            return "redirect:/qna/list";
+        }
+
+        Qna qna=qnaService.getQnaById(id);
+        QnaSolve qnaSolve=qnaService.getQnaSolveByQna(qna);
+
+        qnaService.delete(qnaSolve);
+
+        return "redirect:/qna/list";
+    }
 
 }
 
