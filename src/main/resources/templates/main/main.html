@@ -147,8 +147,14 @@
                 var sidoSelect = document.getElementById("sido");
                 var gugunSelect = document.getElementById("gugun");
 
-                // 시도 목록 초기화
-                for (var sido in response) {
+                // JSON 객체를 가나다순으로 정렬
+                var sortedResponse = {};
+                Object.keys(response).sort().forEach(function(key) {
+                    sortedResponse[key] = response[key];
+                });
+
+                // 가나다순으로 정렬된 JSON 객체를 사용하여 시도 목록 초기화
+                for (var sido in sortedResponse) {
                     var option = document.createElement("option");
                     option.value = sido;
                     option.textContent = sido;
