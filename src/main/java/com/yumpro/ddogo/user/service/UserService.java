@@ -27,6 +27,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder PasswordEncoder;
+    private final EmailService emailService;
 
     //회원가입처리
     public void userJoin(UserCreateForm userCreateForm){
@@ -214,7 +215,7 @@ public class UserService {
         boolean isUniqueId = false;
 
         while (!isUniqueId) {
-            randomID = emailService.generateID(); //랜덤 아이디 중복 없을때 저장
+            randomID = emailService.generateRandomID(); //랜덤 아이디 중복 없을때 저장
             isUniqueId = !checkUserIdDuplication(randomID);
         }
 

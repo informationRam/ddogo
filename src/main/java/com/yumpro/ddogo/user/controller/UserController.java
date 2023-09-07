@@ -96,6 +96,7 @@ public class UserController {
     //로그인 처리
     @PostMapping("/login")
     public String login(@Valid LoginVaildation loginVaildation, BindingResult bindingResult, Model model, HttpSession session, Principal principal) {
+        System.out.println("?durlf?");
         if (bindingResult.hasErrors()) {
             return "user/loginForm";
         } else {

@@ -29,7 +29,7 @@ public class UserSecurityService implements UserDetailsService {
         System.out.println("loadUserByUsername 진입");
         Optional<com.yumpro.ddogo.common.entity.User> user = userRepository.findByUserId(user_id);
 
-        if (user.isPresent()) {
+        if (user.isEmpty()) {
             throw new UsernameNotFoundException("사용자를 찾을 수 없습니다." + user_id);
         }
 
