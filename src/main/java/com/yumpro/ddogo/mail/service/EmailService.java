@@ -7,12 +7,15 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 @Service
 @AllArgsConstructor
 public class EmailService {
 
     @Autowired
     private JavaMailSender emailSender;
+    private static final AtomicInteger counter = new AtomicInteger(0);
 
     public String sendSimpleMessage(String mailAddress) {
         System.out.println("sendSimpleMessage진입");
@@ -45,6 +48,15 @@ public class EmailService {
             idx = (int) (charSet.length * Math.random());
             str += charSet[idx];
         }
-        return str;
+        return "K"+str;
     }
-}
+
+    // 임시 아이디 생성
+        public String generateID() {
+            int nextValue = counter.incrementAndGet();
+            String id = String.format("K%04d", nextValue);
+            return id;
+        }
+
+    }
+

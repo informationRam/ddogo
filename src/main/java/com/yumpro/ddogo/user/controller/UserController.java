@@ -1,11 +1,12 @@
 package com.yumpro.ddogo.user.controller;
 
-import com.yumpro.ddogo.common.entity.KakaoAccount;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yumpro.ddogo.common.entity.User;
-import com.yumpro.ddogo.common.entity.KakaoUser;
 import com.yumpro.ddogo.mail.service.EmailService;
 
-import com.yumpro.ddogo.user.service.UserSecurityService;
+import com.yumpro.ddogo.user.DTO.KakaoProfile;
+import com.yumpro.ddogo.user.DTO.OAuthToken;
 import com.yumpro.ddogo.user.service.UserService;
 import com.yumpro.ddogo.user.validation.LoginVaildation;
 import com.yumpro.ddogo.user.validation.UserCreateForm;
@@ -13,18 +14,23 @@ import com.yumpro.ddogo.user.validation.UserModifyForm;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.json.ParseException;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 
 //시큐리티 저장 값 가져오기 세션대용
@@ -40,7 +46,7 @@ public class UserController {
     // 메일발송 서비스
     private final EmailService emailService;
     //세션값 담기(1)
-    private final UserSecurityService userSecurityService;
+    private final HttpSession session;
 
     //회원가입 폼
     @GetMapping("/joinForm")
@@ -48,8 +54,6 @@ public class UserController {
         model.addAttribute("userCreateForm", userCreateForm);
         return "/user/joinForm";
     }
-
-
 
     //회원가입처리 후 로그인페이지로 이동
     @PostMapping("/join")
@@ -80,36 +84,6 @@ public class UserController {
         }
     }
 
-
-  /*  //회원가입처리 후 로그인페이지로 이동
-    @PostMapping("/join")
-    public String userJoin(@Valid UserCreateForm userCreateForm, BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) {
-            return "user/joinForm";
-        }
-
-        // 아이디 중복 여부체크
-        if (userService.checkUserIdDuplication(userCreateForm.getUser_id())) {
-            bindingResult.rejectValue("user_id", "User_idInCorrect", "이미 사용중인 아이디입니다.");
-            return "user/joinForm";
-        }
-
-        // 이메일 중복 여부체크
-        if (userService.checkEmailDuplication(userCreateForm.getEmail())) {
-            bindingResult.rejectValue("email", "EmailInCorrect", "이미 사용중인 이메일 입니다.");
-            return "user/joinForm";
-        }
-
-        // 비밀번호, 비밀번호 확인 동일 체크
-        if (!userCreateForm.getPwd1().equals(userCreateForm.getPwd2())) {
-            bindingResult.rejectValue("pwd2", "pwdInCorrect", "비밀번호 확인 값이 다릅니다.");
-            return "user/joinForm";
-        } else {
-            userService.userJoin(userCreateForm);
-            return "redirect:/user/login";
-        }
-    }
-*/
     //로그인 화면(get)
     @GetMapping("/login")
     public String loginForm(LoginVaildation loginVaildation,Model model,UserCreateForm userCreateForm) {
@@ -243,47 +217,117 @@ public class UserController {
         return "redirect:/user/logout";    //목록으로이동
     }
 
+    //카카오 로그인 --------------------- 컨트롤러
 
+    /*
+    * Content-type: application/x-www-form-urlencoded;charset=utf-8
+    https://kauth.kakao.com/oauth/token
+    grant_type=authorization_code
+    client_id=5a378555d1b9b81713af9609ce071c9d
+    redirect_uri=http://localhost/user/kakao
+    * */
 
-    //카카오 테스트폼
-    @GetMapping("/kakao")
-    public String kakao() {
+    @GetMapping("/kakaoform")
+    public String callback(){
         return "/user/kakaoLogin";
     }
 
-    @PostMapping("/kakao")
-    public String kakaoLogin(@RequestBody KakaoAccount kakaoAccount,@RequestBody Map<String, String> data) {
-        System.out.println("받음!@");
+    //카카오 로그인
+    @GetMapping("/kakao")
+    public String callback(String code) throws JsonProcessingException, ParseException, java.text.ParseException {
+        // 1. code 값 존재 유무 확인
+        if(code == null || code.isEmpty()){
+            return "redirect:/loginForm";
+        }
 
-        System.out.println("kakaoAccount:"+kakaoAccount);
-        String nickname = data.get("nickname");
+        RestTemplate rt = new RestTemplate();
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Content-type","application/x-www-form-urlencoded;charset=utf-8");
+        // 2. code 값 카카오 전달 -> access token 받기
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("grant_type", "authorization_code");
+        params.add("client_id", "5a378555d1b9b81713af9609ce071c9d");
+        params.add("redirect_uri", "http://localhost/user/kakao"); // 2차 검증
+        params.add("code", code); // 핵심
 
-      /*  kakaoAccount = kakaoUser.getKakao_account();*/
+        HttpEntity<MultiValueMap<String,String>> KakaoTokenRequest =
+                new HttpEntity<>(params,httpHeaders);
+               /* Fetch.kakao("https://kauth.kakao.com/oauth/token", HttpMethod.POST, body);*/
+
+        ResponseEntity<String> response = rt.exchange(
+                "https://kauth.kakao.com/oauth/token",
+                HttpMethod.POST,
+                KakaoTokenRequest,
+                String.class
+        );
+
+        // 3. access token으로 카카오의 홍길동 resource 접근 가능해짐 -> access token을 파싱하고
+        /*ObjectMapper om = new ObjectMapper();*/
+        ObjectMapper om = new ObjectMapper();
+        OAuthToken oAuthToken = null;
+
+        try {
+            oAuthToken = om.readValue(response.getBody(), OAuthToken.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        System.out.println("카카오 엑세스 토큰:" +oAuthToken.getAccess_token());
+
+        //2.
+        RestTemplate rt2 = new RestTemplate();
+        HttpHeaders httpHeaders2 = new HttpHeaders();
+        httpHeaders2.add("Content-type","application/x-www-form-urlencoded;charset=utf-8");
+        httpHeaders2.add("Authorization","Bearer "+oAuthToken.getAccess_token());
+
+        // 2. code 값 카카오 전달 -> access token 받기
+
+        HttpEntity<MultiValueMap<String,String>> KakaoProfileRequest2 =
+                new HttpEntity<>(httpHeaders2);
+
+        ResponseEntity<String> response2 = rt2.exchange(
+                "https://kapi.kakao.com/v2/user/me",
+                HttpMethod.POST,
+                KakaoProfileRequest2,
+                String.class
+        );
+
+        // 3. access token으로 카카오의 홍길동 resource 접근 가능해짐 -> access token을 파싱하고
+        ObjectMapper om2 = new ObjectMapper();
+        KakaoProfile kakaoProfile = null;
+
+        try {
+            kakaoProfile = om2.readValue(response2.getBody(), KakaoProfile.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
 
 
-        String profileNickname = kakaoAccount.getProfileNickname();
-        String gender = kakaoAccount.getGender();
-        String ageRange = kakaoAccount.getAgeRange();
-        String birthday = kakaoAccount.getBirthday();
-        String email = kakaoAccount.getEmail();
 
-        // 사용자 정보를 출력하거나 원하는 작업을 수행합니다.
-        System.out.println("Profile Nickname: " + profileNickname);
-        System.out.println("Gender: " + gender);
-        System.out.println("Age Range: " + ageRange);
-        System.out.println("Birthday: " + birthday);
-        System.out.println("email: " + email);
-        System.out.println("nickname:" +nickname);
+        System.out.println("카카오 아이디: "+kakaoProfile.getId());
+        System.out.println("카카오 이메일: "+kakaoProfile.getKakaoAccount().getEmail());
+        System.out.println("카카오 유저네임: "+kakaoProfile.getKakaoAccount().getEmail());
 
-        // 원하는 로직을 수행한 후 응답을 반환합니다.
-        return "카카오 로그인 완료";
-    }
+        String email = kakaoProfile.getKakaoAccount().getEmail();
 
+        // 5. 해당 provider_id 값으로 회원가입되어 있는 user의 username 정보가 있는지 DB 조회 (X)
+        User kakaouser = userService.getUser2(email);
 
-    //카카오 테스트폼
-    @GetMapping("/kakaoout")
-    public String kakao2() {
-        return "/user/kakaologout";
+        // 6. 있으면 그 user 정보로 session 만들어주고, (자동로그인) (X)
+        if(kakaouser != null){
+            System.out.println("디버그 : 회원정보가 있어서 로그인을 바로 진행합니다");
+            session.setAttribute("principal", kakaouser);
+        }
+
+        // 7. 없으면 강제 회원가입 시키고, 그 정보로 session 만들어주고, (자동로그인)
+        if(kakaouser == null){
+            System.out.println("디버그 : 회원정보가 없어서 회원가입 후 로그인을 바로 진행합니다");
+            userService.kakaoJoin(kakaoProfile);
+            User newKakaouser = userService.getUser2(email);
+            session.setAttribute("principal", newKakaouser);
+        }
+
+        return "redirect:/";
     }
 }
 

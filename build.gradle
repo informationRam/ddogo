@@ -41,7 +41,8 @@ dependencies {
 	// 메일발송
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 
-	// json
+	// kakao login
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
 
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
