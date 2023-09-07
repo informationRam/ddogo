@@ -19,6 +19,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +35,18 @@ public class QnaController {
 
     private final QnaService qnaService;
     private final UserListService userListService;
+
+    //메일용 html파일 문서화
+    public String readHTMLFileAsString(String filePath) {
+        String content = "";
+        try {
+            content = new String(Files.readAllBytes(Paths.get(filePath)), StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            e.printStackTrace();
+            content = "HTML 파일을 불러오지 못했습니다.";
+        }
+        return content;
+    }
 
     //(all)문의글 리스트 보기
     @PreAuthorize("isAuthenticated()")
@@ -141,9 +157,11 @@ public class QnaController {
             model.addAttribute("userRole",userRole);
             return "qna/qna_detail";
         }
-
+        String text = readHTMLFileAsString("src/main/resources/templates/qna/qna_mail.html");
         //답변 저장 로직+질문 상태변경
         qnaService.Solveadd(qnaSolveAddForm.getQnaSolveTitle(),qnaSolveAddForm.getQnaSolveContent(),qna);
+        userListService.sendSimpleEmail(qna.getUser().getEmail(), "[또갈지도]답변이 등록되었습니다", text);
+
         Qna qna1 = qnaService.getQnaById(id);
         QnaSolve qnaSolve1 = qnaService.getQnaSolveByQna(qna1);
 
@@ -151,6 +169,7 @@ public class QnaController {
         model.addAttribute("qnaSolve",qnaSolve1);
         model.addAttribute("qna",qna1);
         model.addAttribute("user",principal.getName());
+        model.addAttribute("userRole",userRole);
 
         //4.View
         return "qna/qna_detail";
