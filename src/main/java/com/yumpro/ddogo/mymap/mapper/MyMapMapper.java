@@ -14,5 +14,8 @@ public interface MyMapMapper {
 
 
     //맛집 저장 삭제
-    void deleteMyHotpl(Integer mapNo);
+    void deleteMyHotpl(@Param("mapNo") Integer mapNo);
+
+
+    void updateMemoByReviewNo(@Param("reviewNo") Integer reviewNo, @Param("memo") String memo);
 }
