@@ -29,8 +29,8 @@
           and m.recom = 'Y'
           and h.hotplace_cate_no = 1
         group by h.hotplace_name, h.hotplace_no, ra.avg_emo_result
-        order by jjim desc,avg_emo_result desc
-        limit 3
+        order by jjim desc,ra.avg_emo_result desc
+        limit 5
 		]]>
     </select>
 
@@ -51,8 +51,8 @@
           and m.recom = 'Y'
           and h.hotplace_cate_no = 2
         group by h.hotplace_name, h.hotplace_no, ra.avg_emo_result
-        order by jjim desc,avg_emo_result desc
-        limit 3
+        order by jjim desc,ra.avg_emo_result desc
+        limit 5
 		]]>
     </select>
 
