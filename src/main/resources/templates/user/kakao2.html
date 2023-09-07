@@ -6,7 +6,24 @@
 
 <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
 
-<script>
+
+    <a href="https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=5a378555d1b9b81713af9609ce071c9d&redirect_uri=http://localhost/user/kakao&prompt=response_type=code">카카오로 로그인4!</a>
+    <a href="https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=5a378555d1b9b81713af9609ce071c9d&redirect_uri=http://localhost/user/kakao&prompt=select_account">카카오로 로그인3!</a>
+
+    <!-- post -->
+    Content-type: application/x-www-form-urlencoded;charset=utf-8
+    https://kauth.kakao.com/oauth/token
+    grant_type=authorization_code
+    client_id=5a378555d1b9b81713af9609ce071c9d
+    redirect_uri=http://localhost/user/kakao
+
+    <!-- 사용자 정보조회 -->
+    https://kapi.kakao.com/v2/user/me
+    Authorization: Bearer ${ACCESS_TOKEN}
+    Content-type: application/x-www-form-urlencoded;charset=utf-8
+
+
+    <script>
     Kakao.init("5a378555d1b9b81713af9609ce071c9d");
     console.log(Kakao.isInitialized()); // sdk 초기화 여부 판단
 

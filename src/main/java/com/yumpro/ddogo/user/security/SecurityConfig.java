@@ -1,5 +1,7 @@
 package com.yumpro.ddogo.user.security;
 
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -32,13 +34,14 @@ public class SecurityConfig {
                 .requestMatchers(new AntPathRequestMatcher("/admin/**")).hasRole("ADMIN")
                 .anyRequest().permitAll()
                 .and().formLogin().
-                loginPage("/user/login").usernameParameter("user_id").passwordParameter("pwd").defaultSuccessUrl("/")
-                .and().logout().
+                loginPage("/user/login").usernameParameter("user_id").passwordParameter("pwd").defaultSuccessUrl("/");
+               /* .and().oauth2Login().loginPage("/user/login").userInfoEndpoint().userService(principalOauth2UserService);*/
+               /* .and().logout().
                 logoutRequestMatcher(new AntPathRequestMatcher("/user/logout")).logoutSuccessUrl("/").invalidateHttpSession(true)
                 .and().exceptionHandling().accessDeniedPage("/common/ddoError")
                 .and()
                 .exceptionHandling() // 예외 처리 설정을 추가합니다.
-                .accessDeniedPage("/common/ddoError.html"); // 403 에러 발생 시 커스텀 에러 페이지로 리디렉션합니다.
+                .accessDeniedPage("/common/ddoError.html"); // 403 에러 발생 시 커스텀 에러 페이지로 리디렉션합니다.*/
 
         return http.build();
   }
