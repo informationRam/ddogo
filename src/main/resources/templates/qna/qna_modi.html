@@ -1,0 +1,24 @@
+<html layout:decorate="~{layout}" xmlns:th="http://www.thymeleaf.org">
+<div layout:fragment="content" class="container my-3">
+    <link rel="stylesheet" href="/css/admin/ddostyle.css" />
+    <h5 class="my-3 border-bottom pb-2">질문수정</h5>
+    <form id="questionForm" th:object="${qnaAddForm}" th:action="@{|/qna/modify/${qna.qnaNo}|}" method="post">
+        <div class="mb-3">
+            <label for="qna_title" class="form-label">제목</label>
+            <input type="text" th:field="*{qna_title}" class="form-control"/>
+            <span class="ddo-error-text" th:if="${#fields.hasErrors('qna_title')}" th:errors="*{qna_title}"></span>
+        </div>
+        <div class="mb-3">
+            <label for="qna_content" class="form-label">내용</label>
+            <textarea th:field="*{qna_content}" class="form-control" rows="8"></textarea>
+            <span class="ddo-error-text" th:if="${#fields.hasErrors('qna_content')}" th:errors="*{qna_content}"></span>
+        </div>
+        <div class="mb-3">
+            <label for="qna_pwd" class="form-label">비밀번호 확인</label>
+            <input type="password" th:field="*{qna_pwd}" class="form-control"/>
+            <span class="ddo-error-text" th:if="${#fields.hasErrors('qna_pwd')}" th:errors="*{qna_pwd}"></span>
+        </div>
+        <input type="submit" value="질문 등록" class="btn btn-primary my-2"/>
+    </form>
+</div>
+</html>

@@ -8,13 +8,10 @@ import com.yumpro.ddogo.qna.domain.QnaListDTO;
 import com.yumpro.ddogo.qna.repository.QnaJpaRepository;
 import com.yumpro.ddogo.qna.repository.QnaRepository;
 import com.yumpro.ddogo.qna.repository.QnaSolveRepository;
-import com.yumpro.ddogo.qna.validation.QnaSolveAddForm;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -96,6 +93,13 @@ public class QnaService {
     public void delete(QnaSolve qnaSolve,Qna qna) {
         qnaSolveRepository.delete(qnaSolve);
         qna.setQnaSolved('N');
+        qnaJpaRepository.save(qna);
+    }
+
+    public void modi(Qna qna, String title, String content) {
+        qna.setQnaTitle(title);
+        qna.setQnaContent(content);
+        qna.setQnaDate(LocalDateTime.now());
         qnaJpaRepository.save(qna);
     }
 }

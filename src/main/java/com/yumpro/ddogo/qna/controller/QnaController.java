@@ -229,5 +229,63 @@ public class QnaController {
         return "redirect:/qna/list";
     }
 
+    //문의사항 수정
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("modify/{id}")
+    public String qnaModiForm(QnaAddForm QnaAddForm,@PathVariable("id") Integer id,Principal principal,Model model){
+        Qna qna = qnaService.getQnaById(id);
+        if ( !qna.getUser().getUserId().equals(principal.getName()) ) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"수정권한이 없습니다.");
+        }
+        QnaAddForm.setQna_title(qna.getQnaTitle());
+        QnaAddForm.setQna_content(qna.getQnaContent());
+        model.addAttribute("qna",qna);
+
+        return "qna/qna_modi";
+    }
+
+    //(유저)문의글 작성 처리
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("modify/{id}")
+    public String qnaModi(@Valid QnaAddForm qnaAddForm, BindingResult bindingResult, @PathVariable int id, Principal principal, Model model){
+
+        Qna qna = qnaService.getQnaById(id);
+
+        if ( !qna.getUser().getUserId().equals(principal.getName()) ) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"수정권한이 없습니다.");
+        }
+        if(qna.getQnaSolved()=='Y'){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"수정권한이 없습니다.");
+        }
+        if(bindingResult.hasErrors()){  //유효성검사시 에러가 발생하면
+            model.addAttribute("qna",qna);
+            return "qna/qna_modi";
+        }
+
+        if(!qnaAddForm.getQna_pwd().equals(qna.getQnaPwd())){
+            bindingResult.rejectValue("qnaPwd","qnaPwdInCorrect","문의 비밀번호가 일치하지 않습니다");
+            model.addAttribute("qna",qna);
+            return "qna/qna_modi";
+        }
+
+        String title=qnaAddForm.getQna_title();
+        String content=qnaAddForm.getQna_content();
+
+        qnaService.modi(qna,title,content);
+
+        Qna qna1 = qnaService.getQnaById(id);
+        QnaSolve qnaSolve = qnaService.getQnaSolveByQna(qna1);
+        String userRole=null;
+        if(principal.getName().equals("admin")){
+            userRole="admin";
+        }else{
+            userRole="user";
+        }
+
+        model.addAttribute("qnaSolve",qnaSolve);
+        model.addAttribute("qna",qna1);
+        model.addAttribute("userRole",userRole);
+        return "qna/qna_detail";
+    }
 }
 

@@ -10,10 +10,25 @@
                 <div class="badge bg-light text-dark p-2 text-start" th:text="${qna.user.user_name}"></div>
                 <div class="badge bg-light text-dark p-2 text-start" th:text="${#temporals.format(qna.qnaDate,'yyyy/MM/dd HH:mm')}"></div>
             </div>
+            <div class="my-3" th:if="${qnaSolve == null}">
+                <a th:href="@{|/qna/modify/${qna.qnaNo}|}"
+                   class="btn btn-sm btn-outline-secondary"
+                   sec:authorize="isAuthenticated()"
+                   th:if="${qnaSolve == null}"
+                   th:text="수정"></a>
+                <!--답변삭제버튼-->
+                <a href="javascript:void();" th:data-uri="@{|/qna/delete/${qna.qnaNo}|}"
+                   class="delete btn btn-sm btn-outline-secondary"
+                   sec:authorize="isAuthenticated()"
+                   th:if="${qnaSolve == null}"
+                   th:text="삭제"></a>
+            </div>
+            <div class="my-3" th:if="${qnaSolve != null}">
+                <span>답변이 달린 질문은 수정 또는 삭제 하실 수 없습니다</span>
+            </div>
         </div>
     </div>
     <!-- 답변 -->
-
     <div class="card my-3">
         <div th:if="${qnaSolve != null}">
             <div class="card-head">
@@ -26,14 +41,14 @@
                         <div class="badge bg-light text-dark p-2 text-start" th:text="${#temporals.format(qnaSolve.qnaSolveDate,'yyyy/MM/dd HH:mm')}"></div>
                     </div>
                 </div>
-                <!--답변수정 버튼: 구현X-->
+                <!--답변수정 버튼-->
                 <div class="my-3">
                     <a th:href="@{|/qna/solve/modify/${qna.qnaNo}|}"
                        class="btn btn-sm btn-outline-secondary"
                        sec:authorize="isAuthenticated()"
                        th:if="${qnaSolve != null}"
                        th:text="수정"></a>
-                    <!--삭제버튼-->
+                    <!--답변삭제버튼-->
                     <a href="javascript:void();" th:data-uri="@{|/qna/solve/delete/${qna.qnaNo}|}"
                        class="delete btn btn-sm btn-outline-secondary"
                        sec:authorize="isAuthenticated()"
