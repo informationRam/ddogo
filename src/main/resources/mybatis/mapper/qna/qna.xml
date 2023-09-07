@@ -18,16 +18,16 @@
         <!-- 정렬 필드(sortField)에 따른 정렬 -->
         ORDER BY
         <choose>
-            <when test="sortField == 'qnaTitle'">
+            <when test="sortField == 'qna_title'">
                 q.qna_title
             </when>
-            <when test="sortField == 'userId'">
+            <when test="sortField == 'user_id'">
                 u.user_id
             </when>
-            <when test="sortField == 'qnaSolved'">
+            <when test="sortField == 'qna_solved'">
                 q.qna_solved
             </when>
-            <when test="sortField == 'qnaDate'">
+            <when test="sortField == 'qna_date'">
                 q.qna_date
             </when>
             <otherwise>
@@ -35,11 +35,11 @@
             </otherwise>
         </choose>
         <choose>
-            <when test="sortOrder == 'desc'">
-                DESC
+            <when test="sortOrder == 'asc'">
+                asc
             </when>
             <otherwise>
-                ASC
+                desc
             </otherwise>
         </choose>
         <!-- 페이지네이션 -->
