@@ -75,3 +75,8 @@ max-width: 500px;
     font-size: 11px;
     display: block;
 }
+
+.ddo-bg {
+    background-color: #FF0841 !important;
+    color: #fff !important; /* 만약 글씨색을 흰색으로 변경하고 싶다면 */
+}

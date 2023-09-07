@@ -30,7 +30,7 @@
     border-radius: 0.2rem;
 }
 
-/* 아이콘 스타일 */
+
 .ddo-a {
     text-decoration: none;
     color: inherit;
@@ -39,4 +39,17 @@
 
 .ddo-icon-class {
     vertical-align: middle;
+}
+
+
+.ddo-title-click {
+    font-weight: bold;
+    color: #2c3e50;
+    text-decoration: none;
+    transition: color 0.3s;
+    cursor: pointer;
+}
+
+.ddo-title-click:hover {
+    color: #e74c3c;
 }

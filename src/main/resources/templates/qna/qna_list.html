@@ -26,8 +26,8 @@
         </div>
 
         <!-- 테이블 부분 -->
-        <table class="table table-striped">
-            <thead>
+        <table class="table">
+            <thead class="table-danger">
             <tr>
                 <th>상태
                     <a href="#" th:href="@{${sortField == 'qna_solved' and sortOrder == 'asc' ? '?sortField=qna_solved&sortOrder=desc' : '?sortField=qna_solved&sortOrder=asc'}}" class="ddo-a">
@@ -72,7 +72,7 @@
                     </span>
                 </td>
 
-                <td th:text="${qna.qna_title}" th:onclick="'showCard(\'' + ${qna.qna_no} + '\')'"></td>
+                <td th:text="${qna.qna_title}" th:onclick="'showCard(\'' + ${qna.qna_no} + '\')'" class="ddo-title-click"></td>
                 <td th:text="${qna.user_id}"></td>
                 <td th:text="${#temporals.format(qna.qna_date.toLocalDate(), 'yyyy/MM/dd')}"></td>
                 <div th:id="'hiddenCard' + ${qna.qna_no}" class="card" style="display: none;">
