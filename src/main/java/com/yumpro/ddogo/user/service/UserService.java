@@ -27,7 +27,6 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder PasswordEncoder;
-    private final EmailService emailService;
 
     //회원가입처리
     public void userJoin(UserCreateForm userCreateForm){

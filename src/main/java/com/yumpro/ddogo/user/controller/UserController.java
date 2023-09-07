@@ -55,6 +55,8 @@ public class UserController {
         return "/user/joinForm";
     }
 
+
+
     //회원가입처리 후 로그인페이지로 이동
     @PostMapping("/join")
     public String userJoin(@Valid UserCreateForm userCreateForm, BindingResult bindingResult, Model model) {

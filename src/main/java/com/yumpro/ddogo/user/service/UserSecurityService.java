@@ -1,5 +1,6 @@
 package com.yumpro.ddogo.user.service;
 
+import com.yumpro.ddogo.user.security.UserRole;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -28,9 +29,7 @@ public class UserSecurityService implements UserDetailsService {
         System.out.println("loadUserByUsername 진입");
         Optional<com.yumpro.ddogo.common.entity.User> user = userRepository.findByUserId(user_id);
 
-        System.out.println("user:" + user);
-        if (user.isEmpty()) {
-            System.out.println("if");
+        if (user.isPresent()) {
             throw new UsernameNotFoundException("사용자를 찾을 수 없습니다." + user_id);
         }
 

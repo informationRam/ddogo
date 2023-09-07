@@ -2,10 +2,12 @@
 <div layout:fragment="content" class="container my-3">
 
     <span><p class="nav-link" sec:authorize="isAuthenticated()" sec:authentication="name">회원</span>
+    <span sec:authorize="hasRole('ROLE_ADMIN')">Admin</span>
+    <span sec:authorize="hasRole('ROLE_USER')">User</span>
 
     <ul>
-        <div sec:authorize="hasRole('ROLE_ADMIN')">
-            관리자만!
+        <div sec:authorize="hasRole('ROLE_ADMIN')" >
+            <a th:href="@{/admin/go}">관리자만!</a>
         </div>
 
         <div sec:authorize="hasAuthority('ROLE_ADMIN')">
@@ -16,7 +18,7 @@
         <li><a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/user/logout}">로그아웃</a></li>
         <li><a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/admin/go}">admin</a></li>
         <li><a class="nav-link" th:href="@{/notice/list}">공지사항</a></li>
-        <li><a class="nav-link" th:href="@{/user/kakaoform}">kakao</a></li>
+        <li><a class="nav-link" th:href="@{/user/kakao2}">kakao</a></li>
         <li><a class="nav-link" th:href="@{/user/kakaoout}">kako로그아웃</a></li>
 
 
