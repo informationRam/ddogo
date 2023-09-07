@@ -263,7 +263,7 @@ public class QnaController {
         }
 
         if(!qnaAddForm.getQna_pwd().equals(qna.getQnaPwd())){
-            bindingResult.rejectValue("qnaPwd","qnaPwdInCorrect","문의 비밀번호가 일치하지 않습니다");
+            bindingResult.rejectValue("qna_pwd","qnaPwdInCorrect","문의 비밀번호가 일치하지 않습니다");
             model.addAttribute("qna",qna);
             return "qna/qna_modi";
         }

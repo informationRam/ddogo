@@ -10,7 +10,7 @@
                 <div class="badge bg-light text-dark p-2 text-start" th:text="${qna.user.user_name}"></div>
                 <div class="badge bg-light text-dark p-2 text-start" th:text="${#temporals.format(qna.qnaDate,'yyyy/MM/dd HH:mm')}"></div>
             </div>
-            <div class="my-3" th:if="${qnaSolve == null}">
+            <div class="my-3" th:if="${userRole == 'user'} and${qnaSolve == null}">
                 <a th:href="@{|/qna/modify/${qna.qnaNo}|}"
                    class="btn btn-sm btn-outline-secondary"
                    sec:authorize="isAuthenticated()"
