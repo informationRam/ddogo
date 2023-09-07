@@ -287,5 +287,21 @@ public class QnaController {
         model.addAttribute("userRole",userRole);
         return "qna/qna_detail";
     }
-}
 
+
+    //문의사항 삭제
+    ///solve/delete/${qna.qnaNo}
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/delete/{id}")
+    public String qnaDelete(@PathVariable("id") Integer id,Principal principal){
+        Qna qna = qnaService.getQnaById(id);
+
+        if ( !qna.getUser().getUserId().equals(principal.getName()) ) {
+            return "redirect:/qna/list";
+        }
+
+        qnaService.qnaDelete(qna);
+
+        return "redirect:/qna/list";
+    }
+}

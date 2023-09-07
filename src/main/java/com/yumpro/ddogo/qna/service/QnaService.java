@@ -102,4 +102,8 @@ public class QnaService {
         qna.setQnaDate(LocalDateTime.now());
         qnaJpaRepository.save(qna);
     }
+
+    public void qnaDelete(Qna qna) {
+        qnaJpaRepository.delete(qna);
+    }
 }
