@@ -43,7 +43,6 @@ public class UserService {
         user.setEmail(userCreateForm.getEmail());
         user.setPwd(userCreateForm.getPwd1());
         user.setPwd(PasswordEncoder.encode(userCreateForm.getPwd1()));
-        user.setRole(RoleType.USER);
         userRepository.save(user);
     }
 
@@ -198,12 +197,8 @@ public class UserService {
         return userModifyForm;
     }
 
-
     // ———— ------------------------ 카카오 서비스
-    //id, email 값 가져오기
-       /* System.out.println("카카오아이디: "+kakaoProfile.getId());
-        System.out.println("카카오이메일: "+kakaoProfile.getKakaoAccount().getEmail());
-        System.out.println("카카오유저네임: "+kakaoProfile.getKakaoAccount().getEmail()+"_"+kakaoProfile.getId());*/
+/*
 
     //kakao회원가입처리
     public void kakaoJoin(KakaoProfile kakaoProfile) throws ParseException, java.text.ParseException {
@@ -248,7 +243,6 @@ public class UserService {
         user.setPwd(PasswordEncoder.encode(uuid.toString()));    //비밀번호도 랜덤으로 저장
         userRepository.save(user);
     }
-
-
+*/
 
 }

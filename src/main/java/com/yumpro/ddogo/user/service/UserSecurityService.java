@@ -33,8 +33,6 @@ public class UserSecurityService implements UserDetailsService {
         this.userRepository = userRepository;
     }
 
-
-
     @Override
     public UserDetails loadUserByUsername(String user_id) throws UsernameNotFoundException {
         System.out.println("시큐리티 로그인 진행 : UserSecurityService 진입");
@@ -59,7 +57,7 @@ public class UserSecurityService implements UserDetailsService {
             SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(user1, null, authorities));
             System.out.println("getUserId:"+user1.getUserId());
             System.out.println("getUse:"+user1);
-            // Return the UserDetails instance with minimal information (only username and password)
+
             return new User(user1.getUserId(), user1.getPwd(), new ArrayList<>());
         }
         return new User(user1.getUserId(), user1.getPwd(), authorities);

@@ -14,18 +14,12 @@ import com.yumpro.ddogo.user.validation.UserModifyForm;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.json.ParseException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -61,8 +55,6 @@ public class UserController {
         model.addAttribute("userCreateForm", userCreateForm);
         return "/user/joinForm";
     }
-
-
 
     //회원가입처리 후 로그인페이지로 이동
     @PostMapping("/join")
@@ -228,15 +220,14 @@ public class UserController {
     }
 
     //카카오 로그인 --------------------- 컨트롤러
-
     /*
     * Content-type: application/x-www-form-urlencoded;charset=utf-8
     https://kauth.kakao.com/oauth/token
     grant_type=authorization_code
     client_id=5a378555d1b9b81713af9609ce071c9d
     redirect_uri=http://localhost/user/kakao
-    * */
-
+    */
+/*
     @GetMapping("/kakaoform")
     public String callback(){
         return "/user/kakaoLogin";
@@ -262,7 +253,7 @@ public class UserController {
 
         HttpEntity<MultiValueMap<String,String>> KakaoTokenRequest =
                 new HttpEntity<>(params,httpHeaders);
-               /* Fetch.kakao("https://kauth.kakao.com/oauth/token", HttpMethod.POST, body);*/
+               *//* Fetch.kakao("https://kauth.kakao.com/oauth/token", HttpMethod.POST, body);*//*
 
         ResponseEntity<String> response = rt.exchange(
                 "https://kauth.kakao.com/oauth/token",
@@ -272,7 +263,7 @@ public class UserController {
         );
 
         // 3. access token으로 카카오의 홍길동 resource 접근 가능해짐 -> access token을 파싱하고
-        /*ObjectMapper om = new ObjectMapper();*/
+        *//*ObjectMapper om = new ObjectMapper();*//*
         ObjectMapper om = new ObjectMapper();
         OAuthToken oAuthToken = null;
 
@@ -344,7 +335,7 @@ public class UserController {
 
         }
         return "redirect:/";
-    }
+    }*/
 }
 
 

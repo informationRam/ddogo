@@ -41,6 +41,6 @@ public class User {
     @NotNull
     private String pwd;                 //'비밀번호'
 
-    @Enumerated(EnumType.STRING)
-    private RoleType role;
+/*    @Enumerated(EnumType.STRING)
+    private RoleType role;*/
 }

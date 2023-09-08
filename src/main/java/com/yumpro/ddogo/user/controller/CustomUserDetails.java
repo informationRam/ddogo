@@ -4,6 +4,8 @@ import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
 
+
+//시큐리티 사용필요
 public class CustomUserDetails extends org.springframework.security.core.userdetails.User {
     private final String user_id;
 
