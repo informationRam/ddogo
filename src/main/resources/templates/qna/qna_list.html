@@ -13,7 +13,7 @@
                 <option value="user_id">작성자</option>
             </select>
             <input type="text" class="form-control me-2" name="search" placeholder="문의사항 검색">
-            <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i></button>
+            <button type="submit" class="btn btn-danger"><i class="bi bi-search"></i></button>
             <a href="/qna/list" class="btn btn-secondary" style="margin-left:3px;"><i class="bi bi-arrow-repeat"></i></a>
         </form>
 
@@ -21,7 +21,7 @@
         <div class="d-flex justify-content-between mb-3">
             <div class="mb-2">총 개수: <span th:text="${totalCnt}"></span></div>
             <div>
-                <a href="/qna/add" class="btn btn-primary me-2"><i class="bi bi-pencil-fill"></i></a>
+                <a href="/qna/add" class="btn btn-danger me-2"><i class="bi bi-pencil-fill"></i></a>
             </div>
         </div>
 
@@ -80,7 +80,7 @@
                         <form th:id="'passwordForm' + ${qna.qna_no}" th:action="@{|/qna/detail/${qna.qna_no}|}" method="post">
                             <label for="inputPwd">비밀번호:</label>
                             <input type="password" id="inputPwd" name="inputPwd">
-                            <button type="submit" class="btn btn-primary">확인</button>
+                            <button type="submit" class="btn btn-danger">확인</button>
                         </form>
                     </div>
                 </div>
@@ -101,13 +101,13 @@
                 <nav th:if="${#lists.size(qnaList)} > 0">
                     <ul class="pagination">
                         <li class="page-item" th:classappend="${currentPage == 1 ? 'disabled' : ''}">
-                            <a class="page-link" th:href="@{|/qna/list?page=${currentPage - 1}|}">이전</a>
+                            <a class="page-link" th:href="@{/qna/list(page=${currentPage - 1}, search=${search}, searchCategory=${searchCategory}, sortField=${sortField}, sortOrder=${sortOrder})}">이전</a>
                         </li>
                         <li class="page-item" th:each="i : ${#numbers.sequence(1, totalPages)}" th:classappend="${i == currentPage ? 'active' : ''}">
-                            <a class="page-link" th:href="@{'?page=' + ${i}}" th:text="${i}"></a>
+                            <a class="page-link" th:href="@{/qna/list(page=${i}, search=${search}, searchCategory=${searchCategory}, sortField=${sortField}, sortOrder=${sortOrder})}" th:text="${i}"></a>
                         </li>
                         <li class="page-item" th:classappend="${currentPage == totalPages ? 'disabled' : ''}">
-                            <a class="page-link" th:href="@{|/qna/list?page=${currentPage + 1}|}">다음</a>
+                            <a class="page-link" th:href="@{/qna/list(page=${currentPage + 1}, search=${search}, searchCategory=${searchCategory}, sortField=${sortField}, sortOrder=${sortOrder})}">다음</a>
                         </li>
                     </ul>
                 </nav>
@@ -136,11 +136,15 @@
                 updateUrlParam("page", page);
             });
 
-            // 검색 파라미터 업뎃
+            // 검색 및 정렬 파라미터 업뎃
             $("#searchForm").on("submit", function(event) {
                 event.preventDefault();
-                var search = $(this).find('input[name="keyword"]').val();
-                updateUrlParam("search", search);
+                var params = new URLSearchParams(window.location.search);
+                params.set("search", $(this).find('input[name="search"]').val());
+                params.set("searchCategory", $(this).find('select[name="searchCategory"]').val());
+                params.set("sortField", $(this).find('select[name="sortField"]').val());
+                params.set("sortOrder", $(this).find('select[name="sortOrder"]').val());
+                window.location.search = params.toString();
             });
         });
 

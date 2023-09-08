@@ -18,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -51,13 +52,29 @@ public class QnaController {
     //(all)문의글 리스트 보기
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/list")
-    public String qnaList(Model model, @RequestParam Map<String, Object> map, @RequestParam(value = "page", defaultValue = "1") int currentPage, Principal principal) {
-
+    public String qnaList(Model model, @RequestParam Map<String, Object> map,
+                          @RequestParam(value = "page", defaultValue = "1") int currentPage,
+                          @RequestParam(value="search", required=false) String search,
+                          @RequestParam(value="searchCategory", required=false) String searchCategory,
+                          @RequestParam(value="sortField", required=false) String sortField,
+                          @RequestParam(value="sortOrder", required=false) String sortOrder,
+                          Principal principal) {
         int limit = 15; // 페이지당 보여줄 아이템 개수
         int offset = (currentPage - 1) * limit;
 
+        if (sortField == null) {
+            sortField = "qna_no";
+        }
+        if (sortOrder == null) {
+            sortOrder = "desc";
+        }
+
         map.put("limit", limit);
         map.put("offset", offset);
+        map.put("search", search);
+        map.put("searchCategory", searchCategory);
+        map.put("sortField", sortField);
+        map.put("sortOrder", sortOrder);
 
         List<QnaListDTO> qnaList = qnaService.getQnaList(map);
 
@@ -69,6 +86,11 @@ public class QnaController {
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("qnaList",qnaList);
         model.addAttribute("userId",principal.getName());
+        model.addAttribute("search", search);
+        model.addAttribute("searchCategory", searchCategory);
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortOrder", sortOrder);
+
 
         return "qna/qna_list";
     }
@@ -99,10 +121,16 @@ public class QnaController {
         return "redirect:/qna/list"; //(질문목록조회요청을 통한)질문목록페이지로 이동
     }
 
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/detail/{id}")
+    public String qnaDetailGet(){
+        return"redirect:/qna/list";
+    }
+
     //문의글 상세 보기 (비밀번호 확인 / 관리자는 free)
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/detail/{id}")
-    public String qnaDetail(@PathVariable int id, @RequestParam String inputPwd, Model model, Principal principal, QnaSolveAddForm qnaSolveAddForm){
+    public String qnaDetail(@PathVariable int id, @RequestParam(value="inputPwd", defaultValue = "null") String inputPwd, Model model, Principal principal, QnaSolveAddForm qnaSolveAddForm){
 
         Qna qna = qnaService.getQnaById(id);
 
@@ -156,11 +184,13 @@ public class QnaController {
             model.addAttribute("user",principal.getName());
             model.addAttribute("userRole",userRole);
             return "qna/qna_detail";
-        }
+        } else{
+
         String text = readHTMLFileAsString("src/main/resources/templates/qna/qna_mail.html");
         //답변 저장 로직+질문 상태변경
         qnaService.Solveadd(qnaSolveAddForm.getQnaSolveTitle(),qnaSolveAddForm.getQnaSolveContent(),qna);
         userListService.sendSimpleEmail(qna.getUser().getEmail(), "[또갈지도]답변이 등록되었습니다", text);
+        }
 
         Qna qna1 = qnaService.getQnaById(id);
         QnaSolve qnaSolve1 = qnaService.getQnaSolveByQna(qna1);
@@ -316,5 +346,10 @@ public class QnaController {
         qnaService.qnaDelete(qna);
 
         return "redirect:/qna/list";
+    }
+
+    @GetMapping("/error")
+    public String qnaError(){
+        return "qna/error_forbidden";
     }
 }

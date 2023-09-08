@@ -107,13 +107,13 @@
                             <nav th:if="${#lists.size(users)} > 0">
                                 <ul class="pagination">
                                     <li class="page-item" th:classappend="${currentPage == 1 ? 'disabled' : ''}">
-                                        <a class="page-link" th:href="@{'?page=' + (${currentPage} - 1)}">이전</a>
+                                        <a class="page-link" th:href="@{'?page=' + (${currentPage} - 1) + '&search=' + ${search} + '&searchCategory=' + ${searchCategory} + '&sortField=' + ${sortField} + '&sortOrder=' + ${sortOrder}}">이전</a>
                                     </li>
                                     <li class="page-item" th:each="i : ${#numbers.sequence(1, totalPages)}" th:classappend="${i == currentPage ? 'active' : ''}">
-                                        <a class="page-link" th:href="@{'?page=' + ${i}}" th:text="${i}"></a>
+                                        <a class="page-link" th:href="@{'?page=' + ${i} + '&search=' + ${search} + '&searchCategory=' + ${searchCategory} + '&sortField=' + ${sortField} + '&sortOrder=' + ${sortOrder}}" th:text="${i}"></a>
                                     </li>
                                     <li class="page-item" th:classappend="${currentPage == totalPages ? 'disabled' : ''}">
-                                        <a class="page-link" th:href="@{'?page=' + (${currentPage} + 1)}">다음</a>
+                                        <a class="page-link" th:href="@{'?page=' + (${currentPage} + 1) + '&search=' + ${search} + '&searchCategory=' + ${searchCategory} + '&sortField=' + ${sortField} + '&sortOrder=' + ${sortOrder}}">다음</a>
                                     </li>
                                 </ul>
                             </nav>
