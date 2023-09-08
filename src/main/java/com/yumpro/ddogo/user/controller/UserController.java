@@ -18,6 +18,10 @@ import org.apache.tomcat.util.json.ParseException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.LinkedMultiValueMap;
@@ -47,6 +51,9 @@ public class UserController {
     private final EmailService emailService;
     //세션값 담기(1)
     private final HttpSession session;
+
+    // 카카오로그인
+    private final AuthenticationManager authenticationManager;
 
     //회원가입 폼
     @GetMapping("/joinForm")
@@ -305,8 +312,6 @@ public class UserController {
             throw new RuntimeException(e);
         }
 
-
-
         System.out.println("카카오 아이디: "+kakaoProfile.getId());
         System.out.println("카카오 이메일: "+kakaoProfile.getKakaoAccount().getEmail());
         System.out.println("카카오 유저네임: "+kakaoProfile.getKakaoAccount().getEmail());
@@ -320,6 +325,11 @@ public class UserController {
         if(kakaouser != null){
             System.out.println("디버그 : 회원정보가 있어서 로그인을 바로 진행합니다");
             session.setAttribute("principal", kakaouser);
+            //로그인처리
+            // 로그인 처리
+            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(kakaouser.getUserId(), kakaouser.getPwd());
+            Authentication authentication = authenticationManager.authenticate(authToken);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
         // 7. 없으면 강제 회원가입 시키고, 그 정보로 session 만들어주고, (자동로그인)
@@ -328,8 +338,11 @@ public class UserController {
             userService.kakaoJoin(kakaoProfile);
             User newKakaouser = userService.getUser2(email);
             session.setAttribute("principal", newKakaouser);
-        }
+            //로그인처리
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(newKakaouser.getUserId(),newKakaouser.getPwd()));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
+        }
         return "redirect:/";
     }
 }

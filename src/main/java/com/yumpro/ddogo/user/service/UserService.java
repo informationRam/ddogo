@@ -3,6 +3,7 @@ package com.yumpro.ddogo.user.service;
 import com.yumpro.ddogo.common.entity.User;
 import com.yumpro.ddogo.mail.service.EmailService;
 import com.yumpro.ddogo.user.DTO.KakaoProfile;
+import com.yumpro.ddogo.user.DTO.RoleType;
 import com.yumpro.ddogo.user.DTO.UserDTO;
 import com.yumpro.ddogo.user.reprository.UserRepository;
 import com.yumpro.ddogo.user.validation.UserCreateForm;
@@ -29,6 +30,7 @@ public class UserService {
     private final PasswordEncoder PasswordEncoder;
     private final EmailService emailService;
 
+
     //회원가입처리
     public void userJoin(UserCreateForm userCreateForm){
         User user = new User();
@@ -41,6 +43,7 @@ public class UserService {
         user.setEmail(userCreateForm.getEmail());
         user.setPwd(userCreateForm.getPwd1());
         user.setPwd(PasswordEncoder.encode(userCreateForm.getPwd1()));
+        user.setRole(RoleType.USER);
         userRepository.save(user);
     }
 
