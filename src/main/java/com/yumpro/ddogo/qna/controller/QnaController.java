@@ -123,7 +123,7 @@ public class QnaController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/detail/{id}")
-    public String qnaDetailGet(RedirectAttributes redirectAttributes){
+    public String qnaDetailGet(@PathVariable int id,@RequestParam(value="inputPwd", required = false) String inputPwd,RedirectAttributes redirectAttributes){
         redirectAttributes.addFlashAttribute("error", "문의글 상세보기는 비밀번호 후 이용해주세요");
         return"redirect:/qna/list";
     }
