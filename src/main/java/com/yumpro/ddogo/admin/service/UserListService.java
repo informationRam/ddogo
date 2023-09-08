@@ -6,6 +6,7 @@ import com.yumpro.ddogo.admin.repository.UserListRepository;
 import com.yumpro.ddogo.admin.repository.UserModiRepository;
 import com.yumpro.ddogo.admin.validation.UserModiForm;
 import com.yumpro.ddogo.common.entity.User;
+import com.yumpro.ddogo.qna.service.QnaService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -116,5 +117,9 @@ public class UserListService {
         modiAdmin.setEmail(user.getEmail());
         modiAdmin.setJoin_date(user.getJoinDate());
         return modiAdmin;
+    }
+
+    public int getUserListCount(Map<String, Object> map) {
+        return userRepository.getUserListCount(map);
     }
 }

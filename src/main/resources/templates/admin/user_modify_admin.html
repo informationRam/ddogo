@@ -86,6 +86,10 @@
                             <button onclick="expelUser()" class="btn btn-danger">강제탈퇴</button>
                         </div>
                     </div>
+                    <br/>
+                    <div id="loading-message" style="display: none;" class="alert alert-info">
+                        <span class="text-secondary">회원 강퇴 처리가 진행중입니다</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -108,38 +112,45 @@
             }
         }
 
-        function expelUser() {
-            const adminPassword = document.getElementById('adminPassword').value;
-            const userId = document.querySelector('input[name="user_id"]').value;
+function expelUser() {
+    // 버튼 비활성화 및 로딩 메시지 표시
+    document.querySelector('.btn.btn-danger').disabled = true;
+    document.getElementById('loading-message').style.display = 'block';
 
-            fetch(`http://localhost/admin/user/valiAdmin`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ inputPassword: adminPassword })
-            })
-            .then(response => {
-                if (response.ok) {
-                    return fetch(`http://localhost/admin/user/delete/${userId}`, { method: 'POST' });
-                } else {
-                    return Promise.reject("비밀번호가 일치하지 않습니다");
-                }
-            })
-            .then(response => {
-                if (!response.ok) {
-                    return response.text().then(error => Promise.reject(error));
-                }
-                return response.text();
-            })
-            .then((message) => {
-                alert(message);
-                window.location.href = 'http://localhost/admin/user/list';
-            })
-            .catch(error => {
-                alert(error);
-            });
-        }
+    const adminPassword = document.getElementById('adminPassword').value;
+    const userId = document.querySelector('input[name="user_id"]').value;
+
+    fetch(`http://localhost/admin/user/valiAdmin`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ inputPassword: adminPassword })
+        })
+        .then(response => {
+            if (response.ok) {
+                return fetch(`http://localhost/admin/user/delete/${userId}`, { method: 'POST' });
+            } else {
+                return Promise.reject("비밀번호가 일치하지 않습니다");
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.text().then(error => Promise.reject(error));
+            }
+            return response.text();
+        })
+        .then((message) => {
+            alert(message);
+            window.location.href = 'http://localhost/admin/user/list';
+        })
+        .catch(error => {
+            alert(error);
+            // 오류가 발생하면 버튼을 다시 활성화하고 로딩 메시지를 숨김
+            document.querySelector('.btn.btn-danger').disabled = false;
+            document.getElementById('loading-message').style.display = 'none';
+        });
+    }
 
     </script>
 </div>

@@ -23,7 +23,7 @@
                                 </div>
                             </form>
                             <!-- 총 개수 표시 -->
-                            <div class="mb-2">총 개수: <span th:text="${#lists.size(users)}"></span>
+                            <div class="mb-2">총 개수: <span th:text="${totalCnt}"></span>
                             <table class="table table-striped">
 
                             <thead>
@@ -105,7 +105,7 @@
                         </table>
                                 <a href="/admin/user/list" class="btn btn-ddo ms-2"><i class="bi bi-arrow-repeat"></i></a></div>
                             <!--페이지네이션-->
-                            <nav th:if="${#lists.size(users)} > 0">
+                            <nav th:if="${totalCnt} > 0">
                                 <ul class="pagination">
                                     <li class="page-item" th:classappend="${currentPage == 1 ? 'disabled' : ''}">
                                         <a class="page-link" th:href="@{/admin/user/list(page=${currentPage - 1}, search=${search}, searchCategory=${searchCategory}, sortField=${sortField}, sortOrder=${sortOrder})}">이전</a>
@@ -133,7 +133,7 @@
         }
 
         //결과없으면 페이지네이션 숨기기
-        if (${#lists.size(users)} == 0) {
+        if (${totalCnt} == 0) {
         $(".pagination").hide();
         }
 

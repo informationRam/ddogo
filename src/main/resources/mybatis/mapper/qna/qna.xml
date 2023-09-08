@@ -31,7 +31,7 @@
                 q.qna_date
             </when>
             <otherwise>
-                q.qna_no
+                q.qna_date
             </otherwise>
         </choose>
         <choose>
@@ -44,7 +44,7 @@
         </choose>
         <!-- 페이지네이션 -->
         <if test="limit != null and offset != null">
-            LIMIT #{limit} OFFSET #{offset}
+            limit #{limit} offset #{offset}
         </if>
     </select>
 

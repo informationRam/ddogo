@@ -70,8 +70,10 @@ public class UserListController {
         }
         List<UserDTO> userList = userService.userList(map);
 
-        int totalPages = (int) Math.ceil((double) userList.size() / limit);
+        int totalCount = userService.getUserListCount(map);
+        int totalPages = (int) Math.ceil((double) totalCount / limit);
 
+        model.addAttribute("totalCnt",totalCount);
         model.addAttribute("users", userList);
         model.addAttribute("currentPage", currentPage);
         model.addAttribute("totalPages", totalPages);
