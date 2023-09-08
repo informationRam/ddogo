@@ -1,0 +1,34 @@
+<html layout:decorate="~{layout}" xmlns:th="http://www.thymeleaf.org">
+<div layout:fragment="content" class="container my-5">
+    <div class="mb-4">
+        <h3 class="text-center mb-4" th:text="${qna.qnaTitle}"></h3>
+        <div class="card shadow p-4">
+            <div class="card-text" style="white-space:pre-line;" th:text="${qna.qnaContent}"></div>
+            <div class="d-flex justify-content-end mt-3">
+                <div class="badge bg-light text-dark p-2" th:text="${qna.user.user_name}"></div>
+                <div class="badge bg-light text-dark p-2 ms-2" th:text="${#temporals.format(qna.qnaDate,'yyyy/MM/dd HH:mm')}"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 답변 수정 폼 -->
+    <div class="card shadow p-4 my-3">
+        <form id="answer" class="my-3" th:action="@{|/qna/solve/modify/${qna.qnaNo}|}" th:object="${qnaSolveAddForm}" method="post">
+            <div class="mb-3">
+                <input type="text" th:field="*{qnaSolveTitle}" class="form-control" placeholder="제목을 입력하세요" />
+                <span class="text-danger d-block mt-1" th:if="${#fields.hasErrors('qnaSolveTitle')}" th:errors="*{qnaSolveTitle}"></span>
+            </div>
+            <div class="mb-3">
+                <textarea th:field="*{qnaSolveContent}" class="form-control" rows="8" placeholder="내용을 입력하세요"></textarea>
+                <span class="text-danger d-block mt-1" th:if="${#fields.hasErrors('qnaSolveContent')}" th:errors="*{qnaSolveContent}"></span>
+            </div>
+            <div class="d-flex justify-content-end">
+                <input type="submit" value="답변 수정" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+    <div class="my-4 text-center">
+        <a href="/qna/list" class="btn btn-secondary">목록으로</a>
+    </div>
+</div>
+</html>

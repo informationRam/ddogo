@@ -1,0 +1,55 @@
+/* 배지 스타일 */
+.badge {
+    font-size: 0.875em;
+}
+
+/* 비밀번호 카드 스타일 */
+.card {
+    margin: 20px 20px 20px 20px
+    padding: 10px;
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+}
+
+.card-body {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.card-body label {
+    margin-bottom: 0;
+}
+
+.card-body input {
+    margin-bottom: 0;
+    padding: 5px;
+    border: 1px solid #ced4da;
+    border-radius: 0.2rem;
+}
+
+
+.ddo-a {
+    text-decoration: none;
+    color: inherit;
+    margin-left: 5px;
+}
+
+.ddo-icon-class {
+    vertical-align: middle;
+}
+
+
+.ddo-title-click {
+    font-weight: bold;
+    color: #2c3e50;
+    text-decoration: none;
+    transition: color 0.3s;
+    cursor: pointer;
+}
+
+.ddo-title-click:hover {
+    color: #e74c3c;
+}
