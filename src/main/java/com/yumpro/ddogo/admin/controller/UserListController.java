@@ -40,13 +40,30 @@ public class UserListController {
     //리스트 보여주기(검색 정렬 페이지네이션)
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/user/list")
-    public String userList(Model model, @RequestParam Map<String, Object> map, @RequestParam(value = "page", defaultValue = "1") int currentPage,Principal principal) {
+    public String userList(Model model, @RequestParam Map<String, Object> map,
+                           @RequestParam(value = "page", defaultValue = "1") int currentPage,
+                           @RequestParam(value="search", required=false) String search,
+                           @RequestParam(value="searchCategory", required=false) String searchCategory,
+                           @RequestParam(value="sortField", required=false) String sortField,
+                           @RequestParam(value="sortOrder", required=false) String sortOrder,
+                           Principal principal) {
 
         int limit = 10; // 페이지당 보여줄 아이템 개수
         int offset = (currentPage - 1) * limit;
 
+        if (sortField == null) {
+            sortField = "qna_no";
+        }
+        if (sortOrder == null) {
+            sortOrder = "desc";
+        }
+
         map.put("limit", limit);
         map.put("offset", offset);
+        map.put("search", search);
+        map.put("searchCategory", searchCategory);
+        map.put("sortField", sortField);
+        map.put("sortOrder", sortOrder);
 
         if ( !principal.getName().equals("admin") ) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"권한이 없습니다.");
@@ -58,6 +75,10 @@ public class UserListController {
         model.addAttribute("users", userList);
         model.addAttribute("currentPage", currentPage);
         model.addAttribute("totalPages", totalPages);
+        model.addAttribute("search", search);
+        model.addAttribute("searchCategory", searchCategory);
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortOrder", sortOrder);
 
         return "admin/user_list";
     }
