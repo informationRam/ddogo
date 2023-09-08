@@ -18,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -51,13 +52,29 @@ public class QnaController {
     //(all)문의글 리스트 보기
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/list")
-    public String qnaList(Model model, @RequestParam Map<String, Object> map, @RequestParam(value = "page", defaultValue = "1") int currentPage, Principal principal) {
-
+    public String qnaList(Model model, @RequestParam Map<String, Object> map,
+                          @RequestParam(value = "page", defaultValue = "1") int currentPage,
+                          @RequestParam(value="search", required=false) String search,
+                          @RequestParam(value="searchCategory", required=false) String searchCategory,
+                          @RequestParam(value="sortField", required=false) String sortField,
+                          @RequestParam(value="sortOrder", required=false) String sortOrder,
+                          Principal principal) {
         int limit = 15; // 페이지당 보여줄 아이템 개수
         int offset = (currentPage - 1) * limit;
 
+        if (sortField == null) {
+            sortField = "qna_no";
+        }
+        if (sortOrder == null) {
+            sortOrder = "desc";
+        }
+
         map.put("limit", limit);
         map.put("offset", offset);
+        map.put("search", search);
+        map.put("searchCategory", searchCategory);
+        map.put("sortField", sortField);
+        map.put("sortOrder", sortOrder);
 
         List<QnaListDTO> qnaList = qnaService.getQnaList(map);
 
@@ -69,6 +86,11 @@ public class QnaController {
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("qnaList",qnaList);
         model.addAttribute("userId",principal.getName());
+        model.addAttribute("search", search);
+        model.addAttribute("searchCategory", searchCategory);
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortOrder", sortOrder);
+
 
         return "qna/qna_list";
     }
@@ -99,15 +121,28 @@ public class QnaController {
         return "redirect:/qna/list"; //(질문목록조회요청을 통한)질문목록페이지로 이동
     }
 
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/detail/{id}")
+    public String qnaDetailGet(@PathVariable int id,@RequestParam(value="inputPwd", required = false) String inputPwd,RedirectAttributes redirectAttributes){
+        redirectAttributes.addFlashAttribute("error", "문의글 상세보기는 비밀번호 후 이용해주세요");
+        return"redirect:/qna/list";
+    }
+
     //문의글 상세 보기 (비밀번호 확인 / 관리자는 free)
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/detail/{id}")
-    public String qnaDetail(@PathVariable int id, @RequestParam String inputPwd, Model model, Principal principal, QnaSolveAddForm qnaSolveAddForm){
+    public String qnaDetail(@PathVariable int id, @RequestParam(value="inputPwd", required = false) String inputPwd, Model model, Principal principal, QnaSolveAddForm qnaSolveAddForm,RedirectAttributes redirectAttributes){
+
+        if(inputPwd==null){
+            redirectAttributes.addFlashAttribute("error", "문의글 상세보기는 비밀번호 후 이용해주세요");
+            return "redirect:/qna/list";
+        }
 
         Qna qna = qnaService.getQnaById(id);
 
         if(!principal.getName().equals("admin")){
             if(!qna.getQnaPwd().equals(inputPwd)){
+                redirectAttributes.addFlashAttribute("error", "문의글 상세보기는 비밀번호 후 이용해주세요");
                 return "redirect:/qna/list";
             }
         }
@@ -156,11 +191,13 @@ public class QnaController {
             model.addAttribute("user",principal.getName());
             model.addAttribute("userRole",userRole);
             return "qna/qna_detail";
-        }
+        } else{
+
         String text = readHTMLFileAsString("src/main/resources/templates/qna/qna_mail.html");
         //답변 저장 로직+질문 상태변경
         qnaService.Solveadd(qnaSolveAddForm.getQnaSolveTitle(),qnaSolveAddForm.getQnaSolveContent(),qna);
         userListService.sendSimpleEmail(qna.getUser().getEmail(), "[또갈지도]답변이 등록되었습니다", text);
+        }
 
         Qna qna1 = qnaService.getQnaById(id);
         QnaSolve qnaSolve1 = qnaService.getQnaSolveByQna(qna1);
@@ -178,12 +215,13 @@ public class QnaController {
     //답변 수정 폼 보여줘
     @PreAuthorize("isAuthenticated()")//로그인인증
     @GetMapping("/solve/modify/{id}")
-    public String qnaSolveMofiFrom(@PathVariable int id, Model model, Principal principal, QnaSolveAddForm qnaSolveAddForm){
+    public String qnaSolveMofiFrom(@PathVariable int id, Model model, Principal principal, QnaSolveAddForm qnaSolveAddForm, RedirectAttributes redirectAttributes){
 
         Qna qna = qnaService.getQnaById(id);
         QnaSolve qnaSolve = qnaService.getQnaSolveByQna(qna);
 
         if(!principal.getName().equals("admin")){
+            redirectAttributes.addFlashAttribute("error", "문의 답글은 관리자만 수정할 수 있습니다");
             return "redirect:/qna/list";
         }
 
@@ -198,8 +236,9 @@ public class QnaController {
     //답변수정처리
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/solve/modify/{id}")
-    public String qnaSolveMofiy(@PathVariable int id,@Valid QnaSolveAddForm qnaSolveAddForm,BindingResult bindingResult,Model model,Principal principal){
+    public String qnaSolveMofiy(@PathVariable int id,@Valid QnaSolveAddForm qnaSolveAddForm,BindingResult bindingResult,Model model,Principal principal,RedirectAttributes redirectAttributes){
         if(!principal.getName().equals("admin")){
+            redirectAttributes.addFlashAttribute("error", "답변 수정은 관리자만 가능합니다");
             return "redirect:/qna/list";
         }
 
@@ -229,8 +268,9 @@ public class QnaController {
     ///solve/delete/${qna.qnaNo}
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/solve/delete/{id}")
-    public String qnaSolveDelete(@PathVariable("id") Integer id,Principal principal){
+    public String qnaSolveDelete(@PathVariable("id") Integer id,Principal principal,RedirectAttributes redirectAttributes){
         if(!principal.getName().equals("admin")){
+            redirectAttributes.addFlashAttribute("error", "답글 삭제는 관리자만 가능합니다");
             return "redirect:/qna/list";
         }
 
@@ -245,10 +285,11 @@ public class QnaController {
     //문의사항 수정폼
     @PreAuthorize("isAuthenticated()")
     @GetMapping("modify/{id}")
-    public String qnaModiForm(QnaAddForm QnaAddForm,@PathVariable("id") Integer id,Principal principal,Model model){
+    public String qnaModiForm(QnaAddForm QnaAddForm,@PathVariable("id") Integer id,Principal principal,Model model, RedirectAttributes redirectAttributes){
         Qna qna = qnaService.getQnaById(id);
         if ( !qna.getUser().getUserId().equals(principal.getName()) ) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"수정권한이 없습니다.");
+            redirectAttributes.addFlashAttribute("error", "작성자 본인 이외의 사용자에게는 수정 권한이 없습니다");
+            return "redirect:/qna/list";
         }
         QnaAddForm.setQna_title(qna.getQnaTitle());
         QnaAddForm.setQna_content(qna.getQnaContent());
@@ -306,15 +347,21 @@ public class QnaController {
     ///solve/delete/${qna.qnaNo}
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/delete/{id}")
-    public String qnaDelete(@PathVariable("id") Integer id,Principal principal){
+    public String qnaDelete(@PathVariable("id") Integer id,Principal principal, RedirectAttributes redirectAttributes){
         Qna qna = qnaService.getQnaById(id);
 
         if ( !qna.getUser().getUserId().equals(principal.getName()) ) {
+            redirectAttributes.addFlashAttribute("error", "작성자 본인 이외의 사용자에게는 삭제 권한이 없습니다");
             return "redirect:/qna/list";
         }
 
         qnaService.qnaDelete(qna);
 
         return "redirect:/qna/list";
+    }
+
+    @GetMapping("/error")
+    public String qnaError(){
+        return "qna/error_forbidden";
     }
 }

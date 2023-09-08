@@ -9,4 +9,6 @@ import java.util.Map;
 
 public interface UserListRepository {
     List<UserDTO> userList(Map<String,Object> map) throws DataAccessException;
+
+    int getUserListCount(Map<String, Object> map);
 }

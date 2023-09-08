@@ -1,7 +1,8 @@
 <html layout:decorate="~{layout}" xmlns:th="http://www.thymeleaf.org">
 <div layout:fragment="content" class="container my-5">
     <link rel="stylesheet" href="/css/admin/ddostyle.css" />
-    <h3 class="text-center mb-4 border-bottom pb-2">질문등록</h3>
+    <h1 class="text-center">QnA</h1><br/><br/>
+    <h3 class="mb-4 border-bottom pb-2">질문등록</h3>
     <form id="questionForm" th:object="${qnaAddForm}" th:action="@{/qna/add}" method="post">
         <div class="card shadow p-4">
             <div class="mb-3">
@@ -20,7 +21,7 @@
                 <span class="text-danger d-block mt-1" th:if="${#fields.hasErrors('qna_pwd')}" th:errors="*{qna_pwd}"></span>
             </div>
             <div class="d-flex justify-content-center mb-3">
-                <input type="submit" value="질문 등록" class="btn btn-primary my-2 me-2" />
+                <input type="submit" value="질문 등록" class="btn btn-ddo my-2 me-2" />
                 <a href="/qna/list" class="btn btn-secondary my-2">돌아가기</a>
             </div>
         </div>

@@ -17,4 +17,8 @@ public class UserListRepositoryImpl implements UserListRepository {
     public List<UserDTO> userList(Map<String,Object> map) throws DataAccessException{
         return sqlSession.selectList("admin.userList",map);
     }
+    @Override
+    public int getUserListCount(Map<String, Object> map){
+        return sqlSession.selectOne("admin.userListCnt",map);
+    }
 }

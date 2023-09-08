@@ -134,9 +134,20 @@
             </otherwise>
         </choose>
             <!-- 페이지네이션 -->
-        <if test="limit != null and offset != ''">
-        limit #{limit} offset #{offset}
+        <if test="limit != null and offset != null">
+            limit #{limit} offset #{offset}
         </if>
     </select>
 
+    <select id="userListCnt" parameterType="map" resultType="int">
+        SELECT
+        count(user_no)
+        FROM
+        user
+        WHERE 1=1
+        <!-- 검색어(search)에 대한 조건 추가 -->
+        <if test="search != null and search != '' and searchCategory != null and searchCategory != ''">
+            AND ${searchCategory} LIKE CONCAT('%', #{search}, '%')
+        </if>
+    </select>
 </mapper>

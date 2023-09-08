@@ -1,5 +1,6 @@
 <html layout:decorate="~{admin/bar}">
 <div layout:fragment="content">
+    <link rel="stylesheet" href="/css/admin/ddostyle.css" />
     <main class="mt-5 pt-3">
         <div class="container-fluid">
             <div class="row">
@@ -22,7 +23,7 @@
                                 </div>
                             </form>
                             <!-- 총 개수 표시 -->
-                            <div class="mb-2">총 개수: <span th:text="${#lists.size(users)}"></span>
+                            <div class="mb-2">총 개수: <span th:text="${totalCnt}"></span>
                             <table class="table table-striped">
 
                             <thead>
@@ -104,16 +105,16 @@
                         </table>
                                 <a href="/admin/user/list" class="btn btn-ddo ms-2"><i class="bi bi-arrow-repeat"></i></a></div>
                             <!--페이지네이션-->
-                            <nav th:if="${#lists.size(users)} > 0">
+                            <nav th:if="${totalCnt} > 0">
                                 <ul class="pagination">
                                     <li class="page-item" th:classappend="${currentPage == 1 ? 'disabled' : ''}">
-                                        <a class="page-link" th:href="@{'?page=' + (${currentPage} - 1)}">이전</a>
+                                        <a class="page-link" th:href="@{/admin/user/list(page=${currentPage - 1}, search=${search}, searchCategory=${searchCategory}, sortField=${sortField}, sortOrder=${sortOrder})}">이전</a>
                                     </li>
                                     <li class="page-item" th:each="i : ${#numbers.sequence(1, totalPages)}" th:classappend="${i == currentPage ? 'active' : ''}">
-                                        <a class="page-link" th:href="@{'?page=' + ${i}}" th:text="${i}"></a>
+                                        <a class="page-link" th:href="@{/admin/user/list(page=${i}, search=${search}, searchCategory=${searchCategory}, sortField=${sortField}, sortOrder=${sortOrder})}" th:text="${i}"></a>
                                     </li>
                                     <li class="page-item" th:classappend="${currentPage == totalPages ? 'disabled' : ''}">
-                                        <a class="page-link" th:href="@{'?page=' + (${currentPage} + 1)}">다음</a>
+                                        <a class="page-link" th:href="@{/admin/user/list(page=${currentPage + 1}, search=${search}, searchCategory=${searchCategory}, sortField=${sortField}, sortOrder=${sortOrder})}">다음</a>
                                     </li>
                                 </ul>
                             </nav>
@@ -132,7 +133,7 @@
         }
 
         //결과없으면 페이지네이션 숨기기
-        if (${#lists.size(users)} == 0) {
+        if (${totalCnt} == 0) {
         $(".pagination").hide();
         }
 
@@ -144,15 +145,16 @@
             updateUrlParam("page", page);
         });
 
-        // 검색 파라미터 업뎃
-        $("#searchForm").on("submit", function(event) {
-            event.preventDefault();
-            var search = $(this).find('input[name="search"]').val();
-            console.log(search);
-            var searchCategory = $(this).find('select[name="searchCategory"]').val();
-            updateUrlParam("search", search);
-            updateUrlParam("searchCategory", searchCategory);
-        });
+            // 검색 및 정렬 파라미터 업뎃
+            $("#searchForm").on("submit", function(event) {
+                event.preventDefault();
+                var params = new URLSearchParams(window.location.search);
+                params.set("search", $(this).find('input[name="search"]').val());
+                params.set("searchCategory", $(this).find('select[name="searchCategory"]').val());
+                params.set("sortField", $(this).find('select[name="sortField"]').val());
+                params.set("sortOrder", $(this).find('select[name="sortOrder"]').val());
+                window.location.search = params.toString();
+            });
     });
 </script>
 </div>

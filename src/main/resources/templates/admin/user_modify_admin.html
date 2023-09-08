@@ -4,45 +4,45 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12 mb-3">
-                    <h1>회원 정보 수정</h1>
+                    <h1 style="margin-left:4em;">회원 정보 수정</h1>
                     <div class="card">
-                        <div class="card-body">
+                        <div class="card-body" style="margin-left:8em; margin-right:8em;">
                             <form id="userModifyByAdmin" th:object="${userModiForm}" th:action="@{|/admin/user/modify/${userModiForm.user_no}|}" method="post">
                                 <table class="table">
                                     <tbody>
                                     <tr>
-                                        <th>회원번호</th>
+                                        <th class="text-center">회원번호</th>
                                         <td>
                                             <input type="text" th:field="*{user_no}" disabled="disabled"/>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <th>회원명</th>
+                                        <th class="text-center">회원명</th>
                                         <td>
                                             <input type="text" th:field="*{user_name}"/><br/>
                                             <span class="ddo-error-text" th:if="${#fields.hasErrors('user_name')}" th:errors="*{user_name}"></span>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <th>회원id</th>
+                                        <th class="text-center">회원id</th>
                                         <td>
                                             <input type="text" th:field="*{user_id}"/><br/>
                                             <span class="ddo-error-text" th:if="${#fields.hasErrors('user_id')}" th:errors="*{user_id}"></span>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <th>비밀번호</th>
+                                        <th class="text-center">비밀번호</th>
                                         <td><span>*비밀번호는 본인만 변경할 수 있습니다</span></td>
                                     </tr>
                                     <tr>
-                                        <th>생일</th>
+                                        <th class="text-center">생일</th>
                                         <td>
                                             <input type="date" th:field="*{BIRTH}"/><br/>
                                             <span class="ddo-error-text" th:if="${#fields.hasErrors('BIRTH')}" th:errors="*{BIRTH}"></span>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <th>성별</th>
+                                        <th class="text-center">성별</th>
                                         <td>
                                             <input type="radio" th:field="*{gender}" id="genderM" value="M"/>
                                             <label for="genderM">남성</label>
@@ -52,13 +52,13 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <th>가입일</th>
+                                        <th class="text-center">가입일</th>
                                         <td>
                                             <input type="text" th:field="*{join_date}" disabled="disabled"/>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <th>이메일</th>
+                                        <th class="text-center">이메일</th>
                                         <td>
                                             <input type="text" th:field="*{email}"/><br/>
                                             <span class="ddo-error-text" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
@@ -86,6 +86,10 @@
                             <button onclick="expelUser()" class="btn btn-danger">강제탈퇴</button>
                         </div>
                     </div>
+                    <br/>
+                    <div id="loading-message" style="display: none;" class="alert alert-info">
+                        <span class="text-secondary">회원 강퇴 처리가 진행중입니다</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -108,38 +112,45 @@
             }
         }
 
-        function expelUser() {
-            const adminPassword = document.getElementById('adminPassword').value;
-            const userId = document.querySelector('input[name="user_id"]').value;
+function expelUser() {
+    // 버튼 비활성화 및 로딩 메시지 표시
+    document.querySelector('.btn.btn-danger').disabled = true;
+    document.getElementById('loading-message').style.display = 'block';
 
-            fetch(`http://localhost/admin/user/valiAdmin`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ inputPassword: adminPassword })
-            })
-            .then(response => {
-                if (response.ok) {
-                    return fetch(`http://localhost/admin/user/delete/${userId}`, { method: 'POST' });
-                } else {
-                    return Promise.reject("비밀번호가 일치하지 않습니다");
-                }
-            })
-            .then(response => {
-                if (!response.ok) {
-                    return response.text().then(error => Promise.reject(error));
-                }
-                return response.text();
-            })
-            .then((message) => {
-                alert(message);
-                window.location.href = 'http://localhost/admin/user/list';
-            })
-            .catch(error => {
-                alert(error);
-            });
-        }
+    const adminPassword = document.getElementById('adminPassword').value;
+    const userId = document.querySelector('input[name="user_id"]').value;
+
+    fetch(`http://localhost/admin/user/valiAdmin`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ inputPassword: adminPassword })
+        })
+        .then(response => {
+            if (response.ok) {
+                return fetch(`http://localhost/admin/user/delete/${userId}`, { method: 'POST' });
+            } else {
+                return Promise.reject("비밀번호가 일치하지 않습니다");
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.text().then(error => Promise.reject(error));
+            }
+            return response.text();
+        })
+        .then((message) => {
+            alert(message);
+            window.location.href = 'http://localhost/admin/user/list';
+        })
+        .catch(error => {
+            alert(error);
+            // 오류가 발생하면 버튼을 다시 활성화하고 로딩 메시지를 숨김
+            document.querySelector('.btn.btn-danger').disabled = false;
+            document.getElementById('loading-message').style.display = 'none';
+        });
+    }
 
     </script>
 </div>

@@ -18,5 +18,3 @@ public class QnaListDTO {
     private LocalDateTime qna_date;
     private String qna_pwd;
 }
-
-

@@ -6,6 +6,7 @@
   font-size: 14px;
   border-radius: 3px;
   float: right;
+  border-radius:6px;
 }
 .btn-ddo:hover {
   color: #fff;
@@ -78,5 +79,5 @@ max-width: 500px;
 
 .ddo-bg {
     background-color: #FF0841 !important;
-    color: #fff !important; /* 만약 글씨색을 흰색으로 변경하고 싶다면 */
+    color: #fff !important;
 }
