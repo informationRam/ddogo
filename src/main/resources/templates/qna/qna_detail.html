@@ -36,7 +36,6 @@
     <div class="alert alert-info" th:if="${qnaSolve == null} and ${userRole == 'user'}">
         답변은 2~5일 정도 소요됩니다. 잠시만 기다려주세요.
     </div>
-
     <!-- 답변 등록 폼 -->
     <div th:if="${userRole == 'admin'} and ${qnaSolve == null}">
         <form id="answer" class="my-3 bg-light p-4 shadow" th:action="@{|/qna/solve/add/${qna.qnaNo}|}" th:object="${qnaSolveAddForm}" method="post">
