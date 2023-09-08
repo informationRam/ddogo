@@ -123,19 +123,26 @@ public class QnaController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/detail/{id}")
-    public String qnaDetailGet(){
+    public String qnaDetailGet(RedirectAttributes redirectAttributes){
+        redirectAttributes.addFlashAttribute("error", "문의글 상세보기는 비밀번호 후 이용해주세요");
         return"redirect:/qna/list";
     }
 
     //문의글 상세 보기 (비밀번호 확인 / 관리자는 free)
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/detail/{id}")
-    public String qnaDetail(@PathVariable int id, @RequestParam(value="inputPwd", defaultValue = "null") String inputPwd, Model model, Principal principal, QnaSolveAddForm qnaSolveAddForm){
+    public String qnaDetail(@PathVariable int id, @RequestParam(value="inputPwd", required = false) String inputPwd, Model model, Principal principal, QnaSolveAddForm qnaSolveAddForm,RedirectAttributes redirectAttributes){
+
+        if(inputPwd==null){
+            redirectAttributes.addFlashAttribute("error", "문의글 상세보기는 비밀번호 후 이용해주세요");
+            return "redirect:/qna/list";
+        }
 
         Qna qna = qnaService.getQnaById(id);
 
         if(!principal.getName().equals("admin")){
             if(!qna.getQnaPwd().equals(inputPwd)){
+                redirectAttributes.addFlashAttribute("error", "문의글 상세보기는 비밀번호 후 이용해주세요");
                 return "redirect:/qna/list";
             }
         }
@@ -208,12 +215,13 @@ public class QnaController {
     //답변 수정 폼 보여줘
     @PreAuthorize("isAuthenticated()")//로그인인증
     @GetMapping("/solve/modify/{id}")
-    public String qnaSolveMofiFrom(@PathVariable int id, Model model, Principal principal, QnaSolveAddForm qnaSolveAddForm){
+    public String qnaSolveMofiFrom(@PathVariable int id, Model model, Principal principal, QnaSolveAddForm qnaSolveAddForm, RedirectAttributes redirectAttributes){
 
         Qna qna = qnaService.getQnaById(id);
         QnaSolve qnaSolve = qnaService.getQnaSolveByQna(qna);
 
         if(!principal.getName().equals("admin")){
+            redirectAttributes.addFlashAttribute("error", "문의 답글은 관리자만 수정할 수 있습니다");
             return "redirect:/qna/list";
         }
 
@@ -228,8 +236,9 @@ public class QnaController {
     //답변수정처리
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/solve/modify/{id}")
-    public String qnaSolveMofiy(@PathVariable int id,@Valid QnaSolveAddForm qnaSolveAddForm,BindingResult bindingResult,Model model,Principal principal){
+    public String qnaSolveMofiy(@PathVariable int id,@Valid QnaSolveAddForm qnaSolveAddForm,BindingResult bindingResult,Model model,Principal principal,RedirectAttributes redirectAttributes){
         if(!principal.getName().equals("admin")){
+            redirectAttributes.addFlashAttribute("error", "답변 수정은 관리자만 가능합니다");
             return "redirect:/qna/list";
         }
 
@@ -259,8 +268,9 @@ public class QnaController {
     ///solve/delete/${qna.qnaNo}
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/solve/delete/{id}")
-    public String qnaSolveDelete(@PathVariable("id") Integer id,Principal principal){
+    public String qnaSolveDelete(@PathVariable("id") Integer id,Principal principal,RedirectAttributes redirectAttributes){
         if(!principal.getName().equals("admin")){
+            redirectAttributes.addFlashAttribute("error", "답글 삭제는 관리자만 가능합니다");
             return "redirect:/qna/list";
         }
 
