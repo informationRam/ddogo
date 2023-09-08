@@ -150,4 +150,11 @@
             AND ${searchCategory} LIKE CONCAT('%', #{search}, '%')
         </if>
     </select>
+
+    <select id="notSolvedCnt" resultType="int">
+        select count(qna_no)
+        from ddogo.qna
+        where qna_solved='N'
+    </select>
+
 </mapper>

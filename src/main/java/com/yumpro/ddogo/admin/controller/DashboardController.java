@@ -45,12 +45,12 @@ public class DashboardController {
         double emoAvg=dashboardService.emoAvg();
         double RecentEmoAvg=dashboardService.RecentEmoAvg();
         int nowActiveUser=dashboardService.nowActiveUser();
+        int notSolvedCnt=dashboardService.notSolvedCnt();
 
         double activePercent = ((double) nowActiveUser / userTotal) * 100;
         activePercent = Math.round(activePercent * 100.0) / 100.0;
 
         //그래프
-        //List<ActiveUser> activeUser=activeUserService.findByYear(year);
         List<ActiveUser> activeUser=dashboardService.findByYear(year);
         List<HashMap<String, Object>> localHotplaceCnt=dashboardService.localHotplaceCnt();
 
@@ -59,6 +59,7 @@ public class DashboardController {
 
         //3.model
         //카드
+        model.addAttribute("notSolvedCnt",notSolvedCnt);
         model.addAttribute("userTotal",userTotal);
         model.addAttribute("recentUser",recentUser);
         model.addAttribute("hotplaceTotal",hotplaceTotal);
