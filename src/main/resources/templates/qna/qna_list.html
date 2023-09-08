@@ -8,18 +8,6 @@
     <h1 class="text-center">QnA</h1><br/>
 
     <div class="container my-3">
-        <!-- 문의사항 검색 폼 -->
-        <form id="searchForm" class="d-flex align-items-center mb-3" action="/qna/list" method="GET">
-            <select name="searchCategory" class="form-select me-2">
-                <option value="qna_title">제목</option>
-                <option value="qna_content">내용</option>
-                <option value="user_id">작성자</option>
-            </select>
-            <input type="text" class="form-control me-2" name="search" placeholder="문의사항 검색">
-            <button type="submit" class="btn btn-ddo"><i class="bi bi-search"></i></button>
-            <a href="/qna/list" class="btn btn-secondary" style="margin-left:3px;"><i class="bi bi-arrow-repeat"></i></a>
-        </form>
-
         <!-- 총 개수 표시 및 추가 버튼들 -->
         <div class="d-flex justify-content-between mb-3">
             <div class="mb-2">총 개수: <span th:text="${totalCnt}"></span></div>
@@ -27,7 +15,7 @@
                 <a href="/qna/add" class="btn btn-ddo me-2"><i class="bi bi-pencil-fill"></i></a>
             </div>
         </div>
-
+        <div th:if="${error}" th:text="${error}" class="text-danger d-block mt-1"></div>
         <!-- 테이블 부분 -->
         <table class="table">
             <thead class="table-danger">
@@ -74,8 +62,7 @@
                           th:text="${qna.qna_solved.toString() == 'Y'} ? '답변완료' : '답변전'">
                     </span>
                 </td>
-
-                <td th:text="${qna.qna_title}" th:onclick="'showCard(\'' + ${qna.qna_no} + '\')'" class="ddo-title-click"></td>
+                <td th:utext="${qna.qna_title}+' <i class=&quot;bi bi-lock-fill&quot;></i>'" th:onclick="'showCard(\'' + ${qna.qna_no} + '\')'" class="ddo-title-click"></td>
                 <td th:text="${qna.user_id}"></td>
                 <td th:text="${#temporals.format(qna.qna_date.toLocalDate(), 'yyyy/MM/dd')}"></td>
                 <div th:id="'hiddenCard' + ${qna.qna_no}" class="card" style="display: none;">
@@ -97,7 +84,24 @@
                 <td colspan="4" class="text-center">검색 결과가 없습니다.</td>
             </tr>
             </tbody>
-        </table>
+        </table><br/>
+
+        <!-- 문의사항 검색 폼 -->
+        <div style="margin-left:16em; margin-right:16em;">
+        <form id="searchForm" class="d-flex align-items-center mb-3" action="/qna/list" method="GET">
+            <div style="width:200px;">
+            <select name="searchCategory" class="form-select me-2">
+                <option value="qna_title">제목</option>
+                <option value="qna_content">내용</option>
+                <option value="user_id">작성자</option>
+            </select>
+            </div>
+            <input type="text" class="form-control me-2" name="search" placeholder="문의사항 검색">
+            <button type="submit" class="btn btn-ddo"><i class="bi bi-search"></i></button>
+            <a href="/qna/list" class="btn btn-secondary" style="margin-left:3px;"><i class="bi bi-arrow-repeat"></i></a>
+        </form>
+        </div><br/>
+
         <!--페이지네이션-->
         <nav th:if="${#lists.size(qnaList)} > 0" class="mt-3">
             <ul class="pagination justify-content-center">

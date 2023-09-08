@@ -275,10 +275,11 @@ public class QnaController {
     //문의사항 수정폼
     @PreAuthorize("isAuthenticated()")
     @GetMapping("modify/{id}")
-    public String qnaModiForm(QnaAddForm QnaAddForm,@PathVariable("id") Integer id,Principal principal,Model model){
+    public String qnaModiForm(QnaAddForm QnaAddForm,@PathVariable("id") Integer id,Principal principal,Model model, RedirectAttributes redirectAttributes){
         Qna qna = qnaService.getQnaById(id);
         if ( !qna.getUser().getUserId().equals(principal.getName()) ) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"수정권한이 없습니다.");
+            redirectAttributes.addFlashAttribute("error", "작성자 본인 이외의 사용자에게는 수정 권한이 없습니다");
+            return "redirect:/qna/list";
         }
         QnaAddForm.setQna_title(qna.getQnaTitle());
         QnaAddForm.setQna_content(qna.getQnaContent());
@@ -336,10 +337,11 @@ public class QnaController {
     ///solve/delete/${qna.qnaNo}
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/delete/{id}")
-    public String qnaDelete(@PathVariable("id") Integer id,Principal principal){
+    public String qnaDelete(@PathVariable("id") Integer id,Principal principal, RedirectAttributes redirectAttributes){
         Qna qna = qnaService.getQnaById(id);
 
         if ( !qna.getUser().getUserId().equals(principal.getName()) ) {
+            redirectAttributes.addFlashAttribute("error", "작성자 본인 이외의 사용자에게는 삭제 권한이 없습니다");
             return "redirect:/qna/list";
         }
 
