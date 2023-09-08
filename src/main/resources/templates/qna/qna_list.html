@@ -81,7 +81,7 @@
                 <div th:id="'hiddenCard' + ${qna.qna_no}" class="card" style="display: none;">
                     <div class="card-body">
                         <form th:id="'passwordForm' + ${qna.qna_no}" th:action="@{|/qna/detail/${qna.qna_no}|}" method="post">
-                            <label for="inputPwd">비밀번호:</label>
+                            <label for="inputPwd" th:text="'['+${qna.qna_title}+'] 비밀번호: '"></label>
                             <input type="password" id="inputPwd" name="inputPwd">
                             <button type="submit" class="btn btn-ddo">확인</button>
                         </form>
