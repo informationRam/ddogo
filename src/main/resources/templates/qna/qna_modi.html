@@ -1,6 +1,7 @@
 <html layout:decorate="~{layout}" xmlns:th="http://www.thymeleaf.org">
 <div layout:fragment="content" class="container my-5">
     <link rel="stylesheet" href="/css/admin/ddostyle.css" />
+    <h1 class="text-center">QnA</h1><br/><br/>
     <h3 class="mb-4 border-bottom pb-2">질문수정</h3>
     <form id="questionForm" th:object="${qnaAddForm}" th:action="@{|/qna/modify/${qna.qnaNo}|}" method="post">
         <div class="card shadow p-4">
