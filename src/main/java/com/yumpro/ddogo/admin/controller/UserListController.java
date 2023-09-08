@@ -48,7 +48,7 @@ public class UserListController {
                            @RequestParam(value="sortOrder", required=false) String sortOrder,
                            Principal principal) {
 
-        int limit = 10; // 페이지당 보여줄 아이템 개수
+        int limit = 15; // 페이지당 보여줄 아이템 개수
         int offset = (currentPage - 1) * limit;
 
         if (sortField == null) {
