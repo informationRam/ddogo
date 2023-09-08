@@ -14,8 +14,6 @@ public class MymapService {
 
     private final MyMapMapper myMapMapper;
 
-
-
     //회원별 저장한 맛집 리스트 조회 - mapper
     public List<MyMapDTO> getHotplacesByUserNo(int userNo) {
         List<MyMapDTO> HotplList = myMapMapper.hotplacesByUserNo(userNo);
