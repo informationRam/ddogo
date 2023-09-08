@@ -7,7 +7,11 @@ import com.yumpro.ddogo.mymap.service.MymapService;
 import com.yumpro.ddogo.mymap.service.ReviewService;
 import com.yumpro.ddogo.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,8 +20,6 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.security.Principal;
-import java.util.List;
-import java.util.Map;
 
 @RequiredArgsConstructor
 @Controller
@@ -30,7 +32,7 @@ public class MymapController {
 
 
 
-    //mapNo 마커 번호로 후기 폼에 뿌려주기
+    //mapNo로 모달에 기존 후기 보여주기
     @GetMapping("/getReview/{mapNo}")
     @ResponseBody
     public ResponseEntity<EmoReviewDTO> getUserReview(@PathVariable("mapNo") Integer mapNo) {
@@ -46,29 +48,26 @@ public class MymapController {
 
     }
 
-    // 후기수정
-    @PostMapping("/updateReview/{mapNo}")
-    public ResponseEntity<String> updateReviewAndMemo(@PathVariable Integer mapNo, @RequestBody Map<String, Object> updateInfo) {
+    // 모달 후기수정
+    @PostMapping(value="/updateReview/{mapNo}",
+    consumes ="application/json",
+    produces={MediaType.TEXT_PLAIN_VALUE})
+    public ResponseEntity<String> updateReviewAndMemo(@PathVariable Integer mapNo,
+                                                      @RequestBody EmoReviewDTO emoReviewDTO) {
         try {
-            // mapNo를 사용하여 특정 맛집의 후기를 수정
-            reviewService.updateReview(updateInfo);
+            // 여기서 emoReviewDTO 객체에 클라이언트로부터 받은 데이터가 매핑됩니다.
+            // mapNo는 PathVariable로 받으므로 따로 설정하지 않아도 됩니다.
+            reviewService.updateReview(emoReviewDTO);
             return ResponseEntity.ok("업데이트가 성공적으로 수행되었습니다.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("업데이트 중 오류가 발생했습니다.");
         }
     }
-
-
-
-    /*//후기 수정처리
-    @PostMapping("/updateReviewAndMemo")
-    public String updateReviewAndMemo(@RequestParam Integer reviewNo, @RequestParam String review,
-                                      @RequestParam String memo, @RequestParam char recomm,
-                                      Principal principal) {
-        reviewService.updateReviewAndMemo(reviewNo, review, memo);
-        return "redirect:/mymap/" + principal.getName(); // 수정 후 리다이렉트할 페이지
-    }*/
-
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleException(Exception e) {
+        e.printStackTrace(); // 예외 스택 트레이스를 출력
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("업데이트 중 오류가 발생했습니다.");
+    }
 
     //회원 맛집 목록 삭제
     @GetMapping("/delete/{mapNo}")
@@ -83,9 +82,14 @@ public class MymapController {
     }
 
 
-    // 회원별 지도를 보여줄 페이지 및 JSON 데이터를 반환
+    // 회원별 맛집 목록 & 지도를 보여줄 페이지 및 JSON 데이터를 반환
     @GetMapping("/{user_id}")
-    public ModelAndView showUserMyMap(@PathVariable("user_id") String user_id, Model model, Principal principal) {
+    public ModelAndView showUserMyMap(
+            @PathVariable("user_id") String user_id,
+            @RequestParam(defaultValue="1") int page, // 기본 페이지 1
+            @RequestParam(defaultValue="3") int size, // 페이지당 카드 수 4
+            Model model, Principal principal) {
+
         User loginUser = userService.getUser(principal.getName());
         int userNo = loginUser.getUser_no();
 
@@ -93,13 +97,18 @@ public class MymapController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 사용자의 맛집지도에 접근할 권한이 없습니다");
         }
 
-        List<MyMapDTO> hotplList = myMapService.getHotplacesByUserNo(userNo);
+        // 페이지네이션을 위해 Pageable 객체 생성
+        Pageable pageable = PageRequest.of(page - 1, size); // 페이지는 0부터 시작하므로 -1
+
+        Page<MyMapDTO> hotplPage = myMapService.getHotplacesByUserNo(userNo, pageable);
 
         // ModelAndView를 사용하여 View 이름과 데이터 모델을 설정
         ModelAndView modelAndView = new ModelAndView("myMap/kakaoMapT"); // View 이름 설정
-        modelAndView.addObject("userNo", userNo); // 모델 데이터 추가
-        modelAndView.addObject("user", loginUser);
-        modelAndView.addObject("hotplList", hotplList);
+        modelAndView.addObject("userNo", userNo); // 회원번호
+        modelAndView.addObject("user", loginUser); // 로그인 회원 정보 all
+        modelAndView.addObject("hotplList", hotplPage.getContent()); // 현재 페이지의 데이터만 추가
+        modelAndView.addObject("totalPages", hotplPage.getTotalPages()); // 전체 페이지 수 추가
+        modelAndView.addObject("currentPage", page); // 현재 페이지 번호 추가
 
         return modelAndView;
     }
@@ -107,16 +116,23 @@ public class MymapController {
     // JSON 데이터를 반환할 엔드포인트 =>
     @GetMapping("/hotplaces/{user_id}")
     @ResponseBody
-    public List<MyMapDTO> myMapHotplList(@PathVariable("user_id") String user_id, Principal principal) {
+    public Page<MyMapDTO> myMapHotplList(
+            @PathVariable("user_id") String user_id,
+            @RequestParam(defaultValue="1") int page,// 기본 페이지 1
+            @RequestParam(defaultValue="4") int size, // 페이지당 카드 수 4
+            Principal principal) {
+
         User loginUser = userService.getUser(principal.getName());
         int userNo = loginUser.getUser_no();
 
         if (!"admin".equals(principal.getName()) && !user_id.equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 사용자의 맛집지도에 접근할 권한이 없습니다");
         }
-        List<MyMapDTO> myHotplList = myMapService.getHotplacesByUserNo(userNo);
+        // 페이지네이션을 위해 Pageable 객체 생성
+        Pageable pageable = PageRequest.of(page - 1, size); // 페이지는 0부터 시작하므로 -1
+        Page<MyMapDTO> myHotplPage  = myMapService.getHotplacesByUserNo(userNo, pageable);
 
-        return myHotplList; // JSON 데이터 반환
+        return myHotplPage ; // JSON 데이터 반환
     }
 
 

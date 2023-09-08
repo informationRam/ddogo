@@ -6,8 +6,8 @@
             if (xhr.readyState === 4) {
                 if (xhr.status === 200) {
                     var data = JSON.parse(xhr.responseText);
-                    document.getElementById('inputReview').value = data.review;
-                    document.getElementById('inputMemo').value = data.memo;
+                    document.getElementById('review').value = data.review;
+                    document.getElementById('memo').value = data.memo;
                     $('#myModal').modal('show');
                 } else {
                     alert('후기 조회 중 오류가 발생했습니다.');
@@ -20,8 +20,8 @@
 
     // 모달 닫기 시 모달 내용 초기화
     $('#myModal').on('hidden.bs.modal', function () {
-        document.getElementById('inputReview').value = '';
-        document.getElementById('inputMemo').value = '';
+        document.getElementById('review').value = '';
+        document.getElementById('memo').value = '';
     });
 
 

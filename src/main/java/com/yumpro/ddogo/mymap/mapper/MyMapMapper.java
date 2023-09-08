@@ -13,10 +13,13 @@ public interface MyMapMapper {
    List<MyMapDTO> hotplacesByUserNo(@Param("userNo") int userNo);
 
 
-    //맛집 저장 삭제
+    //맛집 삭제
     void deleteMyHotpl(@Param("mapNo") Integer mapNo);
 
 
-   // 후기정보 수정 -2: 마커번호, 추천유무, 메모
-    void updateReview(@Param("mapNo") Integer mapNo, @Param("recomm") String recomm, @Param("memo") String memo);
+//   // 후기정보 수정 -2: 마커번호, 추천유무, 메모
+//    //void updateReview(@Param("mapNo") Integer mapNo, @Param("recomm") String recomm,
+//                      //@Param("memo") String memo);
+//    void updateReview(EmoReviewDTO emoReviewDTO);
+
 }
