@@ -1,16 +1,57 @@
+var currentURL = window.location.href;
+function getURLParameters(url) {
+    var params = {};
+    var queryString = url.split('?')[1]; // 쿼리 문자열 가져오기
+    if (queryString) {
+        var paramArray = queryString.split('&');
+        for (var i = 0; i < paramArray.length; i++) {
+            var param = paramArray[i].split('=');
+            var paramName = decodeURIComponent(param[0]);
+            var paramValue = decodeURIComponent(param[1]);
+            params[paramName] = paramValue;
+        }
+    }
+    return params;
+}
+
+// 3. URL에서 'lat'와 'lng' 값을 추출하고 변수에 저장
+var urlParams = getURLParameters(currentURL);
+var lat = urlParams['lat']; // 'lat' 파라미터의 값
+var lng = urlParams['lng']; // 'lng' 파라미터의 값
+
 var marker; //마커를 전역변수로 선언
 
 // 마커를 담을 배열입니다
 var markers = [];
 
-var mapContainer = document.getElementById('map'), // 지도를 표시할 div
-    mapOption = {
-        center: new kakao.maps.LatLng(37.566826, 126.9786567), // 지도의 중심좌표
-        level: 3 // 지도의 확대 레벨
-    };
+// 일반 지도와 스카이뷰로 지도 타입을 전환할 수 있는 지도타입 컨트롤을 생성합니다
+var mapTypeControl = new kakao.maps.MapTypeControl();
 
-// 지도를 생성합니다
-var map = new kakao.maps.Map(mapContainer, mapOption);
+if(lat!=null && lng!=null){
+    var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+        mapOption = {
+            center: new kakao.maps.LatLng(lat, lng), // 지도의 중심좌표
+            level: 4 // 지도의 확대 레벨
+        };
+    // 지도를 생성합니다
+    var map = new kakao.maps.Map(mapContainer, mapOption);
+} else {
+    var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+        mapOption = {
+            center: new kakao.maps.LatLng(37.499616, 127.030466), // 지도의 중심좌표
+            level: 4 // 지도의 확대 레벨
+        };
+     //지도를 생성합니다
+    var map = new kakao.maps.Map(mapContainer, mapOption);
+}
+
+// 지도에 컨트롤을 추가해야 지도위에 표시됩니다
+// kakao.maps.ControlPosition은 컨트롤이 표시될 위치를 정의하는데 TOPRIGHT는 오른쪽 위를 의미합니다
+map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
+
+// 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
+var zoomControl = new kakao.maps.ZoomControl();
+map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
 
 // 장소 검색 객체를 생성합니다
 var ps = new kakao.maps.services.Places();
@@ -19,7 +60,9 @@ var ps = new kakao.maps.services.Places();
 var infowindow = new kakao.maps.InfoWindow({zIndex:1});
 
 // 키워드로 장소를 검색합니다
-searchPlaces();
+if(lat!=null){
+    searchPlaces();
+}
 
 // 키워드 검색을 요청하는 함수입니다
 function searchPlaces() {
@@ -122,12 +165,12 @@ function getListItem(index, places) {
 
 // 마커를 생성하고 지도 위에 마커를 표시하는 함수입니다
 function addMarker(position, idx, title) {
-    var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png', // 마커 이미지 url, 스프라이트 이미지를 씁니다
-        imageSize = new kakao.maps.Size(36, 37),  // 마커 이미지의 크기
+    var imageSrc = '/image/cm04.png', // 마커 이미지 url, 스프라이트 이미지를 씁니다
+        imageSize = new kakao.maps.Size(45, 37),  // 마커 이미지의 크기
         imgOptions =  {
-            spriteSize : new kakao.maps.Size(36, 691), // 스프라이트 이미지의 크기
+            spriteSize : new kakao.maps.Size(45, 691), // 스프라이트 이미지의 크기
             spriteOrigin : new kakao.maps.Point(0, (idx*46)+10), // 스프라이트 이미지 중 사용할 영역의 좌상단 좌표
-            offset: new kakao.maps.Point(13, 37) // 마커 좌표에 일치시킬 이미지 내에서의 좌표
+            offset: new kakao.maps.Point(21, 37) // 마커 좌표에 일치시킬 이미지 내에서의 좌표
         },
         markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imgOptions),
             marker = new kakao.maps.Marker({
@@ -282,6 +325,7 @@ function displayMyOverlay(clickedMarker, clickedPlaces){
 //해당 마커의 장소정보를 모달의 form태그의 input요소로 넣기 위한 함수.
 function openModal(marker, places) {
     if (marker && places) {
+        var frmKeyword = document.getElementById('keyword').value;
         var markerLat = marker.getPosition().getLat();
         var markerLng = marker.getPosition().getLng();
         var placeName = places.place_name;
@@ -290,6 +334,7 @@ function openModal(marker, places) {
         var placeCateCode = places.category_group_code;
 
         // 각각의 hidden input 요소에 값을 설정
+        document.getElementById('transMean').value = frmKeyword;
         document.getElementById('markerLat').value = markerLat;
         document.getElementById('markerLng').value = markerLng;
         document.getElementById('placeName').value = placeName;

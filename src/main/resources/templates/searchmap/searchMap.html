@@ -2,7 +2,7 @@
 <div layout:fragment="content">
 <link rel="stylesheet" type="text/css" href="/css/searchmap/map.css" th:href="@{/css/searchmap/map.css}" />
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=820d01b1cce59185ed776419691dab39&libraries=services"></script>
-
+<input type="hidden" id="noMean" value="nothing">
 <!--지도 영역-->
 <div class="map_wrap" style="width:100%;height:93vh;">
     <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
@@ -11,9 +11,10 @@
         <div class="option">
             <div>
                 <form onsubmit="searchPlaces(); return false;">
-                    키워드 : <input class="" type="text" value="이태원 맛집" id="keyword" size="15">
+                    <div>
+                    키워드 : <input class="" type="text" id="keyword" size="15" placeholder="여기..또갈지도?">
                         <button type="submit" class="btn btn-outline-danger" style="width:35px;">검색</button>
-
+                    </div>
                 </form>
             </div>
         </div>
@@ -32,6 +33,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form id="modalForm" action="/search/add" method="post">
+                <input type="hidden" id="transMean" name="transMean" value="">
                 <input type="hidden" id="markerLat" name="markerLat" value="">
                 <input type="hidden" id="markerLng" name="markerLng" value="">
                 <input type="hidden" id="placeName" name="placeName" value="">
@@ -54,10 +56,10 @@
                     <div class="d-flex justify-content-center">
                         <div class="btn-group" role="group" aria-label="Radio buttons">
                             <input type="radio" class="btn-check" name="myRecommend" id="myRecommendY" value="Y" autocomplete="off">
-                            <label class="btn btn-outline-primary mx-1" for="myRecommendY">또갈지도</label>
+                            <label class="btn btn-outline-danger mx-1" for="myRecommendY">또갈지도</label>
 
                             <input type="radio" class="btn-check" name="myRecommend" id="myRecommendN" value="N" autocomplete="off">
-                            <label class="btn btn-outline-danger mx-1" for="myRecommendN">안갈지도</label>
+                            <label class="btn btn-outline-secondary mx-1" for="myRecommendN">안갈지도</label>
                         </div>
                     </div>
                 </div>
@@ -69,7 +71,15 @@
         </div>
     </div>
 </div>
+<script th:inline="javascript">
+    if([[${Keyword}]]!=null){
+        document.getElementById('keyword').value = [[${Keyword}]];
+    }
+    if([[${msg}]]!=null){
+            alert([[${msg}]]);
+    }
 
+</script>
 <script src="/js/searchmap/map.js" th:src="@{/js/searchmap/map.js}" th:inline="javascript"></script>
 </div>
 </html>

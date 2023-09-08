@@ -2,6 +2,7 @@
 <div layout:fragment="content">
 <link rel="stylesheet" type="text/css" href="/css/searchmap/map.css" th:href="@{/css/searchmap/map.css}" />
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=820d01b1cce59185ed776419691dab39&libraries=services"></script>
+    searchMap3.html
 
 <!--지도 영역-->
 <div class="map_wrap" style="width:100%;height:93vh;">
@@ -71,11 +72,9 @@
 </div>
 <script th:inline="javascript">
 /*<![CDATA[*/
-   var lat = "/*[[${lat}]]*/";
-   var lng = "/*[[${lng}]]*/";
-        alert(lat);
-/*]]>*/
 
+
+/*]]>*/
 </script>
 <script src="/js/searchmap/map3.js" th:src="@{/js/searchmap/map3.js}" th:inline="javascript"></script>
 </div>

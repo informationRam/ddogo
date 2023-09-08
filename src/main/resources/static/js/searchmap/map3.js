@@ -1,4 +1,3 @@
-
 var marker; //마커를 전역변수로 선언
 
 // 마커를 담을 배열입니다
@@ -197,6 +196,7 @@ function displayMyOverlay(clickedMarker, clickedPlaces){
         position: marker.getPosition()
     });
 
+    //닫기 버튼 클릭시 각각 닫히게 하기 위해 문자열이 아닌 createElement로 작성
     var coWrap = document.createElement('div');
     coWrap.classList.add('co-wrap');
 
@@ -304,13 +304,14 @@ function openModal(marker, places) {
     }
 }
 
- // 검색결과 목록의 자식 Element를 제거하는 함수입니다
+// 검색결과 목록의 자식 Element를 제거하는 함수입니다
 function removeAllChildNods(el) {
     while (el.hasChildNodes()) {
         el.removeChild (el.lastChild);
     }
 }
 
+//모달 폼을 제출.
 function saveFormData() {
    // 유효성 검사 수행
    if (formValidCheck()) {
