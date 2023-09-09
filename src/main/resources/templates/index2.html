@@ -74,14 +74,7 @@
     </div>
 
 
-    <!--모달창-->
-    <!--    <div class="container mt-3">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
-                Open modal
-            </button>
-        </div>-->
-
-    <!-- The Modal --> <!--th:each="ReviewList: ${ReviewList}" th:if="${ReviewList != null}"-->
+    <!-- 모달창 -->
     <div th:each="ReviewList: ${ReviewList}">
         <div th:if="${ReviewList != null}" class="modal" id="myModal">
             <div class="modal-dialog modal-dialog-scrollable">
@@ -90,22 +83,21 @@
                     <!-- Modal Header -->
                     <div class="modal-header">
                         <h4 class="modal-title">후기&감정분석</h4>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        <button id="closeModal" type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
 
                     <!-- Modal body -->
                     <div class="modal-body" >
-                        <!--<div th:each="ReviewList: ${ReviewList}">-->
                         <span class="text1" th:text="${ReviewList.review}"></span>
                         <p/>
-                        <span class="text1" th:text="${'리뷰 온도 ' + ReviewList.emo_result}+'°C'"></span>
+                        <span class="text1" th:text="${'리뷰 온도 ' + ReviewList.emo_result}+'°C'" style="float: right;"></span>
                         <p/>
-                        <!--</div>-->
+                        <br/>
                     </div>
 
                     <!-- Modal footer -->
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                        <button id="closeModal2" type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
                     </div>
 
                 </div>
@@ -177,36 +169,44 @@
 </html>
 
 <!-- 자바스크립트 -->
-
 <script layout:fragment="script">
-
+    //클릭했을 때 hotplace_no값 넘겨주기
     document.querySelectorAll('.heading').forEach(function (element) {
         element.addEventListener("click", function () {
 
-            var hotplace_no = this.getAttribute('data-hotplace-no'); // 데이터 속성에서 hotplace_no 값을 가져옵니다.
+            var hotplace_no = this.getAttribute('data-hotplace-no'); // 데이터 속성에서 hotplace_no 값을 가져오기
 
+            // hotplace_no 값을 사용하여 URL을 생성
+            var url = '/?hotplace_no=' + hotplace_no;
 
-            // hotplace_no 값을 사용하여 URL을 생성합니다.
-            var url = '/?hotplace_no=' + hotplace_no; // 컨트롤러 엔드포인트 URL로 변경하세요.
-
-            // 새로운 URL로 페이지를 이동합니다.
+            // URL로 이동
             window.location.href = url;
-
-            // 모달 또는 다른 동작을 수행할 수 있습니다.
-            //var modal = new bootstrap.Modal(document.getElementById('myModal'));
-            //modal.show();
-            //var modalElement = document.getElementById('myModal');
-            //var modal = new bootstrap.Modal(modalElement);
-            //modal.show();
-
 
         });
 
     });
 
-
+    //모달창 보이기
     var modal = new bootstrap.Modal(document.getElementById('myModal'));
     modal.show();
+
+    // Close 버튼을 클릭했을 때 메인페이지로
+  /*  document.getElementById("closeModal").addEventListener("click", function() {
+        // /main 주소로 이동합니다.
+        window.location.href = "/";
+    });
+    document.getElementById("closeModal2").addEventListener("click", function() {
+        // /main 주소로 이동합니다.
+        window.location.href = "/";
+    });*/
+    document.querySelectorAll("#closeModal, #closeModal2").forEach(function(button) {
+    button.addEventListener("click", function() {
+        // /main 주소로 이동합니다.
+        window.location.href = "/";
+    });
+});
+
+
 </script>
 <script layout:fragment="script">
     document.addEventListener("DOMContentLoaded", function () {
@@ -288,7 +288,7 @@
         if (selectedSido === "" || selectedGugun === "" || isNaN(selectedCategory)) {
             // 사용자가 조건을 선택하지 않은 경우 결과를 숨김
             resultDiv.style.display = "none";
-            alert("시도, 구군, 카테고리를 선택해주세요.");
+            alert("시도, 구군, 카테고리를 모두 선택해주세요.");
         } else {
             // 선택한 조건에 따라 결과를 표시
             resultDiv.style.display = "block";

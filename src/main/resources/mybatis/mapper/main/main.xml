@@ -97,6 +97,7 @@
 		]]>
     </select>
 
+    <!--hotplace_no로 리뷰 가져오기-->
     <select id="getReview" resultType="hashmap" parameterType="int">
         <![CDATA[
 		select review,emo_result
