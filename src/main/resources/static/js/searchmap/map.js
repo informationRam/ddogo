@@ -99,6 +99,7 @@ function displayPlaces(places) {
     fragment = document.createDocumentFragment(),
     bounds = new kakao.maps.LatLngBounds(),
     listStr = '';
+    document.getElementById('menu_wrap').classList.add('bg_white');
     // 검색 결과 목록에 추가된 항목들을 제거합니다
     removeAllChildNods(listEl);
     // 지도에 표시되고 있는 마커를 제거합니다
@@ -156,7 +157,7 @@ function getListItem(index, places) {
     } else {
         itemStr += '    <span>' +  places.address_name  + '</span>';
     }
-      itemStr += '  <span class="tel">' + places.phone  + '</span>' +
+      itemStr += '  <span><a class="tel">' + places.phone  + '</a><a class="link" target="_blank" href="'+places.place_url+'">상세보기</a></span>'
                 '</div>';
     el.innerHTML = itemStr;
     el.className = 'item';
