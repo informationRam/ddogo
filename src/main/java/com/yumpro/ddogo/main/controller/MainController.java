@@ -26,7 +26,9 @@ public class MainController {
     private final MainService mainService;
     
     @GetMapping(value = "/")
-    public String main(HttpServletResponse response, Model model) throws Exception {
+    public String main(HttpServletResponse response,
+                       @RequestParam(name = "hotplace_no", defaultValue = "0") int hotplace_no,
+                       Model model) throws Exception {
         //일별 베스트
         List<HashMap<String, Object>> eatjjim = mainService.eatjjim(); //맛집
         List<HashMap<String, Object>> cafejjim = mainService.cafejjim(); //카페
@@ -57,9 +59,15 @@ public class MainController {
         //out.print(jsonStr); //client로 보내기
         model.addAttribute(jsonStr);
         model.addAttribute("sigunguMap", sigunguMap);
-        System.out.println("sigunguMap_test3" + sigunguMap);
+        System.out.println("sigunguMap_test" + sigunguMap);
 
-        return "index";
+        //후기 가져오기
+        List<HashMap<String, Object>> ReviewList = mainService.getReview(hotplace_no);
+        System.out.println("hotplace_no=" + hotplace_no);
+        System.out.println("ReviewList=" + ReviewList);
+        model.addAttribute("ReviewList", ReviewList);
+
+        return "index2";
 
     }
 
@@ -96,8 +104,6 @@ public class MainController {
 
         return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }
-
-
 
 
 }

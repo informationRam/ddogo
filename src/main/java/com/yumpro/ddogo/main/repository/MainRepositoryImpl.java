@@ -42,4 +42,10 @@ public class MainRepositoryImpl implements MainRepository{
         return sqlSession.selectList("main.monthBest", paramMap);
     }
 
+    @Override
+    public List<HashMap<String, Object>> getReview(int hotplace_no){
+        return sqlSession.selectList("main.getReview",hotplace_no);
+    }
+
+
 }

@@ -1,0 +1,14 @@
+<nav th:fragment="navbarFragment" class="navbar">
+    <div class="container-fluid">
+        <div style="text-align: right;">
+            <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/login}" style="display: inline-block; margin-right: 10px;">로그인</a>
+            <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{#}" style="display: inline-block; margin-right: 10px;">로그아웃</a>
+            <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/signup}" style="display: inline-block; margin-right: 10px;">회원가입</a>
+            <a class="nav-link" th:href="@{#}" style="display: inline-block; margin-right: 10px;">Ranking</a>
+            <a class="nav-link" th:href="@{#}" style="display: inline-block; margin-right: 10px;">Explore</a>
+            <a class="nav-link" th:href="@{#}" style="display: inline-block; margin-right: 100px;">My map</a>
+        </div>
+
+
+    </div>
+</nav>
