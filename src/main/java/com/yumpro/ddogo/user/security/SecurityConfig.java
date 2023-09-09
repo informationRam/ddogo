@@ -34,12 +34,11 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.
-                csrf().disable() // CSRF 보호 비활성화
-                /*csrf().and()*/ // CSRF 보호 활성화
+                /*csrf().disable()*/ // CSRF 보호 비활성화
+                csrf().and() // CSRF 보호 활성화
                 .authorizeHttpRequests();
         http.authorizeHttpRequests()
                 .requestMatchers(new AntPathRequestMatcher("/user/modifyForm/**")).authenticated()
-                .requestMatchers(new AntPathRequestMatcher("/manager/**")).hasAnyRole("MANAGER", "ADMIN")
                 .requestMatchers(new AntPathRequestMatcher("/admin/**")).hasRole("ADMIN")
                 .anyRequest().permitAll()
                 .and().formLogin().
