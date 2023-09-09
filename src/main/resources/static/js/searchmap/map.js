@@ -166,12 +166,12 @@ function getListItem(index, places) {
 
 // 마커를 생성하고 지도 위에 마커를 표시하는 함수입니다
 function addMarker(position, idx, title) {
-    var imageSrc = '/image/cm04.png', // 마커 이미지 url, 스프라이트 이미지를 씁니다
-        imageSize = new kakao.maps.Size(45, 37),  // 마커 이미지의 크기
+    var imageSrc = '/image/cm_al_02.png', // 마커 이미지 url, 스프라이트 이미지를 씁니다
+        imageSize = new kakao.maps.Size(49, 38),  // 마커 이미지의 크기
         imgOptions =  {
-            spriteSize : new kakao.maps.Size(45, 691), // 스프라이트 이미지의 크기
-            spriteOrigin : new kakao.maps.Point(0, (idx*46)+10), // 스프라이트 이미지 중 사용할 영역의 좌상단 좌표
-            offset: new kakao.maps.Point(21, 37) // 마커 좌표에 일치시킬 이미지 내에서의 좌표
+            spriteSize : new kakao.maps.Size(49, 694), // 스프라이트 이미지의 크기
+            spriteOrigin : new kakao.maps.Point(4, (idx*46 )+9), // 스프라이트 이미지 중 사용할 영역의 좌상단 좌표
+            offset: new kakao.maps.Point(17, 38) // 마커 좌표에 일치시킬 이미지 내에서의 좌표
         },
         markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imgOptions),
             marker = new kakao.maps.Marker({
@@ -223,7 +223,7 @@ function displayPagination(pagination) {
 // 인포윈도우에 장소명을 표시합니다.
 // 몸체랑 꼬리가 분리되는게 맘에 안들어서 수정하고 싶음...
 function displayInfowindow(marker, places) {
-    var content = '<div style="padding:5px; z-index:1; max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; ">'+
+    var content = '<div style="top:0px; padding:5px; z-index:1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">'+
                       places.place_name +
                   '</div>';
     infowindow.setContent(content);
