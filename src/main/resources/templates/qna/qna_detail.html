@@ -2,7 +2,7 @@
 <div layout:fragment="content" class="container my-5">
     <link rel="stylesheet" href="/css/admin/ddostyle.css" />
     <link rel="stylesheet" href="/css/admin/qna.css" />
-    <h1 class="text-center">QnA</h1><br/><br/>
+    <h1 class="text-center" style="font-weight: bold;">QnA</h1><br/><br/>
     <div class="mb-4">
         <div class="d-flex mb-4">
             <span class="badge rounded-pill" style="margin-right:7px; font-size: 1.2em; padding: 10px 15px;"
@@ -54,7 +54,7 @@
         <form id="answer" class="my-3 bg-light p-4 shadow" th:action="@{|/qna/solve/add/${qna.qnaNo}|}" th:object="${qnaSolveAddForm}" method="post">
             <div class="d-flex">
                 <img src="/image/logo.png" style="width:80px;">
-                <span>답변하기</span>
+                <span style="font-weight:bold;">&nbsp;답변하기</span>
             </div><br/>
             <div class="mb-3">
                 <input type="text" th:field="*{qnaSolveTitle}" class="form-control" placeholder="제목을 입력하세요" />
