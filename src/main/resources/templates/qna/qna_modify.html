@@ -1,6 +1,7 @@
 <html layout:decorate="~{layout}" xmlns:th="http://www.thymeleaf.org">
 <div layout:fragment="content" class="container my-5">
     <link rel="stylesheet" href="/css/admin/ddostyle.css" />
+    <link rel="stylesheet" href="/css/admin/qna.css" />
     <h1 class="text-center">QnA</h1><br/><br/>
     <div class="mb-4">
         <div class="d-flex mb-4">
@@ -35,7 +36,7 @@
                 <span class="text-danger d-block mt-1" th:if="${#fields.hasErrors('qnaSolveContent')}" th:errors="*{qnaSolveContent}"></span>
             </div>
             <div class="d-flex justify-content-end">
-                <input type="submit" value="답변 수정" class="btn btn-ddo"/>
+                <input type="submit" value="답변 수정" class="btn btn-qna my-2 me-2"/>
             </div>
         </form>
     </div>
