@@ -11,14 +11,23 @@ import lombok.Setter;
 @NoArgsConstructor
 
 
-public class EmoReviewDTO {
+public class ReviewDTO {
 
 
-    private Integer reviewNo;
+
     private String review;
+
+
     private String memo;
+
+
     private Integer mapNo;
+
+
     private char recomm;
+
+
+    private int hotplaceNo;
 
 
 }

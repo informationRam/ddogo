@@ -12,19 +12,13 @@ document.addEventListener("DOMContentLoaded", function () {
         alert(formData);
         return formData;
     }
-    // 모달활성화버튼 출력값 객체로 만들기
-    var showReviewBtn = document.querySelector('.btn-update-review');
-    showReviewBtn.addEventListener('click', function() {
-        var mapNo = showReviewBtn.getAttribute('data-review-no');
-
-    });
 
 //function getReviewInfo(reviewNo){
     document.querySelectorAll('.btn-update-review').forEach(function(button) {
       button.addEventListener('click', function() {
-          mapNo = this.getAttribute('data-review-no');
-           // mapNo = reviewNo.getAttribute('data-review-no');
-            console.log(mapNo); //mapNo 출력확인
+        var button = event.currentTarget; // 현재 클릭된 버튼
+        var hotplaceNo = button.getAttribute('data-hotplace-no'); // data-hotplace-no 값 가져오기
+        var mapNo = button.getAttribute('data-review-no'); // data-review-no 값 가져오기
 
             var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function () {
@@ -34,9 +28,13 @@ document.addEventListener("DOMContentLoaded", function () {
                         console.log(savedReviewInfo); // 데이터 확인을 위한 로그
                         if (savedReviewInfo != null) {
                          // 모달 데이터 표시
-                            console.log(savedReviewInfo)
                             document.getElementById('review').value = savedReviewInfo.review;
                             document.getElementById('memo').value = savedReviewInfo.memo;
+
+                            document.getElementById('hotplaceNo').value = hotplaceNo; // hotplaceNo input에 값 설정
+                            document.getElementById('mapNo').value = mapNo; // mapNo input에 값 설정
+                            console.log(mapNo);
+                            console.log(hotplaceNo);
 
                             selectRadioButton(savedReviewInfo.recomm);
                             console.log('recomm 추천유무:', savedReviewInfo.recomm);
@@ -48,11 +46,11 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
                 }
             };
-
             xhr.open('GET', '/mymap/getReview/' + mapNo, true);
             xhr.send();
              }); //버튼 이벤트리스너
        }); // 쿼리셀렉터
+
 //    }//getReviewInfo함수
 
         // recomm 값을 확인하여 라디오 버튼 표시 설정
@@ -88,13 +86,28 @@ document.addEventListener("DOMContentLoaded", function () {
           // 폼 데이터 가져오기
           var form = document.getElementById('updateReviewForm');
           var formData = new FormData(form);
+
      // 추가할 데이터
-              formData.append('mapNo', mapNo); // mapNo를 추가하려면 필요한 경우 이렇게 할 수 있습니다.
-                console.log(mapNo);
+         var mapNo = document.getElementById('mapNo').value; // mapNo 값을 가져옵니다.
+         var hotplaceNo = document.getElementById('hotplaceNo').value; // hotplaceNo 값을 가져옵니다.
+
+        // mapNo 및 hotplaceNo 값을 formData에 추가합니다
+          formData.append('mapNo', mapNo);
+          formData.append('hotplaceNo', hotplaceNo);
+            console.log(mapNo);
+            console.log(hotplaceNo);
+
+      // memo와 recomm 값을 formData에 추가합니다
+        var memo = document.getElementById('memo').value;
+        var recomm = document.querySelector('input[name="recomm"]:checked').value;
+        formData.append('memo', memo);
+        formData.append('recomm', recomm);
+
           // AJAX 요청을 이용하여 서버에 폼 데이터를 전송하고 후기를 업데이트합니다.
           var xhr = new XMLHttpRequest();
           xhr.open('POST', '/mymap/updateReview/' + mapNo, true); // 수정 컨트롤러 엔드포인트 경로 설정
-          xhr.setRequestHeader('Content-Type', 'application/json');
+           xhr.setRequestHeader('Content-Type', 'application/json');
+
 
           // AJAX 요청 완료 후의 처리
           xhr.onload = function () {
@@ -106,7 +119,7 @@ document.addEventListener("DOMContentLoaded", function () {
                           myModal.hide(); // 모달 닫기
 
                     } else {
-                        alert('후기 수정 중 오류가 발생했습니다.');
+                     alert('후기 수정 중 오류가 발생했습니다.');
                         }
             };
 

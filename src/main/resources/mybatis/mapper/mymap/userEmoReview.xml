@@ -1,20 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yumpro.ddogo.mymap.mapper.EmoReviewMapper">
+<mapper namespace="com.yumpro.ddogo.mymap.mapper.ReviewMapper">
 
-    <select id="getReviewByMapNo" parameterType="Integer" resultType="com.yumpro.ddogo.mymap.domain.EmoReviewDTO">
-        SELECT r.review_no AS reviewNo, r.review, m.map_memo AS memo, m.recom AS recomm, r.map_no AS mapNo
+    <!-- 맛집 후기 조회 -->
+    <select id="getReviewByMapNo" parameterType="Integer" resultType="com.yumpro.ddogo.mymap.domain.ReviewDTO">
+        SELECT r.review, m.map_memo AS memo, m.recom AS recomm, r.map_no AS mapNo, r.hotplace_no AS hotplaceNo
         FROM emoreview r
         INNER JOIN mymap m ON r.map_no = m.map_no
         WHERE r.map_no = #{mapNo};
-
     </select>
 
-    <update id="updateEmoReview" parameterType="map">
-        <!-- emoreview 테이블의 review 필드 수정 -->
-        UPDATE emoreview
-        SET review = #{review}
-        WHERE reviewNo = #{reviewNo}
+    <!-- 맛집 후기 수정 -->
+    <update id="updateReview" parameterType="com.yumpro.ddogo.mymap.domain.ReviewUpdateDTO">
+        <![CDATA[
+       UPDATE emoreview er
+        JOIN mymap mm ON er.map_no = mm.map_no
+        SET
+            er.review = #{review},
+            er.emo_result = #{emo_result},
+            mm.recom = #{recomm},
+            mm.map_memo = #{memo},
+            mm.recom_date = CURRENT_TIMESTAMP
+        WHERE er.map_no = #{mapNo};
+      ]]>
     </update>
+
 </mapper>
