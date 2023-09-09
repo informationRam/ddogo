@@ -14,7 +14,7 @@ import lombok.Setter;
 public class EmoReviewDTO {
 
 
-    private Integer reviewNo;
+
     private String review;
     private String memo;
     private Integer mapNo;
