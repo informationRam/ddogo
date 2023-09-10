@@ -123,6 +123,12 @@ public class MymapController {
 
                 // 감정 분석 결과를 DTO에 설정
                 request.setEmo_result(emoResult);
+
+                // Review 필드가 누락되었을 때 처리
+                if (request.getReview() == null || request.getReview().isEmpty()) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("후기는 필수 입력 항목입니다.");
+                }
+
                 // 컨트롤러 메서드에서 memo와 recomm 저장
                 request.setMemo(request.getMemo());
                 request.setRecomm(request.getRecomm());

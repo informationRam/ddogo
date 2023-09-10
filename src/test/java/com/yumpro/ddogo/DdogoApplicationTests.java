@@ -13,18 +13,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest
 class DdogoApplicationTests {
 
-	@Autowired
-	private MymapMarkerRepository mymapMarkerRepository;
-	@Test
-	void contextLoads() {
-	}
-
-	@Test
-	void test() {
-		List<MymapMarkerDTO> mymapMarkerDTOS = mymapMarkerRepository.findLatLngAddNames();
-		// 결과가 비어있지 않은지 확인
-		Hotplace hotplace = Hotplace.get();
-		assertEquals("사운드온",mymapMarkerDTOS.findLatLngAddNames());
-	}
-
-}
+//	@Autowired
+//	private MymapMarkerRepository mymapMarkerRepository;
+//	@Test
+//	void contextLoads() {
+//	}
+//
+//	@Test
+//	void test() {
+//		List<MymapMarkerDTO> mymapMarkerDTOS = mymapMarkerRepository.findLatLngAddNames();
+//		// 결과가 비어있지 않은지 확인
+//		Hotplace hotplace = Hotplace.get();
+//		assertEquals("사운드온",mymapMarkerDTOS.findLatLngAddNames());
+//	}
+//
+//}

@@ -109,6 +109,8 @@
                                 <label for="review" class="form-label">REVIEW</label>
                                 <div id="error1"></div>
                                 <textarea class="form-control" id="review" name="review" rows="6"></textarea>
+                                <!-- 필수입력 검사 -->
+                                <div id="review-error" class="text-danger"></div>
                             </div>
                             <!-- 메모 입력 필드 -->
                             <div class="mb-3">
@@ -133,7 +135,7 @@
                             </div>
                             <!-- 모달 푸터 -->
                             <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary"  onclick="submitForm()">저장</button>
+                                <button type="button" class="btn btn-primary"  onclick="submitForm()">저장</button>
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
                             </div>
                         </form>

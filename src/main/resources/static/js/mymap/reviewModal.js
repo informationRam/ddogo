@@ -87,6 +87,23 @@ document.addEventListener("DOMContentLoaded", function () {
           var form = document.getElementById('updateReviewForm');
           var formData = new FormData(form);
 
+        // Review 필드의 값을 가져옵니다.
+            var review = document.getElementById('review').value;
+
+         // Review 필드가 비어 있는지 확인합니다.
+         if (review.trim() === '') {
+             // Review 필드가 비어 있다면 경고 메시지를 표시하고 함수 종료
+             var reviewError = document.getElementById('review-error');
+             reviewError.textContent = '후기는 필수 입력 항목입니다.';
+            // 저장을 하지 않고 함수 종료
+            return;
+
+         } else {
+             // Review 필드가 비어 있지 않다면 경고 메시지를 지웁니다.
+             var reviewError = document.getElementById('review-error');
+             reviewError.textContent = '';
+         }
+
      // 추가할 데이터
          var mapNo = document.getElementById('mapNo').value; // mapNo 값을 가져옵니다.
          var hotplaceNo = document.getElementById('hotplaceNo').value; // hotplaceNo 값을 가져옵니다.
@@ -117,9 +134,23 @@ document.addEventListener("DOMContentLoaded", function () {
                  // 모달을 닫으려면 다음과 같은 코드를 사용하세요.
                         var myModal = new bootstrap.Modal(document.getElementById('myModal'));
                           myModal.hide(); // 모달 닫기
+                         // 모달 닫기 시 백드롭 제거
+                             document.getElementById('myModal').addEventListener('hidden.bs.modal', function () {
+                                 // 현재 모달의 백드롭 제거
+                                 var modalBackdrop = document.querySelector('.modal-backdrop');
+                                 if (modalBackdrop) {
+                                     modalBackdrop.parentNode.removeChild(modalBackdrop);
+                                 }
+                                 // 모달을 닫기 위한 추가 코드
+                                 var myModal = new bootstrap.Modal(document.getElementById('myModal'));
+                                 myModal.hide();
+                             });
 
                     } else {
                      alert('후기 수정 중 오류가 발생했습니다.');
+                      // 오류 발생 시 모달 창을 다시 열어줍니다.
+                             var myModal = new bootstrap.Modal(document.getElementById('myModal'));
+                             myModal.show(); // 모달 열기
                         }
             };
 
@@ -135,7 +166,7 @@ document.addEventListener("DOMContentLoaded", function () {
          console.log(jsonData);
    } //submitForm끝
 
-        // 모달 닫기 시 백드롭 제거
+   /*     // 모달 닫기 시 백드롭 제거
         document.getElementById('myModal').addEventListener('hidden.bs.modal', function () {
             // 현재 모달의 백드롭 제거
             var modalBackdrop = document.querySelector('.modal-backdrop');
@@ -145,7 +176,7 @@ document.addEventListener("DOMContentLoaded", function () {
             // 모달을 닫기 위한 추가 코드
             var myModal = new bootstrap.Modal(document.getElementById('myModal'));
             myModal.hide();
-        });
+        });*/
 
 
  });
