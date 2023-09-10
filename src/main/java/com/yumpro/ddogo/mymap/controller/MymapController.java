@@ -2,12 +2,13 @@ package com.yumpro.ddogo.mymap.controller;
 
 import com.yumpro.ddogo.common.entity.User;
 import com.yumpro.ddogo.emoAnal.service.EmoService;
-import com.yumpro.ddogo.mymap.domain.ReviewDTO;
 import com.yumpro.ddogo.mymap.domain.MyMapDTO;
+import com.yumpro.ddogo.mymap.domain.ReviewDTO;
 import com.yumpro.ddogo.mymap.domain.ReviewUpdateDTO;
 import com.yumpro.ddogo.mymap.service.MymapService;
 import com.yumpro.ddogo.mymap.service.ReviewService;
 import com.yumpro.ddogo.user.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -136,17 +137,17 @@ public class MymapController {
                 // 서비스를 사용하여 후기정보 업데이트
                 reviewService.updateReview(request);
 
-                return ResponseEntity.ok("업데이트가 성공적으로 수행되었습니다.");
+                return ResponseEntity.ok("후기가 성공적으로 수행되었습니다.");
             } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("업데이트 중 오류가 발생했습니다.");
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("후기 업로드중 오류가 발생했습니다.");
             }
         }
 
-    @ExceptionHandler(Exception.class)
+/*    @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleException(Exception e) {
         e.printStackTrace(); // 예외 스택 트레이스를 출력
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("업데이트 중 오류가 발생했습니다.");
-    }
+    }*/
 
     //회원 맛집 목록 삭제
     @GetMapping("/delete/{mapNo}")
@@ -186,13 +187,16 @@ public class MymapController {
             @PathVariable("user_id") String user_id,
             @RequestParam(defaultValue="1") int page, // 기본 페이지 1
             @RequestParam(defaultValue="3") int size, // 페이지당 카드 수 4
-            Model model, Principal principal) {
+            Model model, Principal principal, HttpServletRequest request) {
 
         User loginUser = userService.getUser(principal.getName());
         int userNo = loginUser.getUser_no();
 
         if (!"admin".equals(principal.getName()) && !user_id.equals(principal.getName())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 사용자의 맛집지도에 접근할 권한이 없습니다");
+            // 권한이 없는 사용자를 로그인 페이지로 리다이렉트
+            String referer = request.getHeader("index"); //이전페이지로 되돌리기
+            return new ModelAndView("redirect:/user/login");
+         //  throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 사용자의 맛집지도에 접근할 권한이 없습니다");
         }
 
         // 페이지네이션을 위해 Pageable 객체 생성

@@ -1,13 +1,14 @@
 <html layout:decorate="~{layout}" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <div layout:fragment="content" > <!-- container-fluid-->
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" type="text/css"
-      href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
-    <script src="https://kit.fontawesome.com/924c10682d.js" crossorigin="anonymous"></script>
-   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
-     <!-- 찜 아이콘 다운 -->
-    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=820d01b1cce59185ed776419691dab39"></script>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/css/mymap/mymapCSS.css" th:href="@{/css/mymap/mymapCSS.css}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=820d01b1cce59185ed776419691dab39&libraries=services"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
+    <script src="https://kit.fontawesome.com/924c10682d.js" crossorigin="anonymous"></script>
+</head>
 
   <!-- 좌측에 맛집 리스트를 표시하는 부분 -->
 <div class="container-fluid">
@@ -189,50 +190,23 @@
         <div class="column" id="myMapContents">
             <div class="mapBox" style="width:100%; height:93vh;">
                 <!-- 지도를 표시할 div -->
-
+                <input type="hidden" id="userIdContainer" th:attr="data-user-id=${user.userId}">
                 <button id="gpsBtn" class="btn btn-danger mb-2" onclick="gps_check()"> 내 주변보기</button>
+
                 <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
+
             </div>
         </div>
 </div> <!-- containerFluid-->
 
   <!-- 지도 api 연동 Javascript 양역 ---------------- -->
-
-
-  <script type="text/javascript" th:inline="javascript">
+<script type="text/javascript" th:inline="javascript">
 
      // Thymeleaf를 이용하여 사용자 ID를 가져와서 JavaScript 변수로 설정
-    /*<![CDATA[*/
-    var userId = /*[[${user_id}]]*/;
-    var userName = /*[[${user_name}]]*/;
-   /*]]>*/
 
+        var userId = /*[[${user_id}]]*/;
 
-      //지도 생성 스크립트
-          var mapContainer = document.getElementById('map'), //지도를 표시할 div
-                mapOption = {
-                center: new kakao.maps.LatLng(37.506016526623334, 127.10691218161601),  //기본 중심좌표 :석촌
-                level: 3
-            };
-
-        //지도 생성
-        var map = new kakao.maps.Map(mapContainer, mapOption);
-
-        //db저장 정보 마커표시, 변수 가져오기
-
-        /*<![CDATA[*/
-        var positions = [
-            /*[# th:each="myhotpl : ${myHotplList}"]*/
-            {
-                title: /*[[${myhotpl.hotplaceName}]]*/,
-                latlng: new kakao.maps.LatLng(/*[[${myhotpl.lat}]]*/, /*[[${myhotpl.lng}]]*/)
-            },
-            /*[/]*/
-        ];
-        /*]]>*/
-
-
-        //gps로 위치 불러오기 : gps_check()함수
+    //gps로 위치 불러오기 : gps_check()함수
         gps_check();
          function gps_check(){
              if (navigator.geolocation) {
@@ -243,7 +217,6 @@
                  gps_use = false;
              }
          }
-
          // 이용 가능하면, 위도와 경도를 반환하는 showlocation함수.
           function showLocation(pos) {
                   console.log(pos);
@@ -262,7 +235,6 @@
                   }
                   gps_use = false;
               }
-
         //현재위치 마커 표시
          function gps_tracking(){
               if (gps_use) {
@@ -281,13 +253,45 @@
                 gps_check();
               }
           }
-    </script>
+</script>
+    <script src="/js/mymap/mymapKAPI.js"></script>
+
+
+
+
+
+
+        <!--        // 마커를 생성합니다-->
+        <!--        var marker = new kakao.maps.Marker({-->
+        <!--            position: markerPosition,-->
+        <!--            image: markerImage // 커스텀 마커 설정-->
+        <!--        });-->
+
+
+        <!--            for (var i = 0; i < positions.length; i++) {-->
+
+        <!--                var marker = new kakao.maps.Marker({-->
+        <!--                    map: map,-->
+        <!--                    position: positions[i].latlng,-->
+        <!--                    title: positions[i].title-->
+        <!--                });-->
+        <!--              console.log("Created marker:", marker);-->
+        <!--            }-->
+        <!--          }-->
+
+
+
+
+
+
+
+
   <!--   mymapAPI.js 파일을 포함 -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
-<!--  <script type="text/javascript" src="/js/mymapAPI.js"></script>-->
- <script src="/js/mymap/reviewModal.js" th:src="@{/js/mymap/reviewModal.js}"></script>
- <script src="/js/mymap/hotplCard.js" th:src="@{/js/mymap/hotplCard.js}"></script>
+
+<script src="/js/mymap/hotplCard.js" th:src="@{/js/mymap/hotplCard.js}"></script>
+<script src="/js/mymap/reviewModal.js" th:src="@{/js/mymap/reviewModal.js}"></script>
 
 
 
-
+</div>
+</html>

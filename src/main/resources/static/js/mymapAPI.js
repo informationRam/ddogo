@@ -10,7 +10,10 @@ function loadPlaces() {
   // AJAX 요청으로 맛집 데이터 가져오기
     $.ajax({
         url: "/mymap/hotplaces/" + userName,
-        method: "GET",
+        method: "GET",  ,  ]\[
+
+
+        ]
         success: function (data) {
             // 맛집 목록을 표시
             myHotplList = data.myHotplList;
