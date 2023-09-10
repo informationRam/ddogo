@@ -27,7 +27,6 @@ public class MainController {
     
     @GetMapping(value = "/")
     public String main(HttpServletResponse response,
-                       @RequestParam(name = "hotplace_no", defaultValue = "0") int hotplace_no,
                        Model model) throws Exception {
         //일별 베스트
         List<HashMap<String, Object>> eatjjim = mainService.eatjjim(); //맛집
@@ -55,21 +54,28 @@ public class MainController {
         }
 
         String jsonStr = obj.toString();
-        System.out.println("jsonStr =" + jsonStr); //콘솔출력.확인용
+        System.out.println("jsonStr =" + jsonStr);
         //out.print(jsonStr); //client로 보내기
         model.addAttribute(jsonStr);
         model.addAttribute("sigunguMap", sigunguMap);
-        System.out.println("sigunguMap_test" + sigunguMap);
+        System.out.println("sigunguMap" + sigunguMap);
 
-        //후기 가져오기
-        List<HashMap<String, Object>> ReviewList = mainService.getReview(hotplace_no);
-        System.out.println("hotplace_no=" + hotplace_no);
-        System.out.println("ReviewList=" + ReviewList);
-        model.addAttribute("ReviewList", ReviewList);
-
-        return "index2";
+        return "index3";
 
     }
+
+    //리뷰 가져오기
+    @GetMapping(value = "/review/{hotplace_no}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<HashMap<String, Object>> getReview(@PathVariable("hotplace_no") int hotplace_no,
+                                                   Model model) {
+        System.out.println("컨트롤러getReview진입");
+        List<HashMap<String, Object>> reviewList = mainService.getReview(hotplace_no);
+        System.out.println("reviewList="+reviewList);
+        model.addAttribute("reviewList",reviewList);
+        return reviewList;
+    }
+
 
     // 초기 데이터를 가져오는 엔드포인트
     @GetMapping(value = "initialData", produces = MediaType.APPLICATION_JSON_VALUE)
