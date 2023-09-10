@@ -2,7 +2,6 @@
 <div layout:fragment="content">
 <link rel="stylesheet" type="text/css" href="/css/searchmap/map.css" th:href="@{/css/searchmap/map.css}" />
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=820d01b1cce59185ed776419691dab39&libraries=services"></script>
-<input type="hidden" id="noMean" value="nothing">
 <!--지도 영역-->
 <div class="map_wrap" style="width:100%;height:93vh;">
     <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
@@ -64,7 +63,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" onclick="saveFormData()">저장</button>
+                    <button type="button" class="btn btn-danger" onclick="saveFormData()">저장</button>
                     <input type="reset" class="btn btn-secondary"/>
                 </div>
             </form>
