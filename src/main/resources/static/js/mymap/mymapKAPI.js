@@ -28,6 +28,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // 클릭한 카드의 위치 정보를 가져와 지도에 표시
     const cards = document.querySelectorAll('.card');
+    let infowindow = null; // 이전에 열린 인포윈도우를 저장할 변수
+
     cards.forEach(function (card) {
         card.addEventListener('click', function () {
             const lat = parseFloat(card.querySelector('#lat').value);
@@ -50,8 +52,13 @@ document.addEventListener("DOMContentLoaded", function () {
             // 선택한 카드의 내용 가져오기 (맛집 이름)
               const cardTitle = card.querySelector('.card-title strong').textContent;
 
+            // 이전에 열린 인포윈도우가 있다면 닫기
+                    if (infowindow) {
+                        infowindow.close();
+                    }
+
               // 인포윈도우 생성 및 열기
-                var infowindow = new kakao.maps.InfoWindow({
+                infowindow = new kakao.maps.InfoWindow({
                     content:'<div style="padding:10px 10px; solid #FF69B4;">' + cardTitle + '</div>'
                 });
                 infowindow.open(map, marker);
