@@ -1,5 +1,5 @@
-<html xmlns:th="http://www.thymeleaf.org">
-<div class="container my-3">
+<html layout:decorate="~{layout}" xmlns:th="http://www.thymeleaf.org">
+<div layout:fragment="content" class="container my-3">
     <link rel="stylesheet" href="/css/user/login.css" />
     <div class="container" id="container">
         <div class="form-container sign-up-container">
@@ -40,7 +40,8 @@
                         사용자ID 또는 비밀번호를 확인해주세요.
                     </div>
                 </div>
-                <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/pwdsearchfrom}">Forgot your password?</a>
+                <!--네비바 통일을 위한 css조정-->
+                <a class="nav-link" style="margin:15px 0;" sec:authorize="isAnonymous()" th:href="@{/user/pwdsearchfrom}">Forgot your password?</a>
                 <button type="submit">Sign In</button>
             </form>
         </div>

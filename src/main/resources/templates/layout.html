@@ -1,37 +1,20 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>App</title>
-<link rel="stylesheet" type="text/css"
-      href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
-<style>
-    body {
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
-    }
-
-    .content {
-        flex-grow: 1;
-    }
-
-    footer {
-        margin-top: auto;
-    }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>나만의 맛집지도, 또갈지도</title>
+    <link rel="stylesheet" type="text/css"
+          href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
 </head>
 <body>
 <!-- navigation부분 -->
 <nav th:replace="~{navbar::navbarFragment}"></nav>
-<hr/>
+
 <!--  baseTemplate안에 포함될 내용 시작  -->
 <th:block layout:fragment="content"></th:block>
 <!-- baseTemplate안에 포함될 내용 끝 -->
 <script src="/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}" ></script>
 <th:block layout:fragment="script"></th:block>
-<!-- footer -->
-<footer th:replace="~{footer::footerFragment}"></footer>
 </body>
 </html>
