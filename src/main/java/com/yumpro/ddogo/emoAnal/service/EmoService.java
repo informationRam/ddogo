@@ -1,17 +1,5 @@
 package com.yumpro.ddogo.emoAnal.service;
 
-<<<<<<< HEAD
-
-        import com.yumpro.ddogo.emoAnal.entity.Emoreview;
-        import com.yumpro.ddogo.emoAnal.repository.EmoRepository;
-        import lombok.RequiredArgsConstructor;
-        import org.json.JSONObject;
-        import org.springframework.stereotype.Service;
-
-        import java.io.OutputStream;
-        import java.net.HttpURLConnection;
-        import java.net.URL;
-=======
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
@@ -19,33 +7,13 @@ import org.springframework.stereotype.Service;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
->>>>>>> 4f97cb975931c84c1e61e84c9dcd65f1537fc357
 
 @Service
 @RequiredArgsConstructor
 public class EmoService {
 
-<<<<<<< HEAD
-    private final EmoRepository emoRepository;
-
-    //리뷰등록(임시)
-    public void updateReview(String reveiw,int hotplace_no,int map_no,double emo_result){
-        Emoreview emoreview = new Emoreview();
-        emoreview.setReview(reveiw);
-        emoreview.setHotplace_no(hotplace_no);
-        emoreview.setMap_no(map_no);
-        emoreview.setEmo_result(emo_result);
-        emoRepository.save(emoreview);
-    }
-
-    //감정분석
-
-    //감정분석
-    public double emoAnal(String reveiw){
-=======
     //감정분석
     public double emoAnal(String review){
->>>>>>> 4f97cb975931c84c1e61e84c9dcd65f1537fc357
         double emo_result = 0;
         try {
             // API 엔드포인트 URL
@@ -57,11 +25,7 @@ public class EmoService {
 
             // 요청 데이터 생성
             JSONObject data = new JSONObject();
-<<<<<<< HEAD
-            data.put("content",reveiw);
-=======
             data.put("content",review);
->>>>>>> 4f97cb975931c84c1e61e84c9dcd65f1537fc357
 
             // POST 요청 설정
             URL apiUrl = new URL(url);
@@ -133,8 +97,4 @@ public class EmoService {
     }
 
 
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 4f97cb975931c84c1e61e84c9dcd65f1537fc357

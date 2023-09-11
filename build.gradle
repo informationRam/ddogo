@@ -40,11 +40,14 @@ dependencies {
 
 	// 메일발송
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	testImplementation 'junit:junit:4.13.1'
 
 	//시큐리티 외부인증관련
 	implementation 'org.springframework.security:spring-security-oauth2-client'
 
 
+	// json
+	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.h2database:h2'
