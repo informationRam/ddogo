@@ -40,7 +40,8 @@
                         사용자ID 또는 비밀번호를 확인해주세요.
                     </div>
                 </div>
-                <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/pwdsearchfrom}">Forgot your password?</a>
+                <!--네비바 통일을 위한 css조정-->
+                <a class="nav-link" style="margin:15px 0;" sec:authorize="isAnonymous()" th:href="@{/user/pwdsearchfrom}">Forgot your password?</a>
                 <button type="submit">Sign In</button>
             </form>
         </div>
