@@ -13,12 +13,16 @@
                 <input type="email" th:field="*{email}" placeholder="ex)eeee@naver.com">
                 <!-- 성별 -->
                 <div class="gender-container">
-                    <input type="radio" th:field="*{gender}" value="M" id="genderMale" autocomplete="off">
-                    <label for="genderMale">남</label>
-                    <input type="radio" th:field="*{gender}" value="F" id="genderFemale" autocomplete="off">
-                    <label for="genderFemale">여</label>
+                    <div class="radio-group">
+                        <input type="radio" class="btn-check" th:field="*{gender}" value="M" id="genderMale" autocomplete="off">
+                        <label class="btn btn-light" for="genderMale" style="width: 131px;">남자</label>
+                    </div>
+                    <div class="radio-group">
+                        <input type="radio" class="btn-check" th:field="*{gender}" value="F" id="genderFemale" autocomplete="off">
+                        <label class="btn btn-light" for="genderFemale" style="width: 131px;">여자</label>
+                    </div>
                 </div>
-                <!-- 생년 -->
+                <!-- 생일 -->
                 <input type="date" th:field="*{birth}" th:format="'yyyy-MM-dd'">
                 <input type="password" th:field="*{pwd1}" placeholder="비밀번호">
                 <input type="password" th:field="*{pwd2}" placeholder="비밀번호확인">
@@ -28,7 +32,7 @@
         <!-- 로그인 -->
         <div class="form-container sign-in-container">
             <form id="login" class="my-2" th:object="${loginVaildation}" th:action="@{/user/login}" method="post">
-                <h1>Sign in</h1>
+                <h1>Log in</h1>
                 <span>or use your account</span>
                 <!-- Id 입력 -->
                 <input type="text" name="user_id" id="user_id" placeholder="아이디">
@@ -40,9 +44,8 @@
                         사용자ID 또는 비밀번호를 확인해주세요.
                     </div>
                 </div>
-                <!--네비바 통일을 위한 css조정-->
-                <a class="nav-link" style="margin:15px 0;" sec:authorize="isAnonymous()" th:href="@{/user/pwdsearchfrom}">Forgot your password?</a>
-                <button type="submit">Sign In</button>
+                <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/pwdsearchfrom}">Forgot your password?</a>
+                <button type="submit">Log in</button>
             </form>
         </div>
         <div class="overlay-container">
@@ -50,7 +53,7 @@
                 <div class="overlay-panel overlay-left">
                     <h1>Welcome!</h1>
                     <p>To keep connected with us please login with your personal info</p>
-                    <button class="ghost" id="signIn">Sign In</button>
+                    <button class="ghost" id="signIn">Log in</button>
                 </div>
                 <div class="overlay-panel overlay-right">
                     <h1>Hello, Friend!</h1>
@@ -60,50 +63,10 @@
             </div>
         </div>
     </div>
-
-    <!--<div class="container my-5" style="width: 524px;">
-        <div class="border p-4">
-            <div class="my-3">
-                <div class="d-flex justify-content-center align-items-center flex-column">
-                    <img src="/image/logo.png" class="img-fluid" style="margin-bottom:50px;">
-                    <form id="login" class="my-2" th:object="${loginVaildation}" th:action="@{/user/login}" method="post">
-
-                        &lt;!&ndash; 1. 아이디 &ndash;&gt;
-                        <div class="mb-4">
-                            <input type="text" name="user_id" id="user_id" class="form-control form-control-lg" placeholder="아이디">
-                        </div>
-                        &lt;!&ndash; 2. 비밀번호 &ndash;&gt;
-                        <div class="mb-4">
-                            <input type="password" name="pwd" id="pwd" class="form-control form-control-lg" placeholder="비밀번호">
-                        </div>
-                        &lt;!&ndash; 오류시 보여주는 문구 &ndash;&gt;
-                        <div th:if="${param.error}">
-                            <div class="alert alert-danger">
-                                사용자ID 또는 비밀번호를 확인해주세요.
-                            </div>
-                        </div>
-                        <div class="container">
-                            <div class="row align-items-end">
-                                <div class="mb-4">
-                                    <div class="d-flex justify-content-between mb-4">
-                                        <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/searchidform}">아이디찾기</a>
-                                        <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/pwdsearchfrom}">비밀번호찾기</a>
-                                        <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/joinForm}">회원가입</a>
-                                    </div>
-                                </div>
-                            </div>
-                        <div class="d-grid gap-2 col-6 mx-auto" >
-                            <button type="submit" class="btn btn-outline-danger btn-lg"  style="margin-top:100px;">로그인</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
--->
+    <script src="/js/user/join.css"/>
 </div>
 <script layout:fragment="script">
-    const signUpButton = document.getElementById('signUp');
+const signUpButton = document.getElementById('signUp');
 const signInButton = document.getElementById('signIn');
 const container = document.getElementById('container');
 
@@ -116,9 +79,5 @@ signInButton.addEventListener('click', () => {
   container.classList.remove("right-panel-active");
 
 });
-
-
-
 </script>
-
 </html>
