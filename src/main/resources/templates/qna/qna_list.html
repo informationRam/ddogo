@@ -1,5 +1,6 @@
-<html layout:decorate="~{layout_for_main_notice_qna}" xmlns:th="http://www.thymeleaf.org">
-<div layout:fragment="content" class="container my-3">
+<html xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{|${userId == 'admin' ? 'qna/qnabar' : 'layout_for_main_notice_qna'}|}">
+<div layout:fragment="content" th:class="${userId == 'admin'} ? '' : 'container my-5'">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" />
     <link rel="stylesheet" href="/css/admin/ddostyle.css" />
