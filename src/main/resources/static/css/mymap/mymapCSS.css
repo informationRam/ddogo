@@ -43,6 +43,34 @@
     font-size: 20px; /* 원하는 폰트 크기로 설정합니다. */
     font-weight: bold; /* 원하는 폰트 굵기로 설정합니다. */
 }
+
+.card {
+    transition: box-shadow 0.3s, transform 0.3s;
+    transform: scale(1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.card:hover {
+    transform: scale(1.05); /* 마우스 오버 시 크기 확대 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
+    cursor: pointer; /* 마우스 커서를 포인터로 변경 */
+}
+
+
 .modal{
  display: none;
+}
+
+
+@font-face {
+    font-family: 'MalangMalangR'; /* 폰트 패밀리 이름 설정 */
+    src: url('/css/mymap/MALANGMALANGR.TTF') format('truetype'); /* 폰트 파일 경로 설정 */
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* 모든 HTML 요소에 폰트를 적용합니다. */
+html, body, p, h1, h2, h3, h4, h5, h6, a, span, div, /* 필요한 모든 요소를 나열하세요 */
+{
+    font-family: 'MalangMalangR', sans-serif; /* 폰트 패밀리 이름 설정 */
 }

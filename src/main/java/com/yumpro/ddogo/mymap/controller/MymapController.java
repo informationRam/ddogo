@@ -8,7 +8,6 @@ import com.yumpro.ddogo.mymap.domain.ReviewUpdateDTO;
 import com.yumpro.ddogo.mymap.service.MymapService;
 import com.yumpro.ddogo.mymap.service.ReviewService;
 import com.yumpro.ddogo.user.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -143,12 +142,6 @@ public class MymapController {
             }
         }
 
-/*    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleException(Exception e) {
-        e.printStackTrace(); // 예외 스택 트레이스를 출력
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("업데이트 중 오류가 발생했습니다.");
-    }*/
-
     //회원 맛집 목록 삭제
     @GetMapping("/delete/{mapNo}")
     public String deleteHotplList(@PathVariable("mapNo") Integer mapNo,
@@ -162,41 +155,38 @@ public class MymapController {
     }
 
 
-    //ajax용 페이지네이션
-    @GetMapping("/api/{user_id}")
-    @ResponseBody
-    public Page<MyMapDTO> myMapHotplListApi(
-            @PathVariable("user_id") String user_id,
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "4") int size,
-            Principal principal) {
-        User loginUser = userService.getUser(principal.getName());
-        int userNo = loginUser.getUser_no();
+//    //ajax용 페이지네이션
+//    @GetMapping("/api/{user_id}/{pageNo}")
+//    @ResponseBody
+//    public Page<MyMapDTO> myMapHotplListApi(
+//            @PathVariable("user_id") String user_id,
+//            @PathVariable("pageNo") int pageNo, // 파라미터 이름 수정
+//            @RequestParam(defaultValue = "4") int size,
+//            Principal principal) {
+//        User loginUser = userService.getUser(principal.getName());
+//        int userNo = loginUser.getUser_no();
+//
+//        // 페이지네이션을 위해 Pageable 객체 생성
+//        Pageable pageable = PageRequest.of(pageNo - 1, size); // 페이지는 0부터 시작하므로 -1
+//
+//        return myMapService.getHotplacesByUserNo(userNo, pageable);
+//    }
 
-        // 페이지네이션을 위해 Pageable 객체 생성
-        Pageable pageable = PageRequest.of(page - 1, size); // 페이지는 0부터 시작하므로 -1
-
-        return myMapService.getHotplacesByUserNo(userNo, pageable);
-    }
 
 
-
-    // 맛집목록, 페이지네이션, json 데이터 반환 => ajax로 페이징 분리할예정
+    // 회원별 맛집 목록 & 지도를 보여줄 페이지 및 JSON 데이터를 반환
     @GetMapping("/{user_id}")
     public ModelAndView showUserMyMap(
             @PathVariable("user_id") String user_id,
             @RequestParam(defaultValue="1") int page, // 기본 페이지 1
             @RequestParam(defaultValue="3") int size, // 페이지당 카드 수 4
-            Model model, Principal principal, HttpServletRequest request) {
+            Model model, Principal principal) {
 
         User loginUser = userService.getUser(principal.getName());
         int userNo = loginUser.getUser_no();
 
         if (!"admin".equals(principal.getName()) && !user_id.equals(principal.getName())) {
-            // 권한이 없는 사용자를 로그인 페이지로 리다이렉트
-            String referer = request.getHeader("index"); //이전페이지로 되돌리기
-            return new ModelAndView("redirect:/user/login");
-         //  throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 사용자의 맛집지도에 접근할 권한이 없습니다");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 사용자의 맛집지도에 접근할 권한이 없습니다");
         }
 
         // 페이지네이션을 위해 Pageable 객체 생성
@@ -211,7 +201,6 @@ public class MymapController {
         modelAndView.addObject("hotplList", hotplPage.getContent()); // 현재 페이지의 데이터만 추가
         modelAndView.addObject("totalPages", hotplPage.getTotalPages()); // 전체 페이지 수 추가
         modelAndView.addObject("currentPage", page); // 현재 페이지 번호 추가
-
 
         return modelAndView;
     }

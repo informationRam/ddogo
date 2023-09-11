@@ -21,106 +21,103 @@ document.addEventListener("DOMContentLoaded", function () {
                             });
                         }
                     }
-//          // 모든 카드를 숨깁니다.
-//          var cards = document.querySelectorAll('.card');
-//          cards.forEach(function (card) {
-//              card.style.display = 'none';
-//          });
-//
-//          // 선택한 카테고리에 해당하는 카드만 보여줍니다.
-//          var filteredCards = document.querySelectorAll('.card[data-cate-no="' + category + '"]');
-//          filteredCards.forEach(function (card) {
-//              card.style.display = 'block';
-//          });
-//        }
 
+    });
 
   //      <!-- 맛집 카드 삭제 -->
 
-            const deleteButtons = document.querySelectorAll('.btn-delete');
+        const deleteButtons = document.querySelectorAll('.btn-delete');
 
-            deleteButtons.forEach(function(button) {
-                button.addEventListener('click', function() {
-                    if (confirm('정말로 삭제할까요?')) {
-                        const mapId = this.getAttribute('data-map-id');
-                        window.location.href = '/mymap/delete/' + mapId;
-                    }
-                });
+        deleteButtons.forEach(function(button) {
+            button.addEventListener('click', function() {
+                if (confirm('정말로 삭제할까요?')) {
+                    const mapId = this.getAttribute('data-map-id');
+                    window.location.href = '/mymap/delete/' + mapId;
+                }
             });
+        });
 
- // 페이지 버튼 클릭 이벤트 리스너
+// 검색어 입력 필드와 검색 버튼을 가져옵니다
+var searchInput = document.getElementById('searchInput');
+var searchButton = document.querySelector('.btn-danger');
 
-//    // 페이지 로딩 시 초기 페이지 로딩
-//    window.addEventListener('load', function () {
-//        loadPage(1);
+// 검색 버튼 클릭 시 검색 함수 호출
+searchButton.addEventListener('click', search);
+
+// 검색어 입력 필드에서 Enter 키 입력 시 검색 함수 호출
+searchInput.addEventListener('keydown', function (event) {
+    if (event.key === 'Enter') {
+        search();
+    }
+});
+
+function search() {
+    // 입력된 검색어 가져오기
+    var searchText = document.getElementById('searchInput').value.trim().toLowerCase();
+
+    // 모든 카드 요소 가져오기
+    var cards = document.querySelectorAll('.card');
+
+    // 카드를 순회하면서 검색어와 일치하는 카드 표시/숨김 설정
+    cards.forEach(function (card) {
+        var shouldDisplay = false;
+
+        // 검색 대상 요소의 클래스 목록
+        var targetClasses = ['hotplaceName', 'sido', 'gugun', 'review', 'address'];
+
+        // 검색 대상 요소 순회
+        for (var i = 0; i < targetClasses.length; i++) {
+            var targetClass = targetClasses[i];
+            var targetElement = card.querySelector('.' + targetClass);
+
+            if (targetElement) {
+                var targetText = targetElement.textContent.toLowerCase();
+                if (targetText.includes(searchText)) {
+                    shouldDisplay = true;
+                    break; // 검색에 성공하면 더 이상 검사하지 않고 종료
+                }
+            }
+        }
+
+        // 검색어와 일치하는 부분이 하나라도 있으면 카드 표시
+        if (shouldDisplay) {
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+
+
+
+
+
+
+
+
+//        // 각 카드의 속성 가져오기
+//        var title = card.querySelector('#hotplaceName').textContent.toLowerCase();
+//        var sido = card.querySelector('#sido').value.toLowerCase();
+//        var gugun = card.querySelector('#gugun').value.toLowerCase();
+//        var review = card.querySelector('#review').value.toLowerCase();
+//        var address = card.querySelector('#address').value.toLowerCase();
+//
+//        // 검색어와 일치하는 부분이 하나라도 있으면 카드 표시
+//        if (
+//            title.includes(searchText) ||
+//            sido.includes(searchText) ||
+//            gugun.includes(searchText) ||
+//            review.includes(searchText) ||
+//            address.includes(searchText) ||
+//            hotplaceCateNo.includes(searchText)
+//        ) {
+//            card.style.display = 'block';
+//        } else {
+//            card.style.display = 'none';
+//        }
 //    });
-
-
-    window.loadPage= function (element) {
-         // 페이지 번호와 userId 가져오기
-         const userIdInput = document.getElementById('userId');
-         const userId = userIdInput.value;
-         const clickedPageNo  = element.getAttribute('data-page');
-         const dynamicUrl = `/mymap/api/${userId}?page=${clickedPageNo}`;
-
-         // XMLHttpRequest 객체 생성
-         const xhr = new XMLHttpRequest();
-
-         // AJAX 요청 설정 (URL 변경)
-         xhr.open('GET', dynamicUrl, true);
-
-         // AJAX 요청 처리
-         xhr.onreadystatechange = function () {
-             if (xhr.readyState === 4 && xhr.status === 200) {
-                 // 응답 데이터를 사용하여 페이지 업데이트
-                 const listContainer = document.getElementById('listContainer');
-                 listContainer.innerHTML = '';
-
-                 // JSON 데이터 파싱
-                 const responseData = JSON.parse(xhr.responseText);
-
-                 // 카드 HTML 생성 및 초기화
-                 let cardHtml = '';
-
-                 // responseData에서 카드 데이터 추출
-                 responseData.forEach(function (myhotpl) {
-cardHtml += `<div class="card my-2" data-cate-no={{myhotpl.hotplaceCateNo}}>
-                         <div class="card-body" >
-                             <input type="hidden" id="lat" th:value="${myhotpl.lat}" />
-                             <input type="hidden" id="lng" th:value="${myhotpl.lng}" />
-                             <!--<h6 class="card-subtitle mb-2 text-muted" th:text="$${myhotpl.hotplaceName}"></h6>-->
-                             <h5 class="card-title" th:text="${myhotpl.hotplaceName}"></h5>
-                             <p class="card-text" th:text="${myhotpl.address}"></p>
-
-                            <div class="square">
-                                 <p th:text="${myhotpl.avgEmoResult != null ? myhotpl.avgEmoResult.toString() : ''}"></p>
-                             </div>
-
-                             <div class="justify-content-end">
-
-                                 <a th:href="@{'/mymap/delete/'+${myhotpl.mapNo}}" class="btn btn-outline-secondary btn-sm btn-delete"
-                                    data-toggle="modal" data-target="#deleteModal"
-                                    th:attr="data-map-id=${myhotpl.mapNo}" onclick="return false;">삭제</a>
-
-                                 <button type="button" class="btn btn-outline-success btn-sm btn-update-review"
-                                         data-bs-toggle="modal" data-bs-target="#myModal"
-                                         th:attr="data-review-no=${myhotpl.mapNo}" > 내 후기 수정</button>
-                                 <i class="bi bi-bookmark-heart-fill"></i>
-                             </div>
-                         </div>
-                     </div>`;
-                });
-
-                 // 카드 HTML을 추가
-                listContainer.innerHTML = cardHtml;
-             }
-         };
-
-         // AJAX 요청 보내기
-         xhr.send();
-    }; //pagination끝
+//}
 
 
 
 
-}); // 페이지끝
