@@ -65,10 +65,10 @@ function search() {
         var shouldDisplay = false;
 
         // 카드에서 음식점 이름과 주소 가져오기
-        var hotplaceNameElement = card.querySelector('.hotplaceName');
-        var addressElement = card.querySelector('.address');
+        var hotplaceNameElement = card.querySelector('.card-title strong');
+        var addressElement = card.querySelector('.card-body .address');
 
-        if (hotplaceNameElement) {
+        if (hotplaceNameElement && addressElement) {
             var hotplaceName = hotplaceNameElement.textContent.toLowerCase();
             var address = addressElement.textContent.toLowerCase();
 
@@ -86,7 +86,6 @@ function search() {
         }
     });
 }
-
 
 
 

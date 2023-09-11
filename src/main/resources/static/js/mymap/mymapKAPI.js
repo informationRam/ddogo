@@ -1,3 +1,5 @@
+//지도생성, 현위치, 카드클릭.js
+
 var hotplList = []; // 마커 데이터를 저장할 배열
 var markerList = []; // 마커 객체를 저장할 배열
 var map; // 전역으로 map 변수를 선언
@@ -91,26 +93,6 @@ document.addEventListener("DOMContentLoaded", function () {
             };
             xhr.send();
         }
-
-
-//    // 함수로 Ajax 요청 분리
-//    function loadHotplList(userId) {
-//        var xhr = new XMLHttpRequest();
-//        xhr.open('GET', '/mymap/hotplaces/' + userId, true);
-//        xhr.onload = function () {
-//            if (xhr.status === 200) {
-//                hotplList = JSON.parse(xhr.responseText);
-//                console.log(hotplList);
-//                displayMarkers();
-//            } else {
-//                console.error('Error fetching data: ' + xhr.status);
-//            }
-//        };
-//        xhr.onerror = function () {
-//            console.error('Request failed');
-//        };
-//        xhr.send();
-//    }
 
 
     // 페이지가 로드될 때 gps_check 함수 자동 호출

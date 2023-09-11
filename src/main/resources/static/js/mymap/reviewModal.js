@@ -166,7 +166,7 @@ document.addEventListener("DOMContentLoaded", function () {
          console.log(jsonData);
    } //submitForm끝
 
-   /*     // 모달 닫기 시 백드롭 제거
+     // 모달 닫기 시 백드롭 제거
         document.getElementById('myModal').addEventListener('hidden.bs.modal', function () {
             // 현재 모달의 백드롭 제거
             var modalBackdrop = document.querySelector('.modal-backdrop');
@@ -176,7 +176,8 @@ document.addEventListener("DOMContentLoaded", function () {
             // 모달을 닫기 위한 추가 코드
             var myModal = new bootstrap.Modal(document.getElementById('myModal'));
             myModal.hide();
-        });*/
+        });
+
 
 
  });

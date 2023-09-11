@@ -67,7 +67,7 @@
                   <!-- 감정결과 박스 -->
                   <div class="emoResult" style="margin: 5px; background-color: #f3c8c8; text-align: center; padding: 5px;">
                     <strong>평균 후기 온도</strong>
-                      <p th:text="${myhotpl.avgEmoResult != null ? myhotpl.avgEmoResult.toString() : ''}" style="margin: 0;"></p>
+                      <p th:text="${myhotpl.avgEmoResult != null ? myhotpl.avgEmoResult.toString()+ ' &#47;100&#8451;' : ''}" style="margin: 0;"></p>
                   </div>
 
                   <div class="justify-content-end">
