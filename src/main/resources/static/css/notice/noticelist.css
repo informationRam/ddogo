@@ -2,13 +2,30 @@
 .notice.no, .notice.title, .notice.date {
     background-color: white;
 }
-/* 페이지네이션 색상을 red로 변경 */
-.my.pagination > .active > a,
-.my.pagination > .active > span,
-.my.pagination > .active > a:hover,
-.my.pagination > .active > span:hover,
-.my.pagination > .active > a:focus,
-.my.pagination > .active > span:focus {
-  background: red;
-  border-color: red;
+
+/* 페이지네이션 비활성화된 링크 텍스트 색상을 블랙으로 설정 */
+.pagination .page-item.disabled .page-link {
+    color: black;
 }
+
+/* 페이지네이션 활성화된 링크 배경 색상을 빨간색으로 설정 */
+.pagination .page-item.active .page-link {
+    background-color: red;
+    border-color: red;
+    color: white; /* 텍스트 색상을 흰색으로 변경 */
+}
+
+/* 페이지네이션 호버 상태 배경 색상을 빨간색으로 설정 */
+.pagination .page-item:hover .page-link {
+    background-color: red;
+    border-color: red;
+    color: white; /* 텍스트 색상을 흰색으로 변경 */
+}
+
+
+
+
+  a {
+    text-decoration: none; /* 밑줄 제거 */
+    color: black; /* 글자 색상을 블랙으로 설정 */
+  }
