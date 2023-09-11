@@ -354,7 +354,7 @@ document.addEventListener("DOMContentLoaded", function () {
             formData.append("hotplace_cate_no", selectedCategory);
 
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", "http://172.30.1.40/main", true);
+            xhr.open("GET", "http://172.30.1.40/main", true);
             xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
 
             xhr.onload = function () {
