@@ -20,6 +20,8 @@
     <input type="hidden" th:name="notiNo" th:value="${notiNo}" />
     <div class="text-center my-2">
       <input type="submit" value="수정하기" class="btn btn-outline-danger"/>
+      <!--목록보기(이전페이지)-->
+      <a href="/notice/list" th:href="@{/notice/list}" class="btn btn btn-outline-warning" style="text-decoration:none;">목록보기</a>
     </div>
   </form>
 </div>
