@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         console.log(savedReviewInfo); // 데이터 확인을 위한 로그
                         if (savedReviewInfo != null) {
                          // 모달 데이터 표시
-                            document.getElementById('review').value = savedReviewInfo.review;
+                            document.getElementById('modalReview').value = savedReviewInfo.review;
                             document.getElementById('memo').value = savedReviewInfo.memo;
 
                             document.getElementById('hotplaceNo').value = hotplaceNo; // hotplaceNo input에 값 설정
@@ -88,7 +88,7 @@ document.addEventListener("DOMContentLoaded", function () {
           var formData = new FormData(form);
 
         // Review 필드의 값을 가져옵니다.
-            var review = document.getElementById('review').value;
+            var review = document.getElementById('modalReview').value;
 
          // Review 필드가 비어 있는지 확인합니다.
          if (review.trim() === '') {
