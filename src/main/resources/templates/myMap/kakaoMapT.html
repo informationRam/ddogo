@@ -3,9 +3,10 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="/css/mymap/mymapCSS.css" th:href="@{/css/mymap/mymapCSS.css}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=820d01b1cce59185ed776419691dab39&libraries=services"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/924c10682d.js" crossorigin="anonymous"></script>
 </head>
 <body>
@@ -18,8 +19,8 @@
         </div>
           <!-- 맛집 검색창 -->
           <div class="input-group my-3">
-              <input type="text" class="form-control" placeholder="맛집 검색" id="searchInput">
-              <button class="btn btn-danger" onclick="search()">검색</button>
+              <input type="text" class="form-control" placeholder="지역명 또는 가게명" id="searchInput">
+              <button class="btn btn-danger" id="searchButton">검색</button>
           </div>
 
           <!-- 카테고리 버튼 -->
@@ -46,6 +47,7 @@
                   <input type="hidden" id="gugun" th:value="${myhotpl.gugun}" />
                   <input type="hidden" id="review" th:value="${myhotpl.review}" />
                   <input type="hidden" id="address" th:value="${myhotpl.address}" />
+                  <input type="hidden" id="myHotplace" th:value="${myhotpl.hotplaceName}" />
 
                   <!--<h6 class="card-subtitle mb-2 text-muted" th:text="$${myhotpl.hotplaceName}"></h6>-->
                   <div style="display: flex; align-items: center;">
@@ -108,7 +110,7 @@
                             <div class="mb-3">
                                 <label for="review" class="form-label">REVIEW</label>
                                 <div id="error1"></div>
-                                <textarea class="form-control" id="review" name="review" rows="6"></textarea>
+                                <textarea class="form-control" id="modalReview" name="review" rows="6"></textarea>
                                 <!-- 필수입력 검사 -->
                                 <div id="review-error" class="text-danger"></div>
                             </div>
@@ -135,7 +137,7 @@
                             </div>
                             <!-- 모달 푸터 -->
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-primary"  onclick="submitForm()">저장</button>
+                                <button type="button" class="btn btn-danger"  onclick="submitForm()">저장</button>
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
                             </div>
                         </form>
@@ -196,7 +198,8 @@
                 <!-- 지도를 표시할 div -->
                 <input type="hidden" id="userIdContainer" th:attr="data-user-id=${user.userId}">
                 <button id="gpsBtn" class="btn btn-danger mb-2"> 내 주변보기</button>
-
+                <button class="btn btn-outline-danger"><a href="#">내 정보 수정</a></button>
+                <!--<button><a href="/modifyForm/${user.user_id}" th:href="@{|/modifyForm/${user.user_id}|}">내 정보 수정</a></button>-->
                 <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
 
             </div>
@@ -216,8 +219,8 @@
 
 </script>
 <script src="/js/mymap/mymapKAPI.js"></script>
-<!--<script src="/js/mymap/hotplPaging.js" th:src="@{/js/mymap/hotplPaging.js}"></script>-->
 <script src="/js/mymap/reviewModal.js" th:src="@{/js/mymap/reviewModal.js}"></script>
+<!--<script src="/js/mymap/hotplPaging.js" th:src="@{/js/mymap/hotplPaging.js}"></script>-->
 
 
 

@@ -179,7 +179,7 @@ public class MymapController {
     public ModelAndView showUserMyMap(
             @PathVariable("user_id") String user_id,
             @RequestParam(defaultValue="1") int page, // 기본 페이지 1
-            @RequestParam(defaultValue="3") int size, // 페이지당 카드 수 4
+            @RequestParam(defaultValue="4") int size, // 페이지당 카드 수 4
             Model model, Principal principal) {
 
         User loginUser = userService.getUser(principal.getName());
