@@ -1,0 +1,83 @@
+.btn-ddo {
+  color: #fff;
+  background-color: #FF0841;
+  border-color: #FF0841;
+  padding: 7px 14px;
+  font-size: 14px;
+  border-radius: 3px;
+  float: right;
+  border-radius:6px;
+}
+.btn-ddo:hover {
+  color: #fff;
+  background-color: #df1040;
+  border-color: #df1040;
+}
+.btn-check:focus + .btn-ddo, .btn-ddo:focus {
+  color: #fff;
+  background-color: #df1040;
+  border-color: #df1040;
+  box-shadow: 0 0 0 0.25rem #ff426e81;
+}
+.btn-check:checked + .btn-ddo, .btn-check:active + .btn-ddo, .btn-ddo:active, .btn-ddo.active, .show > .btn-ddo.dropdown-toggle {
+  color: #fff;
+  background-color: #df1040;
+  border-color: #df1040;
+}
+.btn-check:checked + .btn-ddo:focus, .btn-check:active + .btn-ddo:focus, .btn-ddo:active:focus, .btn-ddo.active:focus, .show > .btn-ddo.dropdown-toggle:focus {
+  box-shadow: 0 0 0 0.25rem #ff426e81;
+}
+
+.btn-ddo:disabled{
+    color:#fff;background-color:#6c757d;border-color:#6c757d
+    }
+
+.bd-red{border-color: #FF0841; background-color:#fff;}
+.bd-yellow{border-color: #ffc107; background-color:#fff;}
+.bd-green{border-color: #39A998; background-color:#fff;}
+.bd-blue {border-color: #0A74DA; background-color: #fff;}
+
+.right-ddo {
+    text-align: right;
+}
+
+.ddo-a {
+text-decoration: none;
+}
+
+.ddo-search{
+max-width: 500px;
+}
+
+.ddo-small-text{
+     font-size: 12px;
+     color: #D3D3D3;
+     font-style: italic;
+}
+
+.ddo-right{
+  float: right;
+}
+
+
+.ddo-icon-class {
+    text-decoration: none;
+    color: gray;
+}
+
+.ddo-icon-class :hover, .your-icon-class :focus {
+    color: black;
+}
+
+.ddo-error-text{
+    color: #FF0841;
+    font-weight: bold;
+    margin: 5px 0;
+    font-size: 11px;
+    display: block;
+}
+
+.ddo-bg {
+    background-color: #FF0841 !important;
+    color: #fff !important;
+}

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>커스텀오버레이 만들기</title>
+    <style>
+        /* CSS 스타일 추가 */
+        .co-wrap {
+            position: relative;
+            padding: 10px;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            max-width: 375px; /* 말풍선 최대 너비 설정 */
+        }
+
+        .co-close {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: transparent;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #888;
+        }
+        .co-close:before {
+            content: "✖";
+            font-size: 12px;
+        }
+        .co-content {
+            padding-left: 10px;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .co-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0 10 10 0;
+        }
+
+        .co-body {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start; /* 위쪽 정렬로 변경 */
+            margin-top: 10px;
+        }
+
+        .co-desc {
+            flex: 1;
+            padding-right: 10px; /* 오른쪽 패딩 추가 */
+        }
+        .co-desc .ellipsis {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            margin-bottom: 5px;
+        }
+
+        .jibun .ellipsis {
+            font-size: 11px;
+            color: #888;
+            margin-top: -2px;
+        }
+
+        .phone .ellipsis {
+            color: olive;
+        }
+
+        .co-button {
+            width: 45px;
+            text-align: right;
+        }
+        .co-desc .link {
+            color: #5085BB;
+            text-decoration:none;
+        }
+
+    </style>
+</head>
+<body>
+'<div class="co-wrap">'+
+    '<button id="closeButton" class="co-close"></button>'+
+    '<div class="co-content">'+
+        '<span class="badge bd-bg-warning">'+places.category_group_code+'</span>'+
+        '<div class="co-title">'+
+            places.place_name+
+        '</div>'+
+        '<div class="co-body my-2">'+
+            '<div class="co-desc">'+
+                '<div class="ellipsis">'+places.road_address_name+'</div>'+
+                '<div class="jibun ellipsis">'+places.address_name+'</div>'+
+                '<div class="phone ellipsis">'+places.phone+'</div>'+
+                '<a href="'+places.place_url+'" target="_blank" class="link">상세보기</a>'+
+            '</div>'+
+            '<div class="co-button" style="vertical-align:middle;">'+
+                '<button type="button" data-bs-toggle="modal" data-bs-target="#myModal" class="btn btn-lg btn-primary">또갈지도?</button>'+
+            '</div>'+
+        '</div>'+
+    '</div>'+
+'</div>'
+</body>
+</html>

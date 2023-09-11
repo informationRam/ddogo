@@ -1,18 +1,26 @@
 package com.yumpro.ddogo.user.service;
 
-import com.yumpro.ddogo.user.DTO.UserDTO;
 import com.yumpro.ddogo.common.entity.User;
+import com.yumpro.ddogo.mail.service.EmailService;
+import com.yumpro.ddogo.user.DTO.KakaoProfile;
+import com.yumpro.ddogo.user.DTO.RoleType;
+import com.yumpro.ddogo.user.DTO.UserDTO;
 import com.yumpro.ddogo.user.reprository.UserRepository;
 import com.yumpro.ddogo.user.validation.UserCreateForm;
 
 import com.yumpro.ddogo.user.validation.UserModifyForm;
+import jakarta.validation.constraints.Email;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.json.ParseException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +28,8 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder PasswordEncoder;
+    private final EmailService emailService;
+
 
    /* public User findUserByUserNo(int userNo) {
         // 회원 번호로 사용자를 검색
@@ -49,7 +59,7 @@ public class UserService {
         return emailDuplicate;
     }
 
-    // 회원 가입시 이메일 중복 여부 확인
+    // 회원 가입시 이메일 중복 여부 확인 or id 찾기에 사용
     @Transactional(readOnly = true)
     public boolean checkEmailDuplication(String email) {
         System.out.println("서비스들어옴");
@@ -57,12 +67,6 @@ public class UserService {
         return emailDuplicate;
     }
 
-    @Transactional(readOnly = true)
-    public boolean checkEmailDuplication2(String email) {
-        System.out.println("서비스들어옴");
-        boolean emailDuplicate = userRepository.existsByEmail(email);
-        return emailDuplicate;
-    }
 
     //정보 수정시 사용
     @Transactional(readOnly = true)
@@ -87,24 +91,36 @@ public class UserService {
     }
 
 //비밀번호찾기 - id && email값 동시에 일치하는 회원이 있는지
-    public boolean pwdsearch(UserDTO userDTO){
-        boolean result = false;
+    public boolean pwdsearch(String user_id,String email){
         System.out.println("pwdsearch 서비스옴!");
-        System.out.println("userDTO.getUser_id() :"+ userDTO.getUser_id());
-        System.out.println(" userDTO.getEmail() :"+  userDTO.getEmail());
-        Optional<User> byUserIdAndEmail = userRepository.findByUserIdAndEmail(userDTO.getUser_id(), userDTO.getEmail());
-        if(byUserIdAndEmail.isPresent()){
-            return result;
+        Optional<User> byUserIdAndEmail = userRepository.findByUserIdAndEmail(user_id,email);
+        System.out.println("user_id: "+user_id);
+        System.out.println("email: "+email);
+        System.out.println("byUserIdAndEmail.isEmpty()?"+byUserIdAndEmail.isEmpty());
+        if(byUserIdAndEmail.isEmpty()){   //값이 비어있다면
+            return true;
         }else {
-            result = true;
-            return result;
+            return false;
         }
     }
 
     //아이디값 넣어서 회원정보 가져오기
     public User getUser(String user_id){
+        System.out.println("getUser진입");
         Optional<User> user = userRepository.findByUserId(user_id);
-        return user.get();
+        if (user.isPresent()) {
+            return user.get();
+        }
+        return null;
+    }
+
+//이메일 넣어 회원정보 찾기
+    public User getUser2(String email) {
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isPresent()) {
+            return user.get();
+        }
+        return null;
     }
 
     // 비번 변경
@@ -185,4 +201,53 @@ public class UserService {
         userModifyForm.setPwd2(pwd2);
         return userModifyForm;
     }
+
+    // ———— ------------------------ 카카오 서비스
+/*
+
+    //kakao회원가입처리
+    public void kakaoJoin(KakaoProfile kakaoProfile) throws ParseException, java.text.ParseException {
+        System.out.println("kakaouserjoin서비스진입!");
+        User user = new User();
+        //받아오지 못한 기본값들 세팅
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date defaultBirthDate = dateFormat.parse("9999-01-01");
+
+        // 랜덤 아이디 생성
+        String randomID = null;
+        boolean isUniqueId = false;
+
+        while (!isUniqueId) {
+            randomID = emailService.generateRandomID(); //랜덤 아이디 중복 없을때 저장
+            isUniqueId = !checkUserIdDuplication(randomID);
+        }
+
+        String gender = kakaoProfile.getKakaoAccount().getGender();
+        System.out.println("gender:" +gender);
+        // 성별 받아온 값 첫자리 F,M 으로 출력하기 -> 에러는 E로 저장
+        if (gender != null && !gender.isEmpty()) {
+            String firstCharacter = String.valueOf(gender.charAt(0));
+            System.out.println("firstCharacter : "+firstCharacter);
+            if (firstCharacter.equalsIgnoreCase("f")) {
+                user.setGender("F");
+            } else if (firstCharacter.equalsIgnoreCase("m")) {
+                user.setGender("M");
+            } else {
+                user.setGender("E"); // 에러
+            }
+        } else {
+            user.setGender("E"); // 에러
+        }
+
+        UUID uuid = UUID.randomUUID();
+        user.setUser_name(randomID);
+        user.setUserId(randomID);
+        user.setBirth(defaultBirthDate);    //'9999-01-01' 처리
+        user.setJoinDate(LocalDateTime.now());
+        user.setEmail(kakaoProfile.getKakaoAccount().getEmail());
+        user.setPwd(PasswordEncoder.encode(uuid.toString()));    //비밀번호도 랜덤으로 저장
+        userRepository.save(user);
+    }
+*/
+
 }

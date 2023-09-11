@@ -1,10 +1,13 @@
 package com.yumpro.ddogo.user.security;
 
+import com.yumpro.ddogo.user.security.auth.PrincipalDetail;
 import com.yumpro.ddogo.user.service.UserSecurityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,16 +15,21 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)//@PreAuthorize("isAuthenticated()")//로그인인증가 동작할 수 있기 위함
-public class SecurityConfig {
+public class SecurityConfig{
 
     @Autowired
     private UserSecurityService userSecurityService;
 
+/*
+    @Autowired
+    private CustomOAuth2UserService customOAuth2UserService;
+*/
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -31,14 +39,17 @@ public class SecurityConfig {
                 .authorizeHttpRequests();
         http.authorizeHttpRequests()
                 .requestMatchers(new AntPathRequestMatcher("/user/modifyForm/**")).authenticated()
-                .requestMatchers(new AntPathRequestMatcher("/manager/**")).hasAnyRole("MANAGER", "ADMIN")
                 .requestMatchers(new AntPathRequestMatcher("/admin/**")).hasRole("ADMIN")
+                .requestMatchers(new AntPathRequestMatcher("/user/joinForm")).denyAll() //로그인 후 회원가입접근불가
                 .anyRequest().permitAll()
                 .and().formLogin().
                 loginPage("/user/login").usernameParameter("user_id").passwordParameter("pwd").defaultSuccessUrl("/")
                 .and().logout().
                 logoutRequestMatcher(new AntPathRequestMatcher("/user/logout")).logoutSuccessUrl("/").invalidateHttpSession(true)
                 .and().exceptionHandling().accessDeniedPage("/common/ddoError")
+                .and()
+                .exceptionHandling()
+                .accessDeniedPage("/error/403") // 403 에러 페이지 설정
                 .and()
                 .exceptionHandling() // 예외 처리 설정을 추가합니다.
                 .accessDeniedPage("/common/ddoError.html"); // 403 에러 발생 시 커스텀 에러 페이지로 리디렉션합니다.
