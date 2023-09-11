@@ -1,8 +1,8 @@
 <html layout:decorate="~{layout_for_main_notice_qna}">
 <div layout:fragment="content" class="container my-3">
   <!-- 공지사항 제목 -->
-  <div class="text-center">
-    <h2 class="border-bottom py-2" th:text="${notice.notiTitle}"></h2>
+  <div >
+    <h4 class="border-bottom py-2" th:text="${notice.notiTitle}"></h4>
   </div>
   <!-- 내용 -->
   <div class="card my-3">
@@ -18,6 +18,8 @@
         <!-- 작성일 -->
         <div th:text="${#temporals.format(notice.notiDate,'yyyy-MM-dd HH:mm')}"/>
       </div>
+        <!--목록보기(이전페이지)-->
+        <button class="btn btn-sm btn-outline-warning" onclick="history.back()">목록보기</button>
         <!-- 공지사항수정: 관리자만 가능 -->
         <a th:href="@{|/notice/modify/${notice.notiNo}|}"
            class="btn btn-sm btn-outline-secondary"
@@ -46,3 +48,5 @@
   });
 
 </script>
+</div>
+</html>

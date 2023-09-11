@@ -1,7 +1,7 @@
 <html layout:decorate="~{layout_for_main_notice_qna}">
 <div layout:fragment="content" class="container my-3">
-  <link rel="stylesheet" href="/css/notice/noticelist.css" />
-  <h5 class="my-3 border-bottom pb-2">공지사항</h5>
+  <link rel="stylesheet" href="/css/notice/noticelist.css" th:href="@{/css/notice/noticelist.css}" />
+  <h1 class="text-center my-4" style="font-weight: bold;">공지사항</h1><br/>
   <table class="table table-danger">
     <thead class="table-danger">
     <tr>
@@ -30,20 +30,20 @@
   <!-- Pagination 부분 영역 시작 -->
   <div th:if="${noticePage != null && !noticePage.isEmpty()}">
    <!-- <ul class="pagination justify-content-center"> --><!-- 여기에 bg-danger 클래스 추가 -->
-    <ul class="pagination justify-content-center my">
-      <ul class="pagination my">
+    <ul class="pagination justify-content-center">
+      <ul class="qna-pagination">
       <!-- 이전 버튼 -->
-        <li class="page-item" th:classappend="${!noticePage.hasPrevious()} ? 'disabled'">
-          <a class="page-link" th:href="@{|?page=${noticePage.getNumber() - 1}|}"><span>이전</span></a>
+        <li class="qna-page-item" th:classappend="${!noticePage.hasPrevious()} ? 'disabled'">
+          <a class="qna-page-link" th:href="@{|?page=${noticePage.getNumber() - 1}|}"><span>이전</span></a>
         </li>
         <!-- 페이지 번호: 반복 + 연결 + bootstrap [0] [1] [2] [3~] [4] [5] [6] [7]~~[9] [10] [11] -->
-        <li class="page-item" th:each="page : ${#numbers.sequence(0, noticePage.getTotalPages() - 1)}"
+        <li class="qna-page-item" th:each="page : ${#numbers.sequence(0, noticePage.getTotalPages() - 1)}"
             th:if="${page >= noticePage.getNumber() - 3 and page <= noticePage.getNumber() + 3}" th:classappend="${page == noticePage.getNumber()} ? 'active'">
-          <a class="page-link bg-danger" th:href="@{|?page=${page}|}" th:text="${page + 1}"></a>
+          <a class="qna-page-link" th:href="@{|?page=${page}|}" th:text="${page + 1}"></a>
         </li>
         <!-- 다음 버튼 -->
-        <li class="page-item" th:classappend="${!noticePage.hasNext()} ? 'disabled'">
-          <a class="page-link" th:href="@{|?page=${noticePage.getNumber() + 1}|}"><span>다음</span></a>
+        <li class="qna-page-item" th:classappend="${!noticePage.hasNext()} ? 'disabled'">
+          <a class="qna-page-link" th:href="@{|?page=${noticePage.getNumber() + 1}|}"><span>다음</span></a>
         </li>
       </ul>
     </ul>
