@@ -31,7 +31,7 @@ public class UserService {
     private final EmailService emailService;
 
 
-   /* public User findUserByUserNo(int userNo) {
+/*    public User findUserByUserNo(int userNo) {
         // 회원 번호로 사용자를 검색
         return userRepository.findByUserNo(userNo);
     }*/

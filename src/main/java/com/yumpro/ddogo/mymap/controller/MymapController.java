@@ -34,7 +34,6 @@ public class MymapController {
     private final EmoService emoService;
 
 
-
     //mapNo로 모달에 기존 후기 보여주기
     @GetMapping("/getReview/{mapNo}")
     @ResponseBody
