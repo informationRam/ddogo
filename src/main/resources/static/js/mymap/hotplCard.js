@@ -21,106 +21,129 @@ document.addEventListener("DOMContentLoaded", function () {
                             });
                         }
                     }
-//          // 모든 카드를 숨깁니다.
-//          var cards = document.querySelectorAll('.card');
-//          cards.forEach(function (card) {
-//              card.style.display = 'none';
-//          });
-//
-//          // 선택한 카테고리에 해당하는 카드만 보여줍니다.
-//          var filteredCards = document.querySelectorAll('.card[data-cate-no="' + category + '"]');
-//          filteredCards.forEach(function (card) {
-//              card.style.display = 'block';
-//          });
-//        }
 
+    });
 
   //      <!-- 맛집 카드 삭제 -->
 
-            const deleteButtons = document.querySelectorAll('.btn-delete');
+        const deleteButtons = document.querySelectorAll('.btn-delete');
 
-            deleteButtons.forEach(function(button) {
-                button.addEventListener('click', function() {
-                    if (confirm('정말로 삭제할까요?')) {
-                        const mapId = this.getAttribute('data-map-id');
-                        window.location.href = '/mymap/delete/' + mapId;
-                    }
-                });
+        deleteButtons.forEach(function(button) {
+            button.addEventListener('click', function() {
+                if (confirm('정말로 삭제할까요?')) {
+                    const mapId = this.getAttribute('data-map-id');
+                    window.location.href = '/mymap/delete/' + mapId;
+                }
             });
+        });
 
- // 페이지 버튼 클릭 이벤트 리스너
+// 카드 클릭 이벤트 핸들러
+function cardClickHandler(lat, lng) {
+    // 선택한 맛집의 좌표를 사용하여 해당 위치에 마커 표시
+    const marker = new google.maps.Marker({
+        position: { lat, lng },
+        map: map, // map은 지도 객체입니다.
+        title: '선택한 맛집',
+    });
 
-//    // 페이지 로딩 시 초기 페이지 로딩
-//    window.addEventListener('load', function () {
-//        loadPage(1);
+
+
+
+
+
+
+// 지도를 표시할 컨테이너 선택
+const mapContainer = document.getElementById('map');
+
+
+var mapContainer = document.getElementById('map');
+var mapOption = {
+    center: new kakao.maps.LatLng(37.506016526623334, 127.10691218161601),
+    level: 3
+};
+// 각 카드에 클릭 이벤트 리스너 추가
+const cards = document.querySelectorAll('.card');
+cards.forEach(function (card) {
+    card.addEventListener('click', function () {
+      // 클릭한 카드의 위치 정보 가져오기
+             const lat = parseFloat(card.querySelector('#lat').value);
+             const lng = parseFloat(card.querySelector('#lng').value);
+
+        // 해당 위치에 마커 생성
+        const marker = new kakao.maps.Marker({
+            position: new kakao.maps.LatLng(lat, lng),
+        });
+
+        // 기존 마커 삭제 (선택한 카드의 마커만 표시하기 위해)
+        map.removeMarkers();
+
+        // 마커 지도에 추가
+        marker.setMap(map);
+
+        // 해당 위치로 지도 중심 이동
+        map.panTo(new kakao.maps.LatLng(lat, lng));
+    });
+});
+</script>
+
+
+//    var markers = []; // 마커를 저장할 배열
+//
+//
+//    // 클릭한 카드의 위치로 지도의 중심을 이동
+//    function moveCenter(lat, lng) {
+//        var moveLatLon = new kakao.maps.LatLng(lat, lng);
+//        map.panTo(moveLatLon);
+//    }
+//    // 각 카드에 이벤트 리스너를 추가합니다.
+//    var cardElements = document.querySelectorAll('.card');
+//    cardElements.forEach(function(card, index) {
+//        card.addEventListener('click', function() {
+//            // 클릭한 카드에 연결된 마커의 좌표를 가져옵니다.
+//            var lat = parseFloat(card.querySelector('#lat').value);
+//            var lng = parseFloat(card.querySelector('#lng').value);
+//
+//            // 클릭한 카드에만 마커를 표시하고 나머지 마커를 숨깁니다.
+//            setMarkers(lat, lng);
+//
+//            // 클릭한 카드의 위치로 지도의 중심을 이동시킵니다.
+//            moveCenter(lat, lng);
+//        });
 //    });
-
-
-    window.loadPage= function (element) {
-         // 페이지 번호와 userId 가져오기
-         const userIdInput = document.getElementById('userId');
-         const userId = userIdInput.value;
-         const clickedPageNo  = element.getAttribute('data-page');
-         const dynamicUrl = `/mymap/api/${userId}?page=${clickedPageNo}`;
-
-         // XMLHttpRequest 객체 생성
-         const xhr = new XMLHttpRequest();
-
-         // AJAX 요청 설정 (URL 변경)
-         xhr.open('GET', dynamicUrl, true);
-
-         // AJAX 요청 처리
-         xhr.onreadystatechange = function () {
-             if (xhr.readyState === 4 && xhr.status === 200) {
-                 // 응답 데이터를 사용하여 페이지 업데이트
-                 const listContainer = document.getElementById('listContainer');
-                 listContainer.innerHTML = '';
-
-                 // JSON 데이터 파싱
-                 const responseData = JSON.parse(xhr.responseText);
-
-                 // 카드 HTML 생성 및 초기화
-                 let cardHtml = '';
-
-                 // responseData에서 카드 데이터 추출
-                 responseData.forEach(function (myhotpl) {
-cardHtml += `<div class="card my-2" data-cate-no={{myhotpl.hotplaceCateNo}}>
-                         <div class="card-body" >
-                             <input type="hidden" id="lat" th:value="${myhotpl.lat}" />
-                             <input type="hidden" id="lng" th:value="${myhotpl.lng}" />
-                             <!--<h6 class="card-subtitle mb-2 text-muted" th:text="$${myhotpl.hotplaceName}"></h6>-->
-                             <h5 class="card-title" th:text="${myhotpl.hotplaceName}"></h5>
-                             <p class="card-text" th:text="${myhotpl.address}"></p>
-
-                            <div class="square">
-                                 <p th:text="${myhotpl.avgEmoResult != null ? myhotpl.avgEmoResult.toString() : ''}"></p>
-                             </div>
-
-                             <div class="justify-content-end">
-
-                                 <a th:href="@{'/mymap/delete/'+${myhotpl.mapNo}}" class="btn btn-outline-secondary btn-sm btn-delete"
-                                    data-toggle="modal" data-target="#deleteModal"
-                                    th:attr="data-map-id=${myhotpl.mapNo}" onclick="return false;">삭제</a>
-
-                                 <button type="button" class="btn btn-outline-success btn-sm btn-update-review"
-                                         data-bs-toggle="modal" data-bs-target="#myModal"
-                                         th:attr="data-review-no=${myhotpl.mapNo}" > 내 후기 수정</button>
-                                 <i class="bi bi-bookmark-heart-fill"></i>
-                             </div>
-                         </div>
-                     </div>`;
-                });
-
-                 // 카드 HTML을 추가
-                listContainer.innerHTML = cardHtml;
-             }
-         };
-
-         // AJAX 요청 보내기
-         xhr.send();
-    }; //pagination끝
-
-
-
-
-}); // 페이지끝
+//
+//    // 모든 마커를 생성하고 지도에 표시하는 함수
+//    function displayAllMarkers() {
+//     for (var i = 0; i < hotplList.content.length; i++) {
+//              var hotplData = hotplList.content[i];
+//              var marker = new kakao.maps.Marker({
+//                  map: map,
+//                  image: markerImage,
+//                  position: new kakao.maps.LatLng(hotplData.lat, hotplData.lng),
+//                  title: hotplData.hotplaceName
+//              });
+//            // 생성한 마커를 배열에 추가
+//            markers.push(marker);
+//        }
+//    }
+//
+//    // 클릭한 카드에만 마커를 표시하고 나머지 마커를 숨기는 함수
+//    function setMarkers(clickedLat, clickedLng) {
+//        markers.forEach(function(marker) {
+//            var markerLat = marker.getPosition().getLat();
+//            var markerLng = marker.getPosition().getLng();
+//            if (markerLat === clickedLat && markerLng === clickedLng) {
+//                marker.setMap(map);
+//            } else {
+//                marker.setMap(null); // 숨기기
+//            }
+//        });
+//    }
+//
+//    // 클릭한 카드의 위치로 지도의 중심을 이동시키는 함수
+//    function moveCenter(lat, lng) {
+//        var moveLatLon = new kakao.maps.LatLng(lat, lng);
+//        map.panTo(moveLatLon);
+//    }
+//
+//    // 모든 마커를 생성하고 지도에 표시
+//    displayAllMarkers();

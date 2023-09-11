@@ -9,13 +9,13 @@
 
     <script src="https://kit.fontawesome.com/924c10682d.js" crossorigin="anonymous"></script>
 </head>
-
+<body>
   <!-- 좌측에 맛집 리스트를 표시하는 부분 -->
 <div class="container-fluid">
     <div id="listContainer" class="column">
       <div class="cardBox">
-          <div class="useInfo">
-         <h2><span th:text="${user.user_name}"></span>님의 맛집 리스트</h2>
+          <div class="useInfo" style="text-align: center; background-color: #FFD9DC; padding: 10px;">
+         <h2 style="margin: 10px 0;"><span th:text="${user.user_name}"></span>님의<br>맛집 리스트</h2>
         </div>
           <!-- 맛집 검색창 -->
           <div class="input-group my-3">
@@ -29,7 +29,7 @@
                   <!-- 전체 버튼 -->
                   <button id="everyCateButton" class="btn btn-danger btn-lg" data-cate-no="0" onclick="filterCards(0)" style="flex: 1; margin-right: 10px;">전체</button>
                     <!-- 음식점 버튼 -->
-                      <button id="restaurantButton" class="btn btn-danger btn-lg" data-cate-no="1" onclick="filterCards(1)" style="flex: 1; margin-right: 10px;">음식점</button>
+                      <button id="restaurantButton" class="btn btn-danger btn-lg" data-cate-no="1" onclick="filterCards(1)" style="flex: 1; margin-right: 10px;">식당</button>
                     <!-- 카페 버튼 -->
                       <button id="cafeButton" class="btn btn-danger btn-lg" data-cate-no="2" onclick="filterCards(2)"   style="flex: 1; margin-left: 10px;">카페</button>
 
@@ -44,29 +44,26 @@
                   <input type="hidden" id="lat" th:value="${myhotpl.lat}" />
                   <input type="hidden" id="lng" th:value="${myhotpl.lng}" />
 
-
                   <!--<h6 class="card-subtitle mb-2 text-muted" th:text="$${myhotpl.hotplaceName}"></h6>-->
                   <div style="display: flex; align-items: center;">
                       <h5 class="card-title">
                           <strong th:text="${myhotpl.hotplaceName}" class="font-weight-bold"></strong>
                             <!-- 카테고리 아이콘 -->
-                          <i th:if="${myhotpl.hotplaceCateNo == 1}" class="fa-solid fa-utensils fa-xl" style="color: #c82f09;  margin-left: 5px;"></i>
-                          <i th:if="${myhotpl.hotplaceCateNo == 2}" class="fa-solid fa-mug-hot fa-xl" style="color: #c82f09;  margin-left: 5px;"></i>
+                          <i th:if="${myhotpl.hotplaceCateNo == 1}" class="fa-solid fa-utensils fa-l" style="color: #c82f09;  margin-left: 5px;"></i>
+                          <i th:if="${myhotpl.hotplaceCateNo == 2}" class="fa-solid fa-mug-hot fa-l" style="color: #c82f09;  margin-left: 5px;"></i>
                       </h5>
                   </div>
-                      <div class="recommOrNot"  style="position: absolute; top: 10px; right: 10px;">
-                          <!-- 찜 확인 아이콘 -->
+                     <!-- <div class="recommOrNot"  style="position: absolute; top: 10px; right: 10px;">
+                          &lt;!&ndash; 찜 확인 아이콘 &ndash;&gt;
                           <img th:if="${myhotpl.recomm == 'Y'}" src="/static/image/bookmark-heart-fill.svg" style="color: #c82f09; margin-left: 5px;">
                           <img th:if="${myhotpl.recomm == 'N'}" src="/static/image/bookmark-heart.svg" style="color: #c82f09; margin-left: 5px;">
-                      </div>
+                      </div>-->
 
               <p class="card-text text-muted" th:text="${myhotpl.address}"></p>
-
-
-
                   <!-- 감정결과 박스 -->
-                  <div class="square">
-                      <p th:text="${myhotpl.avgEmoResult != null ? myhotpl.avgEmoResult.toString() : ''}"></p>
+                  <div class="emoResult" style="margin: 5px; background-color: #f3c8c8; text-align: center; padding: 5px;">
+                    <strong>평균 후기 온도</strong>
+                      <p th:text="${myhotpl.avgEmoResult != null ? myhotpl.avgEmoResult.toString() : ''}" style="margin: 0;"></p>
                   </div>
 
                   <div class="justify-content-end">
@@ -144,46 +141,51 @@
                 </div><!-- modalContent-->
             </div><!--modal dialog -->
         </div>    <!-- modal fade: 후기 조회&수정 모달 끝-->
+        <script src="/js/mymap/hotplCard.js" th:src="@{/js/mymap/hotplCard.js}"></script>
 
-        <!-- ajax용 페이징 -->
-        <nav aria-label="PageNavi">
-            <input type="hidden" id="userId" th:value="${user.userId}" />
-            <ul class="pagination justify-content-center">
-                <li class="page-item">
-                    <a class="page-link" href="javascript:void(0);" onclick="loadPage(${currentPage - 1})" aria-label="Previous">
-                        <span aria-hidden="true">&lt;</span>
-                    </a>
-                </li>
-                <li class="page-item" th:each="pageNo : ${#numbers.sequence(1, totalPages)}"
-                    th:class="${pageNo == currentPage} ? 'page-item active' : 'page-item'">
-                    <a class="page-link" href="javascript:void(0);" onclick="loadPage(this)" th:attr="data-page=${pageNo}" th:text="${pageNo}"></a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="javascript:void(0);" onclick="loadPage(${currentPage + 1})" aria-label="Next">
-                        <span aria-hidden="true">&gt;</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-<!--         페이지네이션 컴포넌트
-        <nav aria-label="PageNavi"  class="mt-4">
-            <ul class="pagination justify-content-center">
-                <li class="page-item">
-                    <a class="page-link" th:href="@{/mymap/{user_id}(user_id=${user.userId},page=1)}" aria-label="Previous">
-                        <span aria-hidden="true">&lt;</span>
-                    </a>
-                </li>
-                <li class="page-item" th:each="pageNo : ${#numbers.sequence(1, totalPages)}"
-                    th:class="${pageNo == currentPage} ? 'page-item active' : 'page-item'">
-                    <a class="page-link" th:href="@{/mymap/{user_id}(user_id=${user.userId},page=${pageNo})}" th:text="${pageNo}"></a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" th:href="@{/mymap/{user_id}(user_id=${user.userId},page=${totalPages})}" aria-label="Next">
-                        <span aria-hidden="true">&gt;</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>  페이징 성공확인  -->
+<!--        &lt;!&ndash; ajax용 페이징 &ndash;&gt;-->
+<!--        <nav aria-label="PageNavi">-->
+<!--            <input type="hidden" id="userId" th:value="${user.userId}" />-->
+<!--            <ul class="pagination justify-content-center">-->
+<!--                &lt;!&ndash; 이전 페이지 버튼 &ndash;&gt;-->
+<!--                <li class="page-item">-->
+<!--                    <a class="page-link" href="javascript:void(0);" onclick="loadPage(currentPage - 1)" aria-label="Previous">-->
+<!--                        <span aria-hidden="true">&lt;</span>-->
+<!--                    </a>-->
+<!--                </li>-->
+<!--                &lt;!&ndash; 페이지 번호 버튼 &ndash;&gt;-->
+<!--                <li class="page-item" th:each="pageNo : ${#numbers.sequence(1, totalPages)}"-->
+<!--                    th:class="${pageNo == currentPage} ? 'page-item active' : 'page-item'">-->
+<!--                    <a class="page-link" href="javascript:void(0);" onclick="loadPage(${pageNo})" th:attr="data-page=${pageNo}" th:text="${pageNo}"></a>-->
+<!--                </li>-->
+<!--                &lt;!&ndash; 다음 페이지 버튼 &ndash;&gt;-->
+<!--                <li class="page-item">-->
+<!--                    <a class="page-link" href="javascript:void(0);" onclick="loadPage(currentPage + 1)" aria-label="Next">-->
+<!--                        <span aria-hidden="true">&gt;</span>-->
+<!--                    </a>-->
+<!--                </li>-->
+<!--            </ul>-->
+<!--        </nav>-->
+
+<!--                 페이지네이션 컴포넌트-->
+                <nav aria-label="PageNavi"  class="mt-4">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item">
+                            <a class="page-link" th:href="@{/mymap/{user_id}(user_id=${user.userId},page=1)}" aria-label="Previous">
+                                <span aria-hidden="true">&lt;</span>
+                            </a>
+                        </li>
+                        <li class="page-item" th:each="pageNo : ${#numbers.sequence(1, totalPages)}"
+                            th:class="${pageNo == currentPage} ? 'page-item active' : 'page-item'">
+                            <a class="page-link" th:href="@{/mymap/{user_id}(user_id=${user.userId},page=${pageNo})}" th:text="${pageNo}"></a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" th:href="@{/mymap/{user_id}(user_id=${user.userId},page=${totalPages})}" aria-label="Next">
+                                <span aria-hidden="true">&gt;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
     </div><!-- listContainer 끝 -->
 
         <!-- 지도 영역 시작   -->
@@ -191,104 +193,28 @@
             <div class="mapBox" style="width:100%; height:93vh;">
                 <!-- 지도를 표시할 div -->
                 <input type="hidden" id="userIdContainer" th:attr="data-user-id=${user.userId}">
-                <button id="gpsBtn" class="btn btn-danger mb-2" onclick="gps_check()"> 내 주변보기</button>
+                <button id="gpsBtn" class="btn btn-danger mb-2"> 내 주변보기</button>
 
                 <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
 
             </div>
         </div>
 </div> <!-- containerFluid-->
-
+</body>
   <!-- 지도 api 연동 Javascript 양역 ---------------- -->
 <script type="text/javascript" th:inline="javascript">
 
      // Thymeleaf를 이용하여 사용자 ID를 가져와서 JavaScript 변수로 설정
 
         var userId = /*[[${user_id}]]*/;
+        var pageNo = /*[[${pageNo}]]*/;
 
-    //gps로 위치 불러오기 : gps_check()함수
-        gps_check();
-         function gps_check(){
-             if (navigator.geolocation) {
-                 var options = {timeout:60000};
-                 navigator.geolocation.getCurrentPosition(showLocation, errorHandler, options);
-             } else {
-                 alert("GPS_추적이 불가합니다.");
-                 gps_use = false;
-             }
-         }
-         // 이용 가능하면, 위도와 경도를 반환하는 showlocation함수.
-          function showLocation(pos) {
-                  console.log(pos);
-                  gps_use = true;
-                  gps_lat = pos.coords.latitude;
-                  gps_lng = pos.coords.longitude;
-                  // 위치 정보가 확인되었으므로 이제 gps_tracking 함수 호출 가능
-                  gps_tracking();
-              }
-              // error발생 시 에러의 종류를 알려주는 함수.
-              function errorHandler(error) {
-                  if(error.code == 1) {
-                      alert("접근차단");
-                  } else if( err.code == 2) {
-                      alert("위치를 반환할 수 없습니다.");
-                  }
-                  gps_use = false;
-              }
-        //현재위치 마커 표시
-         function gps_tracking(){
-              if (gps_use) {
-                  map.panTo(new kakao.maps.LatLng(gps_lat,gps_lng));  //카카오api 사용자 좌표로 부드럽게 이동
-                   // 마커 이미지의 이미지 크기 입니다
-                  //var gps_content = new kakao.maps.Size(20, 20);
-                  var gps_content = '<div><img class="pulse" draggable="false" unselectable="on" src="https://ssl.pstatic.net/static/maps/m/pin_rd.png" alt="" style="width: 20px; height: 20px;"></div>';
-                  var currentOverlay = new kakao.maps.CustomOverlay({   //마커를 사용자의 위도와 경도 좌표에 찍어준다.
-                      position: new kakao.maps.LatLng(gps_lat,gps_lng),
-                      content: gps_content,
-                      map: map
-                  });
-                  currentOverlay.setMap(map);
-              } else {
-                alert("접근차단하신 경우 새로고침, 아닌 경우 잠시만 기다려주세요.");
-                gps_check();
-              }
-          }
+
+
+
 </script>
-    <script src="/js/mymap/mymapKAPI.js"></script>
-
-
-
-
-
-
-        <!--        // 마커를 생성합니다-->
-        <!--        var marker = new kakao.maps.Marker({-->
-        <!--            position: markerPosition,-->
-        <!--            image: markerImage // 커스텀 마커 설정-->
-        <!--        });-->
-
-
-        <!--            for (var i = 0; i < positions.length; i++) {-->
-
-        <!--                var marker = new kakao.maps.Marker({-->
-        <!--                    map: map,-->
-        <!--                    position: positions[i].latlng,-->
-        <!--                    title: positions[i].title-->
-        <!--                });-->
-        <!--              console.log("Created marker:", marker);-->
-        <!--            }-->
-        <!--          }-->
-
-
-
-
-
-
-
-
-  <!--   mymapAPI.js 파일을 포함 -->
-
-<script src="/js/mymap/hotplCard.js" th:src="@{/js/mymap/hotplCard.js}"></script>
+<script src="/js/mymap/mymapKAPI.js"></script>
+<!--<script src="/js/mymap/hotplPaging.js" th:src="@{/js/mymap/hotplPaging.js}"></script>-->
 <script src="/js/mymap/reviewModal.js" th:src="@{/js/mymap/reviewModal.js}"></script>
 
 
