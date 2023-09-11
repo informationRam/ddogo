@@ -7,9 +7,5 @@
             border: 1px solid #EAEAEA; /* 테두리 스타일과 색상 */
             margin-top: 10px !important;
             border-top-width: 1px !important;
-            height: 200px !important;
-        }
-          #button {
-            height: 60%;
-            margin-top: 10px;
+            height: 300px !important;
         }
