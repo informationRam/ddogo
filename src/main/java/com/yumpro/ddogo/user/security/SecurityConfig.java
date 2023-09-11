@@ -23,21 +23,12 @@ public class SecurityConfig{
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        /*BCryptPasswordEncoder클래스는 스프링 시큐리티에서 제공되는 클래스이다.이 클래스이용해서  패스워드를 암호화해서 처리하도록 한다.
-        bcrypt는 패스워크드를 저장하는 용도로 설계된 해시 함수로
-        특정 문자열을 암호화하고,
-        체크하는 쪽에서는 암호화된 패스워드가 가능한 패스워드인지만 확인하고
-        다시 원문으로 되돌리지는 못한다.*/
-
         return new BCryptPasswordEncoder();
     }
-
-    //AuthenticationManager 생성
     @Bean
     AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
-
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.
@@ -55,6 +46,5 @@ public class SecurityConfig{
 
         return http.build();
     }
-
 }
 
