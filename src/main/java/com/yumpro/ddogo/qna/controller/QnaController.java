@@ -91,7 +91,6 @@ public class QnaController {
         model.addAttribute("sortField", sortField);
         model.addAttribute("sortOrder", sortOrder);
 
-
         return "qna/qna_list";
     }
 
