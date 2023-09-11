@@ -63,7 +63,6 @@ public class NoticeService {
        return noticeform;
     }
 
-
     //수정하기
     public void modify(Notice notice, Noticeform noticeform) {
         notice.setNotiContent(noticeform.getNotiContent());

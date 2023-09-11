@@ -1,11 +1,12 @@
+.pagination .page-item.disabled .page-link {
+    color: black !important;
+}
+
+
+
 /* notice no, notice title, notice date 클래스의 배경색을 화이트로 설정 */
 .notice.no, .notice.title, .notice.date {
     background-color: white;
-}
-
-/* 페이지네이션 비활성화된 링크 텍스트 색상을 블랙으로 설정 */
-.pagination .page-item.disabled .page-link {
-    color: black;
 }
 
 /* 페이지네이션 활성화된 링크 배경 색상을 빨간색으로 설정 */
@@ -21,11 +22,9 @@
     border-color: red;
     color: white; /* 텍스트 색상을 흰색으로 변경 */
 }
-
-
-
-
+/* 제목 밑줄제거 */
   a {
     text-decoration: none; /* 밑줄 제거 */
     color: black; /* 글자 색상을 블랙으로 설정 */
   }
+
