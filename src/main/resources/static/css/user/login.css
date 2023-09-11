@@ -9,11 +9,11 @@ body {
   background: #f6f5f7;
   display: flex;
   justify-content: center;
-  align-items: center;
+  /*align-items: center; 네비바 통일을 위한 css조정*/
   flex-direction: column;
   font-family: 'Montserrat', sans-serif;
-  height: 100vh;
-  margin: -20px 0 50px;
+  height: 93vh;/*네비바 통일을 위한 css조정*/
+  /*margin: -20px 0 50px; 네비바 통일을 위한 css조정*/
 }
 
 h1 {
@@ -41,7 +41,7 @@ a {
   color: #333;
   font-size: 14px;
   text-decoration: none;
-  margin: 15px 0;
+  /*margin: 15px 0; 네비바 통일을 위한 css조정*/
 }
 
 button {

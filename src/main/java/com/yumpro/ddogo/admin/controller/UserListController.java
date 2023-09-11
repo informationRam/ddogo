@@ -3,6 +3,7 @@ package com.yumpro.ddogo.admin.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yumpro.ddogo.admin.domain.UserDTO;
+import com.yumpro.ddogo.admin.service.DashboardService;
 import com.yumpro.ddogo.admin.service.UserListService;
 import com.yumpro.ddogo.admin.validation.UserModiForm;
 import com.yumpro.ddogo.common.entity.User;
@@ -36,6 +37,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @RequestMapping("/admin")
 public class UserListController {
     private final UserListService userService;
+    private final DashboardService dashboardService;
 
     //리스트 보여주기(검색 정렬 페이지네이션)
     @PreAuthorize("isAuthenticated()")
@@ -73,6 +75,8 @@ public class UserListController {
         int totalCount = userService.getUserListCount(map);
         int totalPages = (int) Math.ceil((double) totalCount / limit);
 
+        int notSolvedCnt=dashboardService.notSolvedCnt();
+        model.addAttribute("notSolvedCnt",notSolvedCnt);
         model.addAttribute("totalCnt",totalCount);
         model.addAttribute("users", userList);
         model.addAttribute("currentPage", currentPage);
@@ -97,7 +101,9 @@ public class UserListController {
         if ( !principal.getName().equals("admin") ) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"수정권한이 없습니다.");
         }
+        int notSolvedCnt=dashboardService.notSolvedCnt();
         //3.Model
+        model.addAttribute("notSolvedCnt",notSolvedCnt);
         model.addAttribute("userModiForm", userModiForm);
         //4.View
         return "admin/user_modify_admin";
@@ -110,6 +116,8 @@ public class UserListController {
                              BindingResult bindingResult, @PathVariable int userNo,Principal principal) {
 
         User user = userService.getUser(userNo);
+        int notSolvedCnt=dashboardService.notSolvedCnt();
+        model.addAttribute("notSolvedCnt",notSolvedCnt);
         model.addAttribute("userModiForm", userModiForm);
 
         if ( !principal.getName().equals("admin") ) {

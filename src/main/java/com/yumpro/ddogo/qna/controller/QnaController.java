@@ -124,7 +124,7 @@ public class QnaController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/detail/{id}")
     public String qnaDetailGet(@PathVariable int id,@RequestParam(value="inputPwd", required = false) String inputPwd,RedirectAttributes redirectAttributes){
-        redirectAttributes.addFlashAttribute("templates/error", "문의글 상세보기는 비밀번호 후 이용해주세요");
+        redirectAttributes.addFlashAttribute("error", "문의글 상세보기는 비밀번호 후 이용해주세요");
         return"redirect:/qna/list";
     }
 
@@ -134,7 +134,7 @@ public class QnaController {
     public String qnaDetail(@PathVariable int id, @RequestParam(value="inputPwd", required = false) String inputPwd, Model model, Principal principal, QnaSolveAddForm qnaSolveAddForm,RedirectAttributes redirectAttributes){
 
         if(inputPwd==null){
-            redirectAttributes.addFlashAttribute("templates/error", "문의글 상세보기는 비밀번호 후 이용해주세요");
+            redirectAttributes.addFlashAttribute("error", "문의글 상세보기는 비밀번호 후 이용해주세요");
             return "redirect:/qna/list";
         }
 
@@ -351,7 +351,7 @@ public class QnaController {
         Qna qna = qnaService.getQnaById(id);
 
         if ( !qna.getUser().getUserId().equals(principal.getName()) ) {
-            redirectAttributes.addFlashAttribute("templates/error", "작성자 본인 이외의 사용자에게는 삭제 권한이 없습니다");
+            redirectAttributes.addFlashAttribute("error", "작성자 본인 이외의 사용자에게는 삭제 권한이 없습니다");
             return "redirect:/qna/list";
         }
 
@@ -360,7 +360,7 @@ public class QnaController {
         return "redirect:/qna/list";
     }
 
-    @GetMapping("/templates/error")
+    @GetMapping("/error")
     public String qnaError(){
         return "qna/error_forbidden";
     }
