@@ -60,7 +60,7 @@ public class MainController {
         model.addAttribute("sigunguMap", sigunguMap);
         System.out.println("sigunguMap" + sigunguMap);
 
-        return "index2";
+        return "index";
 
     }
 

@@ -2,11 +2,6 @@
 <div layout:fragment="content" class="container my-3">
 
     <h5 class="my-3 border-bottom pb-2">공지사항등록</h5>
-    <!--CSRF자동생성을 하기위해 th:action속성은  제거,
-        CSRF값을 설정하기위한 hidden을 추가한다
-        폼의 action속성의 값은 question_form의 브라우저의 현재 URL을 기준으로 설정된다.
-         즉 수정버튼을 클릭해서 폼이 보여지는 경우는 action="/question/modify/질문번호" method="post"
-         즉 등록버튼을 클릭해서 폼이 보여지는 경우는 action="/question/add" method="post"-->
         <form id="join" class="my-2" th:object="${noticeform}" th:action="@{/notice/add}" method="post">
           <!-- 오류시 보여주는 문구-->
           <div th:replace="~{form_errors::formErrorsFragment}"></div>
@@ -20,8 +15,8 @@
             <label for="notiTitle" class="form-label"></label>
             <textarea th:field="*{notiContent}" class="form-control" rows="8" placeholder="내용을 입력해주세요."></textarea>
           </div>
-          <div>
-            <input type="submit" value="등록하기" class="btn btn-primary my-2"/>
+          <div class="text-center my-2">
+            <input type="submit" value="등록하기" class="btn btn-outline-danger"/>
           </div>
         </form>
   </div>

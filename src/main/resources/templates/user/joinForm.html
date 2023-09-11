@@ -1,6 +1,6 @@
 <html layout:decorate="~{layout}" xmlns:th="http://www.thymeleaf.org">
 <div layout:fragment="content" class="container my-3">
-    <link rel="stylesheet" href="/css/user/join.css" />
+    <link rel="stylesheet" href="/css/user/join.css"/>
         <div class="container" id="container">
             <div class="form-container sign-up-container">
                 <form id="join" class="my-2" th:object="${userCreateForm}" th:action="@{/user/join}" method="post">
@@ -16,10 +16,14 @@
                     <input type="email" th:field="*{email}" placeholder="ex)eeee@naver.com">
                     <!-- 성별 -->
                     <div class="gender-container">
-                        <input type="radio" th:field="*{gender}" value="M" id="genderMale" autocomplete="off">
-                        <label for="genderMale">남</label>
-                        <input type="radio" th:field="*{gender}" value="F" id="genderFemale" autocomplete="off">
-                        <label for="genderFemale">여</label>
+                        <div class="radio-group">
+                            <input type="radio" class="btn-check" th:field="*{gender}" value="M" id="genderMale" autocomplete="off">
+                            <label class="btn btn-light" for="genderMale" style="width: 131px;">남자</label>
+                        </div>
+                        <div class="radio-group">
+                            <input type="radio" class="btn-check" th:field="*{gender}" value="F" id="genderFemale" autocomplete="off">
+                            <label class="btn btn-light" for="genderFemale" style="width: 131px;">여자</label>
+                        </div>
                     </div>
                     <!-- 생일 -->
                     <input type="date" th:field="*{birth}" th:format="'yyyy-MM-dd'">
@@ -32,7 +36,7 @@
             <!-- 로그인 -->
             <div class="form-container sign-in-container">
                 <form id="login" class="my-2" th:object="${loginVaildation}" th:action="@{/user/login}" method="post">
-                    <h1>Sign in</h1>
+                    <h1>Log in</h1>
                     <span>or use your account</span>
                     <!-- Id 입력 -->
                     <input type="text" name="user_id" id="user_id" placeholder="아이디">
@@ -45,7 +49,7 @@
                         </div>
                     </div>
                     <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/pwdsearchfrom}">Forgot your password?</a>
-                    <button type="submit">Sign In</button>
+                    <button type="submit">Log in</button>
                 </form>
             </div>
             <div class="overlay-container">
@@ -53,7 +57,7 @@
                     <div class="overlay-panel overlay-left">
                         <h1>Welcome!</h1>
                         <p>To keep connected with us please login with your personal info</p>
-                        <button class="ghost" id="signIn">Sign In</button>
+                        <button class="ghost" id="signIn">Log in</button>
                     </div>
                     <div class="overlay-panel overlay-right">
                         <h1>Hello, Friend!</h1>
@@ -66,79 +70,24 @@
 
 </div>
 <script layout:fragment="script">
-    const signUpButton = document.getElementById('signUp');
+
+const signUpButton = document.getElementById('signUp');
 const signInButton = document.getElementById('signIn');
 const container = document.getElementById('container');
 
 
-        // 페이지가 로드될 때 Sign Up 패널을 먼저 표시
-        container.classList.add("right-panel-active");
+   // 페이지가 로드될 때 Sign Up 패널을 먼저 표시
+   container.classList.add("right-panel-active");
 
 signUpButton.addEventListener('click', () => {
-  container.classList.add("right-panel-active");
+container.classList.add("right-panel-active");
 
 });
 
 signInButton.addEventListener('click', () => {
-  container.classList.remove("right-panel-active");
+container.classList.remove("right-panel-active");
 
 });
 
 </script>
 </html>
-
-    <!--
-
-
-       <div class="container my-3">
-           <h1>회원가입</h1>
-           <form id="join" class="my-2" th:object="${userCreateForm}" th:action="@{/user/join}" method="post">
-               &lt;!&ndash; 오류시 보여주는 문구&ndash;&gt;
-               <div th:replace="~{form_errors::formErrorsFragment}"></div>
-               <div>
-                   <label for="user_name" class="form-label"></label>
-                   <input type="text" class="form-control form-control-lg" th:field="*{user_name}" placeholder="이름">
-               </div>
-
-               <div>
-                   <label for="user_id" class="form-label"></label>
-                   <input type="text" class="form-control form-control-lg" name="user_id" id="user_id" placeholder="아이디">
-               </div>
-               <div>
-                   <label for="birth" class="form-label">생년월일</label>
-                   <input type="date" class="form-control form-control-lg" th:field="*{birth}" th:format="'yyyy-MM-dd'">
-               </div>
-
-               &lt;!&ndash; 성별 &ndash;&gt;
-               <input type="radio" class="btn-check" th:field="*{gender}" value="M" id="genderMale" autocomplete="off">
-               <label class="btn btn-secondary" for="genderMale">남</label>
-               <input type="radio" class="btn-check" th:field="*{gender}" value="F" id="genderFemale" autocomplete="off">
-               <label class="btn btn-secondary" for="genderFemale">여</label>
-
-               <div>
-                   <label for="email" class="form-label">이메일</label>
-                   <input type="email" class="form-control form-control-lg" th:field="*{email}" placeholder="ex)eeee@naver.com">
-               </div>
-               <div>
-                   <label for="pwd1" class="form-label">비밀번호</label>
-                   <input type="password" class="form-control form-control-lg userpw-confirm" th:field="*{pwd1}" placeholder="비밀번호">
-               </div>
-               <div>
-                   <label for="pwd2" class="form-label"></label>
-                   <input type="password" class="form-control form-control-lg userpw-confirm" th:field="*{pwd2}" placeholder="비밀번호확인">
-               </div>
-               <div class="form-check">
-                   <input type="checkbox" class="form-check-input" id="termsPrivacy">
-                   <label class="form-check-label" for="termsPrivacy">
-                       <em class="option point">[필수]</em>
-                       <span class="text">개인정보 수집 및 이용</span>
-                       <a href="https://nid.naver.com/user2/common/terms/terms2?t=viewNaverJoinTerms&amp;v=1" class="link_arrow">전체</a>
-                   </label>
-               </div>
-               <div class="d-flex justify-content-center">
-                   <input type="submit" value="회원가입" class="btn btn-primary">
-               </div>
-           </form>
-       </div>
-   </div>
-   </html>-->
