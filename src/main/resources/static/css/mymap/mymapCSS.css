@@ -61,7 +61,6 @@
  display: none;
 }
 
-
 @font-face {
     font-family: 'MalangMalangR'; /* 폰트 패밀리 이름 설정 */
     src: url('/css/mymap/MALANGMALANGR.TTF') format('truetype'); /* 폰트 파일 경로 설정 */
@@ -69,8 +68,7 @@
     font-style: normal;
 }
 
-/* 모든 HTML 요소에 폰트를 적용합니다. */
-html, body, p, h1, h2, h3, h4, h5, h6, a, span, div, /* 필요한 모든 요소를 나열하세요 */
-{
-    font-family: 'MalangMalangR', sans-serif; /* 폰트 패밀리 이름 설정 */
+    /* 모든 HTML 요소에 폰트를 적용합니다. */
+html, body, p, h1, h2, h3, h4, h5, h6, a, span, div {
+    font-family: 'MalangMalangR', sans-serif;
 }
