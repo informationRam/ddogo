@@ -15,7 +15,7 @@
     <div id="listContainer" class="column">
       <div class="cardBox">
           <div class="useInfo" style="text-align: center; background-color: #FFD9DC; padding: 10px;">
-         <h2 style="margin: 10px 0;"><span th:text="${user.user_name}"></span>님의<br>맛집 리스트</h2>
+         <h2 style="margin: 10px 0;"><span th:text="${user.user_name}"></span>님의<br>또갈지도</h2>
         </div>
           <!-- 맛집 검색창 -->
           <div class="input-group my-3">
@@ -47,7 +47,6 @@
                   <input type="hidden" id="gugun" th:value="${myhotpl.gugun}" />
                   <input type="hidden" id="review" th:value="${myhotpl.review}" />
                   <input type="hidden" id="address" th:value="${myhotpl.address}" />
-
 
                   <!--<h6 class="card-subtitle mb-2 text-muted" th:text="$${myhotpl.hotplaceName}"></h6>-->
                   <div style="display: flex; align-items: center;">

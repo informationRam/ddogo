@@ -37,6 +37,8 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         });
 
+
+//검색창
 // 검색어 입력 필드와 검색 버튼을 가져옵니다
 var searchInput = document.getElementById('searchInput');
 var searchButton = document.querySelector('.btn-danger');
@@ -62,20 +64,17 @@ function search() {
     cards.forEach(function (card) {
         var shouldDisplay = false;
 
-        // 검색 대상 요소의 클래스 목록
-        var targetClasses = ['hotplaceName', 'sido', 'gugun', 'review', 'address'];
+        // 카드에서 음식점 이름과 주소 가져오기
+        var hotplaceNameElement = card.querySelector('.hotplaceName');
+        var addressElement = card.querySelector('.address');
 
-        // 검색 대상 요소 순회
-        for (var i = 0; i < targetClasses.length; i++) {
-            var targetClass = targetClasses[i];
-            var targetElement = card.querySelector('.' + targetClass);
+        if (hotplaceNameElement) {
+            var hotplaceName = hotplaceNameElement.textContent.toLowerCase();
+            var address = addressElement.textContent.toLowerCase();
 
-            if (targetElement) {
-                var targetText = targetElement.textContent.toLowerCase();
-                if (targetText.includes(searchText)) {
-                    shouldDisplay = true;
-                    break; // 검색에 성공하면 더 이상 검사하지 않고 종료
-                }
+            // 검색어가 음식점 이름 또는 주소에 포함되어 있다면 해당 카드를 표시
+            if (hotplaceName.includes(searchText) || address.includes(searchText)) {
+                shouldDisplay = true;
             }
         }
 
@@ -87,8 +86,6 @@ function search() {
         }
     });
 }
-
-
 
 
 
