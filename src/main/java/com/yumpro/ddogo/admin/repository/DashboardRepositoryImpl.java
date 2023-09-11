@@ -53,4 +53,9 @@ public class DashboardRepositoryImpl implements DashboardRepository{
     public List<HashMap<String, Object>> localHotplaceCnt() throws DataAccessException{
         return sqlSession.selectList("admin.localHotplaceCnt");
     }
+
+    @Override
+    public int notSolvedCnt() throws DataAccessException{
+        return sqlSession.selectOne("admin.notSolvedCnt");
+    }
 }

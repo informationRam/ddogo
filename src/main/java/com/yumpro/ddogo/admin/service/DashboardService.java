@@ -71,4 +71,8 @@ public class DashboardService {
     public List<HashMap<String, Object>> localHotplaceCnt() {
         return dashboardRepository.localHotplaceCnt();
     }
+
+    public int notSolvedCnt(){
+        return dashboardRepository.notSolvedCnt();
+    }
 }
