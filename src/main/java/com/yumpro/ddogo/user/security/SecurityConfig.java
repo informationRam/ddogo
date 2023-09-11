@@ -1,13 +1,10 @@
 package com.yumpro.ddogo.user.security;
 
-import com.yumpro.ddogo.user.security.auth.PrincipalDetail;
 import com.yumpro.ddogo.user.service.UserSecurityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,52 +12,14 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)//@PreAuthorize("isAuthenticated()")//로그인인증가 동작할 수 있기 위함
 public class SecurityConfig{
-
     @Autowired
     private UserSecurityService userSecurityService;
-
-/*
-    @Autowired
-    private CustomOAuth2UserService customOAuth2UserService;
-*/
-
-    @Bean
-    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.
-                csrf().disable() // CSRF 보호 비활성화
-                /*csrf().and()*/ // CSRF 보호 활성화
-                .authorizeHttpRequests();
-        http.authorizeHttpRequests()
-                .requestMatchers(new AntPathRequestMatcher("/user/modifyForm/**")).authenticated()
-                .requestMatchers(new AntPathRequestMatcher("/admin/**")).hasRole("ADMIN")
-                .requestMatchers(new AntPathRequestMatcher("/user/joinForm")).denyAll() //로그인 후 회원가입접근불가
-                .anyRequest().permitAll()
-                .and().formLogin().
-                loginPage("/user/login").usernameParameter("user_id").passwordParameter("pwd").defaultSuccessUrl("/")
-                .and().logout().
-                logoutRequestMatcher(new AntPathRequestMatcher("/user/logout")).logoutSuccessUrl("/").invalidateHttpSession(true)
-                .and().exceptionHandling().accessDeniedPage("/common/ddoError")
-                .and()
-                .exceptionHandling()
-                .accessDeniedPage("/error/403") // 403 에러 페이지 설정
-                .and()
-                .exceptionHandling() // 예외 처리 설정을 추가합니다.
-                .accessDeniedPage("/common/ddoError.html"); // 403 에러 발생 시 커스텀 에러 페이지로 리디렉션합니다.
-             /* .and()
-                    .oauth2Login() // 외부 인증
-                    .loginPage("/user/kakaoform") // oauth2Login 시 loginForm
-                    .userInfoEndpoint()
-                    .userService(customOAuth2UserService)*/; // SNS 로그인이 완료된 뒤 후처리가 필요함. 엑세스토큰+사용자프로필 정보
-
-        return http.build();
-    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -73,35 +32,29 @@ public class SecurityConfig{
         return new BCryptPasswordEncoder();
     }
 
-    //Authentication - 인증=>자신을 증명하는 것
-    //AuthenticationManager(인증매니저) - 스프링시큐리티에서 인증을 담당한다
     //AuthenticationManager 생성
     @Bean
     AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
-  /*  protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                // 페이지 권한 설정
-                .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/user/myinfo").hasRole("MEMBER")
-                .antMatchers("/**").permitAll()
-                .and() // 로그인 설정
-                .formLogin()
-                .loginPage("/user/login")
-                .defaultSuccessUrl("/user/login/result")
-                .permitAll()
-                .and() // 로그아웃 설정
-                .logout()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
-                .logoutSuccessUrl("/user/logout/result")
-                .invalidateHttpSession(true)
-                .and()
-                // 403 예외처리 핸들링
-                .exceptionHandling().accessDeniedPage("/user/denied");
+    @Bean
+    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.
+               /* csrf().disable()*/ // CSRF 보호 비활성화
+                csrf().and() // CSRF 보호 활성화
+                .authorizeHttpRequests();
+        http.authorizeHttpRequests()
+                .requestMatchers(new AntPathRequestMatcher("/user/modifyForm/**")).authenticated()
+                .requestMatchers(new AntPathRequestMatcher("/mymap/**")).authenticated()
+                .requestMatchers(new AntPathRequestMatcher("/admin/**")).hasRole("ADMIN")
+                .requestMatchers(new AntPathRequestMatcher("/user/joinForm")).denyAll() //로그인 후 회원가입접근불가
+                .anyRequest().permitAll()
+                .and().formLogin().loginPage("/user/login").usernameParameter("user_id").passwordParameter("pwd").defaultSuccessUrl("/")
+                .and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/user/logout")).logoutSuccessUrl("/").invalidateHttpSession(true);
+
+        return http.build();
     }
-*/
 
 }
 

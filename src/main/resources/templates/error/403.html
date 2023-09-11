@@ -1,26 +1,16 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/default_layout}">
-
-<th:block layout:fragment="head">
-    <title>Spring Boot 404 Error PAGE</title>
-    <!--/* 이 영역에 공통으로 사용할 css, js library를 선언한다. */-->
-    <link th:href="@{/css/common.css}" rel="stylesheet" />
-</th:block>
-
-<body>
-<th:block layout:fragment="header" th:include="@{/fragments/header}"></th:block>
-
-<h1>This is 404 Error Page!</h1>
+<html layout:decorate="~{layout}" xmlns:th="http://www.thymeleaf.org">
+<div layout:fragment="content" class="container my-3">
 <div>
-    CODE: <span th:text="${code}"></span><br>
-    MSG: <span th:text="${msg}"></span><br>
-    TIMESTAMP: <span th:text="${timestamp}"></span><br>
+    <h2>403오류 페이지</h2>
+    서버에서 문제가 발생했습니다.<br />
+    관리자에게 문의해주세요.
+    <p>경로: [[${path}]]</p>
+    <p>오류: [[${error}]]</p>
+    <p>메시지: [[${message}]]</p>
+    <p>오류 목록(BindingResult): [[${errors}]]</p>
+    <p>상태: [[${status}]]</p>
+    <p>발생 시간: [[${timestamp}]]</p>
+    <p>예외 클래스: [[${exception}]]</p>
 </div>
-
-<th:block layout:fragment="footer" th:include="@{/fragments/footer}"></th:block>
 </body>
-
 </html>
