@@ -1,5 +1,6 @@
 package com.yumpro.ddogo.qna.controller;
 
+import com.yumpro.ddogo.admin.service.DashboardService;
 import com.yumpro.ddogo.common.entity.Qna;
 import com.yumpro.ddogo.common.entity.QnaSolve;
 import com.yumpro.ddogo.common.entity.User;
@@ -36,6 +37,7 @@ public class QnaController {
 
     private final QnaService qnaService;
     private final UserListService userListService;
+    private final DashboardService dashboardService;
 
     //메일용 html파일 문서화
     public String readHTMLFileAsString(String filePath) {
@@ -80,7 +82,9 @@ public class QnaController {
 
         int totalCount = qnaService.getQnaListCount(map); // 전체 데이터 수를 가져오는 메서드를 추가해야 합니다.
         int totalPages = (int) Math.ceil((double) totalCount / limit);
-
+        int notSolvedCnt=dashboardService.notSolvedCnt();
+        //3.Model
+        model.addAttribute("notSolvedCnt",notSolvedCnt);
         model.addAttribute("totalCnt",totalCount);
         model.addAttribute("currentPage", currentPage);
         model.addAttribute("totalPages", totalPages);
