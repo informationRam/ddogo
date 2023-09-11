@@ -1,13 +1,7 @@
 package com.yumpro.ddogo.user.DTO;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -15,6 +9,7 @@ import java.util.Date;
 @Getter
 @Setter
 public class UserDTO {
+
 
     private String user_name;          //'회원 이름'
 
