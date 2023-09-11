@@ -1,0 +1,84 @@
+<html layout:decorate="~{layout}" xmlns:th="http://www.thymeleaf.org">
+<div layout:fragment="content">
+<link rel="stylesheet" type="text/css" href="/css/searchmap/map.css" th:href="@{/css/searchmap/map.css}" />
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=820d01b1cce59185ed776419691dab39&libraries=services"></script>
+<!--지도 영역-->
+<div class="map_wrap" style="width:100%;height:93vh;">
+    <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
+    <!--검색결과 목록-->
+    <div class="search">
+        <form onsubmit="searchPlaces(); return false;" class="searchForm">
+            <div class="input-group" style="positon: absolute; top:0px; left:5px; padding: 10px;">
+                <input class="form-control" style="display: inline;" type="text" size="25" id="keyword" placeholder="여기.. 또 갈지도?" autofocus>
+                <button type="submit" class="btn btn-light" style="width:80px; height:45px;"><img src="/image/searchIcon-color-24.png"></button>
+            </div>
+        </form>
+        <div id="menu_wrap">
+            <div class="option">
+            </div>
+
+            <ul id="placesList"></ul>
+            <div id="pagination"></div>
+        </div>
+    </div>
+</div>
+
+<!--모달-->
+<div class="modal fade" id="myModal" onsubmit="return false;" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">'또갈지도?'에 저장</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="modalForm" action="/search/add" method="post">
+                <input type="hidden" id="transMean" name="transMean" value="">
+                <input type="hidden" id="markerLat" name="markerLat" value="">
+                <input type="hidden" id="markerLng" name="markerLng" value="">
+                <input type="hidden" id="placeName" name="placeName" value="">
+                <input type="hidden" id="placeRoadAddress" name="placeRoadAddress" value="">
+                <input type="hidden" id="placeJibunAddress" name="placeJibunAddress" value="">
+                <input type="hidden" id="placeCateCode" name="placeCateCode" value="">
+
+                <div class="modal-body">
+
+                    <div class="mb-3">
+                        <label for="inputReview" class="form-label">Review</label>
+                        <div id="error1"></div>
+                        <textarea class="form-control" id="inputReview" name="inputReview" placeholder="나만의 후기를 남겨주세요!" rows="6"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputMemo" class="form-label">Memo</label>
+                        <textarea class="form-control" id="inputMemo" name="inputMemo" placeholder="해당 장소와 관련한 메모를 적어보세요!" rows="6"></textarea>
+                    </div>
+                    <div id="error2"></div>
+                    <div class="d-flex justify-content-center">
+                        <div class="btn-group" role="group" aria-label="Radio buttons">
+                            <input type="radio" class="btn-check" name="myRecommend" id="myRecommendY" value="Y" autocomplete="off">
+                            <label class="btn btn-outline-danger mx-1" for="myRecommendY">또갈지도</label>
+
+                            <input type="radio" class="btn-check" name="myRecommend" id="myRecommendN" value="N" autocomplete="off">
+                            <label class="btn btn-outline-secondary mx-1" for="myRecommendN">안갈지도</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" onclick="saveFormData()">저장</button>
+                    <input type="reset" class="btn btn-secondary"/>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script th:inline="javascript">
+    if([[${Keyword}]]!=null){
+        document.getElementById('keyword').value = [[${Keyword}]];
+    }
+    if([[${msg}]]!=null){
+            alert([[${msg}]]);
+    }
+
+</script>
+<script src="/js/searchmap/map.js" th:src="@{/js/searchmap/map.js}" th:inline="javascript"></script>
+</div>
+</html>

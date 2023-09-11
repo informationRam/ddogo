@@ -1,4 +1,4 @@
-<html layout:decorate="~{layout}">
+<html layout:decorate="~{layout_for_main_notice_qna}">
 <div layout:fragment="content" class="container my-3">
 
     <h5 class="my-3 border-bottom pb-2">공지사항등록</h5>
@@ -20,8 +20,8 @@
             <label for="notiTitle" class="form-label"></label>
             <textarea th:field="*{notiContent}" class="form-control" rows="8" placeholder="내용을 입력해주세요."></textarea>
           </div>
-          <div>
-            <input type="submit" value="등록하기" class="btn btn-primary my-2"/>
+          <div class="text-center my-2">
+            <input type="submit" value="등록하기" class="btn btn-outline-danger"/>
           </div>
         </form>
   </div>
