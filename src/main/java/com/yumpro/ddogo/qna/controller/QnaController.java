@@ -142,7 +142,7 @@ public class QnaController {
 
         if(!principal.getName().equals("admin")){
             if(!qna.getQnaPwd().equals(inputPwd)){
-                redirectAttributes.addFlashAttribute("error", "문의글 상세보기는 비밀번호 후 이용해주세요");
+                redirectAttributes.addFlashAttribute("templates/error", "문의글 상세보기는 비밀번호 후 이용해주세요");
                 return "redirect:/qna/list";
             }
         }
@@ -221,7 +221,7 @@ public class QnaController {
         QnaSolve qnaSolve = qnaService.getQnaSolveByQna(qna);
 
         if(!principal.getName().equals("admin")){
-            redirectAttributes.addFlashAttribute("error", "문의 답글은 관리자만 수정할 수 있습니다");
+            redirectAttributes.addFlashAttribute("templates/error", "문의 답글은 관리자만 수정할 수 있습니다");
             return "redirect:/qna/list";
         }
 
@@ -238,7 +238,7 @@ public class QnaController {
     @PostMapping("/solve/modify/{id}")
     public String qnaSolveMofiy(@PathVariable int id,@Valid QnaSolveAddForm qnaSolveAddForm,BindingResult bindingResult,Model model,Principal principal,RedirectAttributes redirectAttributes){
         if(!principal.getName().equals("admin")){
-            redirectAttributes.addFlashAttribute("error", "답변 수정은 관리자만 가능합니다");
+            redirectAttributes.addFlashAttribute("templates/error", "답변 수정은 관리자만 가능합니다");
             return "redirect:/qna/list";
         }
 
@@ -270,7 +270,7 @@ public class QnaController {
     @GetMapping("/solve/delete/{id}")
     public String qnaSolveDelete(@PathVariable("id") Integer id,Principal principal,RedirectAttributes redirectAttributes){
         if(!principal.getName().equals("admin")){
-            redirectAttributes.addFlashAttribute("error", "답글 삭제는 관리자만 가능합니다");
+            redirectAttributes.addFlashAttribute("templates/error", "답글 삭제는 관리자만 가능합니다");
             return "redirect:/qna/list";
         }
 
@@ -288,7 +288,7 @@ public class QnaController {
     public String qnaModiForm(QnaAddForm QnaAddForm,@PathVariable("id") Integer id,Principal principal,Model model, RedirectAttributes redirectAttributes){
         Qna qna = qnaService.getQnaById(id);
         if ( !qna.getUser().getUserId().equals(principal.getName()) ) {
-            redirectAttributes.addFlashAttribute("error", "작성자 본인 이외의 사용자에게는 수정 권한이 없습니다");
+            redirectAttributes.addFlashAttribute("templates/error", "작성자 본인 이외의 사용자에게는 수정 권한이 없습니다");
             return "redirect:/qna/list";
         }
         QnaAddForm.setQna_title(qna.getQnaTitle());
@@ -351,7 +351,7 @@ public class QnaController {
         Qna qna = qnaService.getQnaById(id);
 
         if ( !qna.getUser().getUserId().equals(principal.getName()) ) {
-            redirectAttributes.addFlashAttribute("error", "작성자 본인 이외의 사용자에게는 삭제 권한이 없습니다");
+            redirectAttributes.addFlashAttribute("templates/error", "작성자 본인 이외의 사용자에게는 삭제 권한이 없습니다");
             return "redirect:/qna/list";
         }
 
@@ -360,7 +360,7 @@ public class QnaController {
         return "redirect:/qna/list";
     }
 
-    @GetMapping("/error")
+    @GetMapping("/templates/error")
     public String qnaError(){
         return "qna/error_forbidden";
     }

@@ -1,0 +1,14 @@
+/* notice no, notice title, notice date 클래스의 배경색을 화이트로 설정 */
+.notice.no, .notice.title, .notice.date {
+    background-color: white;
+}
+/* 페이지네이션 색상을 red로 변경 */
+.my.pagination > .active > a,
+.my.pagination > .active > span,
+.my.pagination > .active > a:hover,
+.my.pagination > .active > span:hover,
+.my.pagination > .active > a:focus,
+.my.pagination > .active > span:focus {
+  background: red;
+  border-color: red;
+}
