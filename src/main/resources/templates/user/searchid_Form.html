@@ -1,23 +1,6 @@
 <html layout:decorate="~{layout}" xmlns:th="http://www.thymeleaf.org">
 <div layout:fragment="content" class="container my-3">
-    <style>
-        .center-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 10vh;       /* 로고와 높이 */
-            border: 1px solid #EAEAEA; /* 테두리 스타일과 색상 */
-            margin-top: 10px !important;
-            border-top-width: 1px !important;
-            height: 200px !important;
-        }
-          #button {
-            height: 60%;
-            margin-top: 10px;
-        }
-    </style>
-
+    <link rel="stylesheet" href="/css/user/searchid.css"/>
     <!-- 로고 위치 -->
 <div class="text-center" style="margin-bottom:100px;">
     <img src="/image/logo.png" class="img-fluid" alt="...">
@@ -46,11 +29,13 @@
                     <div class="col-auto d-flex justify-content-end mb-2">
                         <button type="button" class="btn btn-outline-danger" id="button" name="button" data-bs-toggle="modal" data-bs-target="#myModal">아이디찾기</button>
                     </div>
-                    <!-- 비밀번호찾기 | 회원가입 링크 -->
-                    <div class="row align-items-end">
-                        <div class="mb-2">
-                            <div class="d-flex d-flex justify-content-start mb-2">
+                    <!-- 비밀번호찾기 | 로그인하기 | 회원가입 링크 -->
+                    <div class="justify-content-center text-centerr">
+                        <div class="justify-content-center mb-2">
+                            <div class="d-flex justify-content-center mb-2">
                                 <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/pwdsearchfrom}">비밀번호찾기</a>
+                                <span style="margin: 0 15px;">|</span> <!-- 구분선 -->
+                                <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/login}">로그인하기</a>
                                 <span style="margin: 0 15px;">|</span> <!-- 구분선 -->
                                 <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/joinForm}">회원가입</a>
                             </div>
