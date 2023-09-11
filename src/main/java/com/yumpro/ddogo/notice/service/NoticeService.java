@@ -60,9 +60,8 @@ public class NoticeService {
         Noticeform noticeform = new Noticeform();
         noticeform.setNotiTitle(notice.getNotiTitle());
         noticeform.setNotiContent(notice.getNotiContent());
-       return noticeform;
+        return noticeform;
     }
-
 
     //수정하기
     public void modify(Notice notice, Noticeform noticeform) {
@@ -71,7 +70,7 @@ public class NoticeService {
         noticeRepository.save(notice);
     }
 
-    //공지사항 삭제하
+    //공지사항 삭제하기
     public void noticeDelete(Notice notice) {
         noticeRepository.delete(notice);
     }

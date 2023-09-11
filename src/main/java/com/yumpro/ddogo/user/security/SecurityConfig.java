@@ -45,19 +45,7 @@ public class SecurityConfig{
                 .and().formLogin().
                 loginPage("/user/login").usernameParameter("user_id").passwordParameter("pwd").defaultSuccessUrl("/")
                 .and().logout().
-                logoutRequestMatcher(new AntPathRequestMatcher("/user/logout")).logoutSuccessUrl("/").invalidateHttpSession(true)
-                .and().exceptionHandling().accessDeniedPage("/common/ddoError")
-                .and()
-                .exceptionHandling()
-                .accessDeniedPage("/error/403") // 403 에러 페이지 설정
-                .and()
-                .exceptionHandling() // 예외 처리 설정을 추가합니다.
-                .accessDeniedPage("/common/ddoError.html"); // 403 에러 발생 시 커스텀 에러 페이지로 리디렉션합니다.
-             /* .and()
-                    .oauth2Login() // 외부 인증
-                    .loginPage("/user/kakaoform") // oauth2Login 시 loginForm
-                    .userInfoEndpoint()
-                    .userService(customOAuth2UserService)*/; // SNS 로그인이 완료된 뒤 후처리가 필요함. 엑세스토큰+사용자프로필 정보
+                logoutRequestMatcher(new AntPathRequestMatcher("/user/logout")).logoutSuccessUrl("/").invalidateHttpSession(true);
 
         return http.build();
     }
@@ -104,4 +92,3 @@ public class SecurityConfig{
 */
 
 }
-
