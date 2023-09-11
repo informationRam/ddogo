@@ -234,6 +234,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         data.forEach(function(reviewList) {
                             let reviewBody = document.createElement('div');
                             reviewBody.classList.add('modalReviewCard', 'my-2');
+                            reviewBody.style.box-shadow = '0 4px 8px rgba(0, 0, 0, 0.2)';//그림자효과
                           let reviewTextElement = document.createElement('p');
                           reviewTextElement.textContent = reviewList.review;
 
@@ -342,7 +343,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (selectedSido === "" || selectedGugun === "" || isNaN(selectedCategory)) {
             // 사용자가 조건을 선택하지 않은 경우 결과를 숨김
             resultDiv.style.display = "none";
-            alert("시도, 구군, 카테고리를 모두 선택해주세요.");
+            alert("시도, 시군구, 카테고리를 모두 선택해주세요.");
         } else {
             // 선택한 조건에 따라 결과를 표시
             resultDiv.style.display = "block";
