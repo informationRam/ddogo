@@ -24,8 +24,8 @@
 
  #myMapContents{
      flex-grow: 1; /* .mapContainer의 가로 넓이 가변으로 설정 */
-     position: relative; /* 내용이 넘칠 경우 스크롤 표시 */
-     padding: 20px;
+     position: relative;
+     padding: 0 20px;
      height: 100vh;
   }
 
