@@ -1,21 +1,19 @@
 <html layout:decorate="~{layout}" xmlns:th="http://www.thymeleaf.org">
 <div layout:fragment="content" class="container my-3">
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
-
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" type="text/css"
-          href="/css/main/main.css" th:href="@{/css/main/main.css}" />
+<link rel="stylesheet" type="text/css" href="/css/main/main.css" th:href="@{/css/main/main.css}" src="https://fontawesome.com/icons/mug-saucer?f=classic&s=solid"/>
 
-<div class="container mt-2 mb-2">
+
+    <div class="container mt-2 mb-2">
     <div class="row">
         <div class="col-md-6" >
-            <h4 class="title" style="margin:20px;">오늘의 Best 음식점</h4>
+            <h4 class="title" style="margin:20px;">오늘의 Best5 음식점</h4>
             <div th:each="eatjjim,  idx :${eatjjim}" class="card p-1 mb-2">
                 <div class="mt-1" style="padding: 20px;">
                     <div class="badge" style="display: inline-block; margin-right: 10px;">
@@ -40,7 +38,7 @@
         </div>
 
         <div class="col-md-6">
-            <h4 class="title" style="margin:20px;">오늘의 Best 카페</h4>
+            <h4 class="title" style="margin:20px;">오늘의 Best5 카페</h4><i class="fa-solid fa-mug-hot"></i>
             <div th:each="cafejjim,  idx :${cafejjim}" class="card p-2 mb-2">
                 <div class="mt-1" style="padding: 15px;">
                     <div class="badge" style="display: inline-block; margin-right: 10px;">
@@ -401,7 +399,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                                 // 가게 이름을 표시하는 열 추가
                                 var nameH6 = document.createElement("h5");
-                                nameH6.className = "heading";
+                                nameH6.className = "heading2";
                                 nameH6.style.display = "inline-block";
                                 nameH6.textContent = entry.hotplace_name;
                                 nameH6.style.marginBottom = "10px"; // 상하 마진

@@ -93,7 +93,7 @@
           and h.gugun=#{gugun}
         group by h.hotplace_name, h.hotplace_no, ra.avg_emo_result
         order by jjim desc,avg_emo_result desc
-        limit 5
+        limit 10
 		]]>
     </select>
 

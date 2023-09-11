@@ -94,6 +94,15 @@ font-family: "MALANGMALANGB";
     font-family: "MALANGMALANGB";
 }
 
+.heading2{
+    font-family: "MALANGMALANGB";
+}
+
+.heading:hover {
+    cursor: pointer;
+    color: rgba(0, 0, 0, 0.5); /* Change this to the desired color */
+}
+
 .form-label{
     font-family: "MALANR";
     font-size: 20px;
