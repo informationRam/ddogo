@@ -24,7 +24,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class MainController {
     private final MainService mainService;
-    
+
     @GetMapping(value = "/")
     public String main(HttpServletResponse response,
                        Model model) throws Exception {
