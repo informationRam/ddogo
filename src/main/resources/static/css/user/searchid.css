@@ -1,0 +1,8 @@
+.center-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        background-color: orange; /* 주황색 배경색 설정 */
+}

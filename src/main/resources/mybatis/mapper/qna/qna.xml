@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="qna">
+
+    <select id="qnaList" parameterType="map" resultType="com.yumpro.ddogo.qna.domain.QnaListDTO">
+        SELECT
+        q.qna_no,q.qna_title,q.user_no AS "userNo",u.user_id,q.qna_solved,q.qna_date, q.qna_pwd
+        FROM
+        qna q
+        INNER JOIN
+        user u ON q.user_no = u.user_no
+        WHERE 1=1
+        <!-- 검색어(search)에 대한 조건 추가 -->
+        <if test="search != null and search != '' and searchCategory != null and searchCategory != ''">
+            AND ${searchCategory} LIKE CONCAT('%', #{search}, '%')
+        </if>
+        <!-- 정렬 필드(sortField)에 따른 정렬 -->
+        ORDER BY
+        <choose>
+            <when test="sortField == 'qna_title'">
+                q.qna_title
+            </when>
+            <when test="sortField == 'user_id'">
+                u.user_id
+            </when>
+            <when test="sortField == 'qna_solved'">
+                q.qna_solved
+            </when>
+            <when test="sortField == 'qna_date'">
+                q.qna_date
+            </when>
+            <otherwise>
+                q.qna_date
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="sortOrder == 'asc'">
+                asc
+            </when>
+            <otherwise>
+                desc
+            </otherwise>
+        </choose>
+        <!-- 페이지네이션 -->
+        <if test="limit != null and offset != null">
+            limit #{limit} offset #{offset}
+        </if>
+    </select>
+
+    <select id="qnaListCnt" parameterType="map" resultType="int">
+        SELECT
+        count(q.qna_no)
+        FROM
+        qna q
+        INNER JOIN
+        user u ON q.user_no = u.user_no
+        WHERE 1=1
+        <!-- 검색어(search)에 대한 조건 추가 -->
+        <if test="search != null and search != '' and searchCategory != null and searchCategory != ''">
+            AND ${searchCategory} LIKE CONCAT('%', #{search}, '%')
+        </if>
+    </select>
+
+</mapper>

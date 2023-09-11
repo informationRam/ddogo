@@ -1,89 +1,106 @@
 <html layout:decorate="~{layout}" xmlns:th="http://www.thymeleaf.org">
 <div layout:fragment="content" class="container my-3">
-
-    <div class="container my-3">
-        <h1>회원 정보 변경 </h1>
-            <form id="join" class="my-3" th:object="${userModifyForm}" th:action="@{|/user/modify/${#authentication.principal.username}|}"  method="post">
-                <!-- 오류시 보여주는 문구-->
-                <div th:replace="~{form_errors::formErrorsFragment}"></div>
-                <!-- 1. 이름 -->
-                <div class="field">
-                    <label for="user_name">이름</label>
-                    <input type="text" th:field="*{user_name}" value="${userModifyForm.user_name}" disabled/>
-                </div>
-                <!--  2. 아이디 -->
-                <div class="field">
-                    <label for="user_id">ID</label>
-                    <input type="text" th:field="*{user_id}" value="${userModifyForm.user_id}" disabled/>
-                </div>
-                <!--  3. 생년월일-->
-                <div class="field">
-                    <label for="birth">생년월일</label>
-                    <input type="date" th:field="*{birth}" value="${userModifyForm.birth}" disabled/>
-                </div>
-                <!-- 4. 성별 -->
-                <div class="field gender">
-                    <label for="gender">성별</label>
-                    <div>
-                        <label><input type="radio" th:field="*{gender}" value="M" disabled>남자</label>
-                        <label><input type="radio" th:field="*{gender}" value="F" disabled>여자</label>
+<main class="mt-5 pt-3">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12 mb-4">
+                <h1>회원 정보 수정</h1>
+                <div class="card">
+                    <div class="card-body">
+                        <form id="join" class="my-3" th:object="${userModifyForm}" th:action="@{|/user/modify/${#authentication.principal.username}|}"  method="post">
+                            <table class="table">
+                                <!-- 오류시 보여주는 문구 -->
+                                <div th:replace="~{form_errors::formErrorsFragment}"></div>
+                                <tbody>
+                                <tr>
+                                    <th>이름</th>
+                                    <td>
+                                        <input type="text" th:field="*{user_name}" value="${userModifyForm.user_name}" disabled readonly/><br/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>회원id</th>
+                                    <td>
+                                        <input type="text" th:field="*{user_id}" value="${userModifyForm.user_id}" disabled readonly/><br/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>비밀번호</th>
+                                    <td>
+                                        <input type="password" th:field="*{pwd1}" placeholder="비밀번호"/><br/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>비밀번호확인</th>
+                                    <td>
+                                        <input type="password" th:field="*{pwd2}" placeholder="비밀번호 확인"/><br/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>생일</th>
+                                    <td>
+                                        <span th:text="${#dates.format(userModifyForm.birth, 'yyyy-MM-dd')}"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>성별</th>
+                                    <td>
+                                        <input type="radio" th:field="*{gender}" id="genderM" value="M" disabled/>
+                                        <label for="genderM">남성</label>
+                                        <input type="radio" th:field="*{gender}" id="genderF" value="F" disabled/>
+                                        <label for="genderF">여성</label><br/>
+                                        <span class="ddo-error-text" th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>이메일</th>
+                                    <td>
+                                        <input type="email" th:field="*{email}" value="${userModifyForm.email}" placeholder="ex)eeee@naver.com"/><br/>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <div>
+                                <button type="submit" class="btn btn-outline-danger my-2">저장</button>
+                            </div>
+                        </form>
+                        <br/>
+                        <br/>
+                        <br/>
                     </div>
                 </div>
-                <!-- 5. 이메일 -->
-                <div class="field">
-                    <label for="email">이메일</label>
-                    <input type="email" th:field="*{email}" value="${userModifyForm.email}" placeholder="ex)eeee@naver.com">
+                <!-- 회원 탈퇴 -->
+                <div class="d-flex justify-content-end my-3">
+                    <a href="javascript:void(0);" th:data-uri="@{|/user/delete/${userModifyForm.user_id}|}"
+                       class="delete btn btn-sm btn-outline-secondary"
+                       sec:authorize="isAuthenticated()"
+                       th:text="탈퇴하기"></a>
                 </div>
-               <!-- 6. 비밀번호1 -->
-                <div class="field">
-                    <label for="pwd1">비밀번호</label>
-                    <input class="userpw-confirm" type="password" th:field="*{pwd1}">
-                </div>
-               <!-- 6. 비밀번호 확인2 -->
-                <div class="field">
-                    <label for="pwd2">비밀번호확인</label>
-                    <input class="userpw-confirm" type="password" th:field="*{pwd2}">
-                </div>
-                <!-- 7. 정보수정 버튼 -->
-                <div>
-                    <input type="submit" value="정보수정">
-                </div>
-            </form>
-            <!-- 회원 탈퇴 -->
-            <div>
-                <a href="javascript:void(0);" th:data-uri="@{|/user/delete/${userModifyForm.user_id}|}"
-                   class="delete btn btn-sm btn-outline-secondary"
-                   sec:authorize="isAuthenticated()"
-                   th:if="${userModifyForm.user_id!=null and #authentication.getPrincipal().getUsername()==userModifyForm.user_id}"
-                   th:text="삭제"></a>
-            </div>
 
+            </div>
         </div>
     </div>
-</div>
-<script>
+</main>
+
+
+
+
+
+<script layout:fragment="script">
+    //탈퇴버튼클릭시 호출
     const delElements = document.getElementsByClassName("delete");
-    Array.from(delElements).forEach(function(element) {
-     element.addEventListener("click", function() {
-         if (confirm("정말로 탈퇴하시겠습니까?")) {
-             // Get the data-uri attribute
-             const deleteUri = this.getAttribute("th:data-uri");
+    Array.from(delElements).forEach(function(element){
 
-             // Create a hidden form for the DELETE request
-             const deleteForm = document.createElement("form");
-             deleteForm.method = "POST"; // 변경: DELETE 대신 POST 요청을 사용합니다.
-             deleteForm.action = deleteUri;
-
-             // Create a CSRF token input (if needed) and append it to the form
-             // Replace 'csrfToken' with your actual CSRF token attribute
-             // deleteForm.innerHTML = '<input type="hidden" name="_csrf" value="' + csrfToken + '">';
-
-             // Append the form to the body and submit it
-             document.body.appendChild(deleteForm);
-             deleteForm.submit();
-         }
-     });
- });
-
+        element.addEventListener("click",function(){
+            if(confirm("탈퇴하시겠습니까?")){//확인버튼을 클릭하면
+                //click이벤트가 발생한 a요소의  data-uri속성의 값을 가져와
+                //location객체의 href속성의 값으로 적용해라
+                //=>현재 browser의 URL주소를 변경해라
+                location.href=this.dataset.uri;
+                //location.href="/question/delete/${question.id}";//질문삭제요청
+                //location.href="/answer/delete/${answer.id}";//답변삭제요청
+            };
+        });
+    });
 </script>
 </html>
