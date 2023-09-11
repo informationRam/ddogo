@@ -1,63 +1,48 @@
-<html layout:decorate="~{layout_for_main_notice_qna}">
+<html layout:decorate="~{layout}">
 <div layout:fragment="content" class="container my-3">
   <h5 class="my-3 border-bottom pb-2">공지사항</h5>
-  <table class="table">
-    <table class="table-success">
-      <tr>
-        <th>번호</th>
-        <th>제목</th>
-        <th>작성일</th>
-      </tr>
+  <table class="table table-danger">
+    <thead class="table-danger">
+    <tr>
+      <th>번호</th>
+      <th>제목</th>
+      <th>작성일</th>
+    </tr>
     </thead>
     <tbody>
     <tr th:each="notice, loop : ${noticePage}">
       <!-- 페이지 번호 -->
-      <td th:text="${noticePage.getTotalElements - (noticePage.number * noticePage.size) - loop.index}"></td>
+      <td class="table-light" th:text="${noticePage.getTotalElements() - (noticePage.getNumber() * noticePage.getSize()) - loop.index}"></td>
       <!-- 공지사항 제목 -->
-      <td>
-          <a href="/notice/detail/${notice.notiNo}" th:href="@{|/notice/detail/${notice.notiNo}|}" th:text="${notice.notiTitle}"></a>
+      <td class="table-light">
+        <a href="/notice/detail/${notice.notiNo}" th:href="@{|/notice/detail/${notice.notiNo}|}" th:text="${notice.notiTitle}"></a>
       </td>
-        <!-- 공지사항 작성일 -> 수정하면 날짜 변경. -->
-      <td th:text="${#temporals.format(notice.notiDate,'yyyy-MM-dd HH:mm')}"></td>
-    </tr><!--1페이지당 출력할 게시물수만큼 반복끝-->
+      <!-- 공지사항 작성일 -> 수정하면 날짜 변경. -->
+      <td class="table-light" th:text="${#temporals.format(notice.notiDate,'yyyy-MM-dd')}"></td>
+    </tr><!-- 1페이지당 출력할 게시물수만큼 반복끝 -->
     </tbody>
   </table>
   <!-- 공지사항 등록하기 -->
-  <div sec:authorize="hasRole('ROLE_ADMIN')">
-    <a th:href="@{/notice/add}" class="btn btn-primary">공지사항작성하기</a>
+  <div sec:authorize="hasRole('ROLE_ADMIN')" class="text-end ms-auto">
+    <a th:href="@{/notice/add}" class="btn btn-outline-danger">작성하기</a>
   </div>
-  <!-- Pagenation 부분 영역 시작-->
-    <div th:if="${noticePage != null && !noticePage.isEmpty()}">
+  <!-- Pagination 부분 영역 시작 -->
+  <div th:if="${noticePage != null && !noticePage.isEmpty()}">
     <ul class="pagination justify-content-center">
-      <!-- 이전버튼 -->
-      <li class="page-item"
-          th:classappend="${!noticePage.hasPrevious} ? 'disabled'">
-        <a class="page-link"
-           th:href="@{|?page=${noticePage.number-1}|}"><span>이전</span></a>
+      <!-- 이전 버튼 -->
+      <li class="page-item" th:classappend="${!noticePage.hasPrevious()} ? 'disabled'">
+        <a class="page-link" th:href="@{|?page=${noticePage.getNumber() - 1}|}"><span>이전</span></a>
       </li>
-      <!-- 페이지번호:반복+연결+bootstrap [0] [1] [2] [3~]  [4] [5] [6] [7]~~[9] [10] [11]  -->
-      <li class="page-item"
-          th:each="page : ${#numbers.sequence(0,noticePage.totalPages-1)}"
-          th:if="${  page>=noticePage.number-3 and  page<=noticePage.number+3 }"
-          th:classappend="${page==noticePage.number} ? 'active'">
-        <a class="page-link"
-           th:href="@{|?page=${page}|}"
-           th:text="${page+1}"></a>
+      <!-- 페이지 번호: 반복 + 연결 + bootstrap [0] [1] [2] [3~] [4] [5] [6] [7]~~[9] [10] [11] -->
+      <li class="page-item" th:each="page : ${#numbers.sequence(0, noticePage.getTotalPages() - 1)}"
+          th:if="${page >= noticePage.getNumber() - 3 and page <= noticePage.getNumber() + 3}" th:classappend="${page == noticePage.getNumber()} ? 'active'">
+        <a class="page-link" th:href="@{|?page=${page}|}" th:text="${page + 1}"></a>
       </li>
-      <!-- 다음버튼 -->
-      <li class="page-item"
-          th:classappend="${!noticePage.hasNext} ? 'disabled'">
-        <a class="page-link"
-           th:href="@{|?page=${noticePage.number+1}|}"><span>다음</span></a>
+      <!-- 다음 버튼 -->
+      <li class="page-item" th:classappend="${!noticePage.hasNext()} ? 'disabled'">
+        <a class="page-link" th:href="@{|?page=${noticePage.getNumber() + 1}|}"><span>다음</span></a>
       </li>
     </ul>
-  </div><!-- Pagenation 부분 영역 끝-->
+  </div><!-- Pagination 부분 영역 끝 -->
 </div>
 </html>
-
-
-
-
-
-
-
