@@ -2,7 +2,7 @@
 <div layout:fragment="content" class="container my-3">
     <link rel="stylesheet" href="/css/user/join.css"/>
         <div class="container" id="container">
-            <div class="form-container sign-up-container">
+            <div class="form-container sign-up-container" style="display: block;">
                 <form id="join" class="my-2" th:object="${userCreateForm}" th:action="@{/user/join}" method="post">
                     <h1>Create Account</h1>
                     <span>or use your email for registration</span>

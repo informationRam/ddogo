@@ -71,7 +71,7 @@ public class NoticeService {
         noticeRepository.save(notice);
     }
 
-    //공지사항 삭제하
+    //공지사항 삭제하기
     public void noticeDelete(Notice notice) {
         noticeRepository.delete(notice);
     }

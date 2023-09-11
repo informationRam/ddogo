@@ -1,5 +1,6 @@
 package com.yumpro.ddogo.user.security;
 
+import com.yumpro.ddogo.common.error.CustomAccessDeniedHandler;
 import com.yumpro.ddogo.user.security.auth.PrincipalDetail;
 import com.yumpro.ddogo.user.service.UserSecurityService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -25,12 +31,25 @@ public class SecurityConfig{
 
     @Autowired
     private UserSecurityService userSecurityService;
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler() {
+        return new CustomAccessDeniedHandler(); // 커스텀 AccessDeniedHandler를 사용하여 403 에러 처리
+    }
 
-/*
+    @Bean
+    public AuthenticationSuccessHandler authenticationSuccessHandler() {
+        return new SimpleUrlAuthenticationSuccessHandler(); // 로그인 성공 시 처리할 핸들러
+    }
+
+    @Bean
+    public AuthenticationFailureHandler authenticationFailureHandler() {
+        return new SimpleUrlAuthenticationFailureHandler(); // 로그인 실패 시 처리할 핸들러
+    }
+
     @Autowired
-    private CustomOAuth2UserService customOAuth2UserService;
-*/
-
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userSecurityService).passwordEncoder(passwordEncoder());
+    }
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.
@@ -39,6 +58,7 @@ public class SecurityConfig{
                 .authorizeHttpRequests();
         http.authorizeHttpRequests()
                 .requestMatchers(new AntPathRequestMatcher("/user/modifyForm/**")).authenticated()
+                .requestMatchers(new AntPathRequestMatcher("/mymap/**")).authenticated()
                 .requestMatchers(new AntPathRequestMatcher("/admin/**")).hasRole("ADMIN")
                 .requestMatchers(new AntPathRequestMatcher("/user/joinForm")).denyAll() //로그인 후 회원가입접근불가
                 .anyRequest().permitAll()
@@ -48,11 +68,9 @@ public class SecurityConfig{
                 logoutRequestMatcher(new AntPathRequestMatcher("/user/logout")).logoutSuccessUrl("/").invalidateHttpSession(true)
                 .and().exceptionHandling().accessDeniedPage("/common/ddoError")
                 .and()
-                .exceptionHandling()
-                .accessDeniedPage("/error/403") // 403 에러 페이지 설정
-                .and()
-                .exceptionHandling() // 예외 처리 설정을 추가합니다.
-                .accessDeniedPage("/common/ddoError.html"); // 403 에러 발생 시 커스텀 에러 페이지로 리디렉션합니다.
+                .exceptionHandling(exceptionHandling ->
+                        exceptionHandling
+                                .accessDeniedHandler(accessDeniedHandler())); // 403 에러 처리
              /* .and()
                     .oauth2Login() // 외부 인증
                     .loginPage("/user/kakaoform") // oauth2Login 시 loginForm
