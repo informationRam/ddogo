@@ -9,6 +9,13 @@
     <link rel="stylesheet" href="/css/admin/dataTables.bootstrap5.min.css" />
     <link rel="stylesheet" href="/css/admin/style.css" />
     <link rel="stylesheet" href="/css/admin/ddostyle.css" />
+    <style>
+        main {
+            width: 80%; /* 원하는 너비 비율로 조정 */
+            margin: 0 auto; /* 중앙 정렬 */
+            padding: 20px; /* 원하는 패딩 값으로 조정 */
+        }
+    </style>
 </head>
 <body>
 <!--navi-->
@@ -39,10 +46,12 @@
 </nav>
 <!-- navi끝 -->
 <!-- offcanvas -->
+<div class="content-container" style="display: flex;">
 <div
-        class="offcanvas offcanvas-start sidebar-nav"
+        class="sidebar-nav"
         tabindex="-1"
         id="sidebar"
+        style="border-right: 1px solid #ccc;"
 >
     <div class="offcanvas-body p-0">
         <nav class="navbar-light">
@@ -93,6 +102,34 @@
                         <span>User</span>
                     </a>
                 </li>
+                <li>&nbsp;<li/>
+                <li>&nbsp;<li/>
+                <li>&nbsp;<li/>
+                <li>&nbsp;<li/>
+                <li>&nbsp;<li/>
+                <li>&nbsp;<li/>
+                <li>&nbsp;<li/>
+                <li>&nbsp;<li/>
+                <li>&nbsp;<li/>
+                <li>&nbsp;<li/>
+                <li>&nbsp;<li/>
+                <li>&nbsp;<li/>
+                <li>&nbsp;<li/>
+                <li>&nbsp;<li/>
+                <li>&nbsp;<li/>
+                <li>&nbsp;<li/>
+                <li>&nbsp;<li/>
+                <li>&nbsp;<li/>
+                <li>&nbsp;<li/>
+                <li>&nbsp;<li/>
+                <li>&nbsp;<li/>
+                <li>&nbsp;<li/>
+                <li>&nbsp;<li/>
+                <li>&nbsp;<li/>
+                <li>&nbsp;<li/>
+                <li>&nbsp;<li/>
+                <li>&nbsp;<li/>
+                <li>&nbsp;<li/>
             </ul>
         </nav>
     </div>
@@ -101,6 +138,7 @@
 <main class="mt-5 pt-3">
 <th:block layout:fragment="content"></th:block>
 </main>
+</div>
 <script src="/js/admin/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.2/dist/chart.min.js"></script>
 <script src="/js/admin/jquery-3.5.1.js"></script>

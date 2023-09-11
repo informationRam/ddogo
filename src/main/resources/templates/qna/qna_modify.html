@@ -1,5 +1,6 @@
-<html layout:decorate="~{layout_for_main_notice_qna}" xmlns:th="http://www.thymeleaf.org">
-<div layout:fragment="content" class="container my-5">
+<html xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{|${userId == 'admin' ? 'qna/qnabar' : 'layout_for_main_notice_qna'}|}">
+<div layout:fragment="content" th:class="${userId == 'admin'} ? '' : 'container my-5'">
     <link rel="stylesheet" href="/css/admin/ddostyle.css" />
     <link rel="stylesheet" href="/css/admin/qna.css" />
     <h1 class="text-center" style="font-weight: bold;">QnA</h1><br/><br/>

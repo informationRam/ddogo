@@ -101,7 +101,11 @@ public class QnaController {
     //(유저)문의글 작성 폼
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/add")
-    public String qnaAdd(QnaAddForm qnaAddForm){
+    public String qnaAdd(QnaAddForm qnaAddForm,Model model,Principal principal){
+        int notSolvedCnt=dashboardService.notSolvedCnt();
+        //3.Model
+        model.addAttribute("notSolvedCnt",notSolvedCnt);
+        model.addAttribute("userId",principal.getName());
         return "qna/qna_add";
     }
 
@@ -109,10 +113,14 @@ public class QnaController {
     @PreAuthorize("isAuthenticated()")//로그인인증=>로그인이 필요한 기능
     @PostMapping("/add")
     public String qnaAdd(@Valid QnaAddForm qnaAddForm, BindingResult bindingResult,
-                         Principal principal) {
+                         Principal principal,Model model) {
         //1.파라미터받기 qna_title,qna_content,qna_pwd
         //2.비즈니스로직
         if(bindingResult.hasErrors()) { //에러가 존재하면
+            int notSolvedCnt=dashboardService.notSolvedCnt();
+            //3.Model
+            model.addAttribute("notSolvedCnt",notSolvedCnt);
+            model.addAttribute("userId",principal.getName());
             return "qna/qna_add";
         }
 
@@ -126,8 +134,11 @@ public class QnaController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/detail/{id}")
-    public String qnaDetailGet(@PathVariable int id,@RequestParam(value="inputPwd", required = false) String inputPwd,RedirectAttributes redirectAttributes){
+    public String qnaDetailGet(@PathVariable int id,@RequestParam(value="inputPwd", required = false) String inputPwd,RedirectAttributes redirectAttributes,Model model){
         redirectAttributes.addFlashAttribute("error", "문의글 상세보기는 비밀번호 후 이용해주세요");
+        int notSolvedCnt=dashboardService.notSolvedCnt();
+        //3.Model
+        model.addAttribute("notSolvedCnt",notSolvedCnt);
         return"redirect:/qna/list";
     }
 
@@ -159,10 +170,14 @@ public class QnaController {
         }else{
             userRole="user";
         }
-
+        int notSolvedCnt=dashboardService.notSolvedCnt();
+        //3.Model
+        model.addAttribute("notSolvedCnt",notSolvedCnt);
         model.addAttribute("qnaSolve",qnaSolve);
         model.addAttribute("qna",qna);
         model.addAttribute("userRole",userRole);
+        model.addAttribute("userId",principal.getName());
+
         return "qna/qna_detail";
     }
 
@@ -189,10 +204,14 @@ public class QnaController {
             userRole="user";
         }
         if(bindingResult.hasErrors()) {
+            int notSolvedCnt=dashboardService.notSolvedCnt();
+            //3.Model
+            model.addAttribute("notSolvedCnt",notSolvedCnt);
             model.addAttribute("qna",qna);
             model.addAttribute("qnaSolve",qnaSolve);
             model.addAttribute("user",principal.getName());
             model.addAttribute("userRole",userRole);
+            model.addAttribute("userId",principal.getName());
             return "qna/qna_detail";
         } else{
 
@@ -204,12 +223,14 @@ public class QnaController {
 
         Qna qna1 = qnaService.getQnaById(id);
         QnaSolve qnaSolve1 = qnaService.getQnaSolveByQna(qna1);
-
+        int notSolvedCnt=dashboardService.notSolvedCnt();
         //3.Model
+        model.addAttribute("notSolvedCnt",notSolvedCnt);
         model.addAttribute("qnaSolve",qnaSolve1);
         model.addAttribute("qna",qna1);
         model.addAttribute("user",principal.getName());
         model.addAttribute("userRole",userRole);
+        model.addAttribute("userId",principal.getName());
 
         //4.View
         return "qna/qna_detail";
@@ -225,13 +246,19 @@ public class QnaController {
 
         if(!principal.getName().equals("admin")){
             redirectAttributes.addFlashAttribute("error", "문의 답글은 관리자만 수정할 수 있습니다");
+            int notSolvedCnt=dashboardService.notSolvedCnt();
+            //3.Model
+            model.addAttribute("notSolvedCnt",notSolvedCnt);
             return "redirect:/qna/list";
         }
 
         qnaSolveAddForm.setQnaSolveTitle(qnaSolve.getQnaSolveTitle());
         qnaSolveAddForm.setQnaSolveContent(qnaSolve.getQnaSolveContent());
-
+        int notSolvedCnt=dashboardService.notSolvedCnt();
+        //3.Model
+        model.addAttribute("notSolvedCnt",notSolvedCnt);
         model.addAttribute("qna",qna);
+        model.addAttribute("userId",principal.getName());
 
         return "qna/qna_modify";
     }
@@ -242,10 +269,17 @@ public class QnaController {
     public String qnaSolveMofiy(@PathVariable int id,@Valid QnaSolveAddForm qnaSolveAddForm,BindingResult bindingResult,Model model,Principal principal,RedirectAttributes redirectAttributes){
         if(!principal.getName().equals("admin")){
             redirectAttributes.addFlashAttribute("error", "답변 수정은 관리자만 가능합니다");
+            int notSolvedCnt=dashboardService.notSolvedCnt();
+            //3.Model
+            model.addAttribute("notSolvedCnt",notSolvedCnt);
             return "redirect:/qna/list";
         }
 
         if(bindingResult.hasErrors()){  //유효성검사시 에러가 발생하면
+            int notSolvedCnt=dashboardService.notSolvedCnt();
+            //3.Model
+            model.addAttribute("notSolvedCnt",notSolvedCnt);
+            model.addAttribute("userId",principal.getName());
             return "question_form"; //question_form.html문서로 이동
         }
 
@@ -258,10 +292,13 @@ public class QnaController {
 
         QnaSolve qnaSolve1 = qnaService.getQnaSolveByQna(qna);
 
+        int notSolvedCnt=dashboardService.notSolvedCnt();
         //3.Model
+        model.addAttribute("notSolvedCnt",notSolvedCnt);
         model.addAttribute("qnaSolve",qnaSolve1);
         model.addAttribute("qna",qna);
         model.addAttribute("user",principal.getName());
+        model.addAttribute("userId",principal.getName());
 
         //4.View
         return "qna/qna_detail";
@@ -271,9 +308,12 @@ public class QnaController {
     ///solve/delete/${qna.qnaNo}
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/solve/delete/{id}")
-    public String qnaSolveDelete(@PathVariable("id") Integer id,Principal principal,RedirectAttributes redirectAttributes){
+    public String qnaSolveDelete(@PathVariable("id") Integer id,Principal principal,RedirectAttributes redirectAttributes,Model model){
         if(!principal.getName().equals("admin")){
             redirectAttributes.addFlashAttribute("error", "답글 삭제는 관리자만 가능합니다");
+            int notSolvedCnt=dashboardService.notSolvedCnt();
+            //3.Model
+            model.addAttribute("notSolvedCnt",notSolvedCnt);
             return "redirect:/qna/list";
         }
 
@@ -296,7 +336,11 @@ public class QnaController {
         }
         QnaAddForm.setQna_title(qna.getQnaTitle());
         QnaAddForm.setQna_content(qna.getQnaContent());
+        int notSolvedCnt=dashboardService.notSolvedCnt();
+        //3.Model
+        model.addAttribute("notSolvedCnt",notSolvedCnt);
         model.addAttribute("qna",qna);
+        model.addAttribute("userId",principal.getName());
 
         return "qna/qna_modi";
     }
@@ -315,13 +359,21 @@ public class QnaController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"수정권한이 없습니다.");
         }
         if(bindingResult.hasErrors()){  //유효성검사시 에러가 발생하면
+            int notSolvedCnt=dashboardService.notSolvedCnt();
+            //3.Model
+            model.addAttribute("notSolvedCnt",notSolvedCnt);
             model.addAttribute("qna",qna);
+            model.addAttribute("userId",principal.getName());
             return "qna/qna_modi";
         }
 
         if(!qnaAddForm.getQna_pwd().equals(qna.getQnaPwd())){
             bindingResult.rejectValue("qna_pwd","qnaPwdInCorrect","문의 비밀번호가 일치하지 않습니다");
+            int notSolvedCnt=dashboardService.notSolvedCnt();
+            //3.Model
+            model.addAttribute("notSolvedCnt",notSolvedCnt);
             model.addAttribute("qna",qna);
+            model.addAttribute("userId",principal.getName());
             return "qna/qna_modi";
         }
 
@@ -338,10 +390,13 @@ public class QnaController {
         }else{
             userRole="user";
         }
-
+        int notSolvedCnt=dashboardService.notSolvedCnt();
+        //3.Model
+        model.addAttribute("notSolvedCnt",notSolvedCnt);
         model.addAttribute("qnaSolve",qnaSolve);
         model.addAttribute("qna",qna1);
         model.addAttribute("userRole",userRole);
+        model.addAttribute("userId",principal.getName());
         return "qna/qna_detail";
     }
 
