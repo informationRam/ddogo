@@ -4,22 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" />
+<link rel="stylesheet" href="/css/main/main.css" th:href="@{/css/main/main.css}" />
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" type="text/css"
-          href="/css/main/main.css" th:href="@{/css/main/main.css}" />
 
 <div class="container mt-2 mb-2">
     <div class="row">
         <div class="col-md-6" >
-            <h4 class="title" style="margin:20px;">오늘의 Best 음식점</h4>
+            <h4 class="title" style="margin:20px;">오늘의 Best 5 음식점</h4>
             <div th:each="eatjjim,  idx :${eatjjim}" class="card p-1 mb-2">
                 <div class="mt-1" style="padding: 20px;">
                     <div class="badge" style="display: inline-block; margin-right: 10px;">
-                        <span th:text="'베스트 ' + (${idx.index + 1})">베스트</span>
+                        <span th:text="'Best ' + (${idx.index + 1})">Best</span>
                     </div>
                     <h5 class="heading" th:text="${eatjjim.hotplace_name}" th:attr="data-hotplace-no=${eatjjim.hotplace_no}" style="display: inline-block;"></h5>
                     <!--뭔가 클릭하고 싶게끔 바꾸기-->
@@ -40,11 +39,11 @@
         </div>
 
         <div class="col-md-6">
-            <h4 class="title" style="margin:20px;">오늘의 Best 카페</h4>
+            <h4 class="title" style="margin:20px;">오늘의 Best 5 카페</h4>
             <div th:each="cafejjim,  idx :${cafejjim}" class="card p-2 mb-2">
                 <div class="mt-1" style="padding: 15px;">
                     <div class="badge" style="display: inline-block; margin-right: 10px;">
-                        <span th:text="'베스트 ' + (${idx.index + 1})">베스트</span>
+                        <span th:text="'Best ' + (${idx.index + 1})">Best</span>
                     </div>
                     <h5 class="heading" th:text="${cafejjim.hotplace_name}" th:attr="data-hotplace-no=${cafejjim.hotplace_no}" style="display: inline-block;"></h5>
                     <div class="ms-2 c-details">
@@ -94,7 +93,7 @@
 <br/>
 <br/>
 <!-- 시도 select -->
-<h4 class="title" style="margin-left:50px;">이번달 Best</h4>
+<h4 class="title" style="margin-left:50px;">이번달 Best 5</h4>
 <div class="container2 mt-1 mb-1">
     <div>
         <label for="sido" class="form-label" style="margin:10px;">시/도</label>
@@ -234,15 +233,18 @@ document.addEventListener("DOMContentLoaded", function () {
                         modalBody.innerHTML = '';
 
                         data.forEach(function(reviewList) {
+                            let reviewBody = document.createElement('div');
+                            reviewBody.classList.add('card-body', 'my-2');
                           let reviewTextElement = document.createElement('p');
                           reviewTextElement.textContent = reviewList.review;
+
                           let emoResultElement = document.createElement('p');
                           emoResultElement.style.textAlign = 'right';
                           emoResultElement.textContent ='리뷰 온도 '+reviewList.emo_result+'°C';
 
                           modalBody.appendChild(reviewTextElement);
-
                           modalBody.appendChild(emoResultElement);
+
                           let breakLine = document.createElement('br');
                           modalBody.appendChild(breakLine);
                         });
@@ -395,13 +397,13 @@ document.addEventListener("DOMContentLoaded", function () {
                                 rankBadge.style.marginBottom = "10px";
 
                                 var rankSpan = document.createElement("span");
-                                rankSpan.textContent = "베스트 "+ (i + 1); // 순위 계산 (0부터 시작하므로 +1)
+                                rankSpan.textContent = "Best "+ (i + 1); // 순위 계산 (0부터 시작하므로 +1)
 
                                 rankBadge.appendChild(rankSpan);
 
                                 // 가게 이름을 표시하는 열 추가
                                 var nameH6 = document.createElement("h5");
-                                nameH6.className = "heading";
+                                nameH6.className = "heading2";
                                 nameH6.style.display = "inline-block";
                                 nameH6.textContent = entry.hotplace_name;
                                 nameH6.style.marginBottom = "10px"; // 상하 마진
@@ -455,7 +457,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
                 } else {
                     console.log("Error:", xhr.statusText);
-                    alert("시도, 구군, 카테고리를 모두 선택해주세요." + xhr.statusText);
+                    alert("Error" + xhr.statusText);
                 }
             };
 
