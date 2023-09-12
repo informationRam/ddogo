@@ -118,7 +118,7 @@ function expelUser() {
     const adminPassword = document.getElementById('adminPassword').value;
     const userId = document.querySelector('input[name="user_id"]').value;
 
-    fetch(`http://localhost/admin/user/valiAdmin`, {
+    fetch(`/admin/user/valiAdmin`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -127,7 +127,7 @@ function expelUser() {
         })
         .then(response => {
             if (response.ok) {
-                return fetch(`http://localhost/admin/user/delete/${userId}`, { method: 'POST' });
+                return fetch(`/admin/user/delete/${userId}`, { method: 'POST' });
             } else {
                 return Promise.reject("비밀번호가 일치하지 않습니다");
             }
@@ -140,7 +140,7 @@ function expelUser() {
         })
         .then((message) => {
             alert(message);
-            window.location.href = 'http://localhost/admin/user/list';
+            window.location.href = '/admin/user/list';
         })
         .catch(error => {
             alert(error);
