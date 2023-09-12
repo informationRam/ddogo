@@ -59,25 +59,25 @@ public class UserController {
     public String userJoin(@Valid UserCreateForm userCreateForm, BindingResult bindingResult, Model model) {
 
         if (bindingResult.hasErrors()) {
-            return "/user/loginForm";
+            return "/user/joinForm";
         }
 
         // 아이디 중복 여부체크
         if (userService.checkUserIdDuplication(userCreateForm.getUser_id())) {
             bindingResult.rejectValue("user_id", "User_idInCorrect", "이미 사용중인 아이디입니다.");
-            return "/user/loginForm";
+            return "/user/joinForm";
         }
 
         // 이메일 중복 여부체크
         if (userService.checkEmailDuplication(userCreateForm.getEmail())) {
             bindingResult.rejectValue("email", "EmailInCorrect", "이미 사용중인 이메일 입니다.");
-            return "/user/loginForm";
+            return "/user/joinForm";
         }
 
         // 비밀번호, 비밀번호 확인 동일 체크
         if (!userCreateForm.getPwd1().equals(userCreateForm.getPwd2())) {
             bindingResult.rejectValue("pwd2", "pwdInCorrect", "비밀번호 확인 값이 다릅니다.");
-            return "/user/loginForm";
+            return "/user/joinForm";
         } else {
             userService.userJoin(userCreateForm);
             return "redirect:/user/login";
