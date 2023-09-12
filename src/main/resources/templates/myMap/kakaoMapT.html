@@ -135,49 +135,31 @@
         </div>    <!-- modal fade: 후기 조회&수정 모달 끝-->
         <script src="/js/mymap/hotplCard.js" th:src="@{/js/mymap/hotplCard.js}"></script>
 
-<!--        &lt;!&ndash; ajax용 페이징 &ndash;&gt;-->
-<!--        <nav aria-label="PageNavi">-->
-<!--            <input type="hidden" id="userId" th:value="${user.userId}" />-->
-<!--            <ul class="pagination justify-content-center">-->
-<!--                &lt;!&ndash; 이전 페이지 버튼 &ndash;&gt;-->
-<!--                <li class="page-item">-->
-<!--                    <a class="page-link" href="javascript:void(0);" onclick="loadPage(currentPage - 1)" aria-label="Previous">-->
-<!--                        <span aria-hidden="true">&lt;</span>-->
-<!--                    </a>-->
-<!--                </li>-->
-<!--                &lt;!&ndash; 페이지 번호 버튼 &ndash;&gt;-->
-<!--                <li class="page-item" th:each="pageNo : ${#numbers.sequence(1, totalPages)}"-->
-<!--                    th:class="${pageNo == currentPage} ? 'page-item active' : 'page-item'">-->
-<!--                    <a class="page-link" href="javascript:void(0);" onclick="loadPage(${pageNo})" th:attr="data-page=${pageNo}" th:text="${pageNo}"></a>-->
-<!--                </li>-->
-<!--                &lt;!&ndash; 다음 페이지 버튼 &ndash;&gt;-->
-<!--                <li class="page-item">-->
-<!--                    <a class="page-link" href="javascript:void(0);" onclick="loadPage(currentPage + 1)" aria-label="Next">-->
-<!--                        <span aria-hidden="true">&gt;</span>-->
-<!--                    </a>-->
-<!--                </li>-->
-<!--            </ul>-->
-<!--        </nav>-->
 
-<!--                 <-- 페이지네이션 컴포넌트-->
-        <nav aria-label="PageNavi"  class="mt-4">
+        <!-- 페이지네이션 컴포넌트 -->
+        <nav aria-label="PageNavi" class="mt-4">
             <ul class="qna-pagination justify-content-center">
+                <!-- 이전 버튼 -->
                 <li class="qna-page-item">
                     <a class="qna-page-link" th:href="@{/mymap/{user_id}(user_id=${user.userId},page=1)}" aria-label="Previous">
-                    <span aria-hidden="true">&lt;</span>
+                        <span aria-hidden="true">&lt;</span>
                     </a>
                 </li>
-                <li class="qna-page-item" th:each="pageNo : ${#numbers.sequence(1, totalPages)}"
-                    th:class="${pageNo == currentPage} ? 'qna-page-item active' : 'qna-page-item'">
-                    <a class="qna-page-link" th:href="@{/mymap/{user_id}(user_id=${user.userId},page=${pageNo})}" th:text="${pageNo}"></a>
+
+                <!-- 페이지 번호들을 루프로 생성 (현재 페이지 기준으로 4개씩 표시) -->
+                <li class="qna-page-item" th:each="pageNo : ${#numbers.sequence(currentPage, currentPage + 3)}" th:class="${pageNo == currentPage} ? 'qna-page-item active' : 'qna-page-item'">
+                    <a class="qna-page-link" th:if="${pageNo >= 1 && pageNo <= totalPages}" th:href="@{/mymap/{user_id}(user_id=${user.userId},page=${pageNo},search=${search})}" th:text="${pageNo}"></a>
                 </li>
+
+                <!-- 다음 버튼 -->
                 <li class="qna-page-item">
                     <a class="qna-page-link" th:href="@{/mymap/{user_id}(user_id=${user.userId},page=${totalPages})}" aria-label="Next">
-                    <span aria-hidden="true">&gt;</span>
+                        <span aria-hidden="true">&gt;</span>
                     </a>
                 </li>
             </ul>
         </nav>
+
     </div><!-- listContainer 끝 -->
 
     <!-- 지도 영역 시작   -->
@@ -205,7 +187,7 @@ var pageNo = /*[[${pageNo}]]*/;
 </script>
 <script src="/js/mymap/mymapKAPI.js"></script>
 <script src="/js/mymap/reviewModal.js" th:src="@{/js/mymap/reviewModal.js}"></script>
-<!--<script src="/js/mymap/hotplPaging.js" th:src="@{/js/mymap/hotplPaging.js}"></script>-->
+
 
 </div>
 </html>

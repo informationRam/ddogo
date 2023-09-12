@@ -49,63 +49,7 @@ public class MymapController {
         }
 
     }
-//
-//    // 모달 후기수정
-//    @PostMapping(value="/updateReview/{mapNo}",
-//            consumes ="application/json",
-//            produces={MediaType.TEXT_PLAIN_VALUE})
-//    public ResponseEntity<String> updateReview(@PathVariable Integer mapNo,
-//                                               @RequestBody ReviewUpdateDTO request
-//                                               ) {
-//        try {
-//            // request 객체에 포함된 데이터 사용
-//            String review = request.getReview();
-//            char recom = request.getRecomm();
-//            String memo = request.getMemo();
-//            int hotplaceNo = request.getHotplaceNo();
-//
-//            // 클라이언트로부터 받은 후기 내용을 감정 분석 서비스로 분석
-//            double emoResult = emoService.emoAnal(request.getReview());
-//
-//            // 감정 분석 결과 서비스 전달, 후기 저장 :request는 dto
-//            reviewService.updateReviewandMemo(mapNo, request, emoResult);
-//
-//            return ResponseEntity.ok("업데이트가 성공적으로 수행되었습니다.");
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("업데이트 중 오류가 발생했습니다.");
-//        }
-//    }
 
-
-/*
-    // 모달 후기수정
-    @PostMapping(value="/updateReview/{mapNo}",
-    consumes ="application/x-www-form-urlencoded",
-    produces={MediaType.TEXT_PLAIN_VALUE})
-    public ResponseEntity<String> updateReviewAndMemo(@PathVariable Integer mapNo,
-                                                      @RequestBody ReviewUpdateDTO request) {
-        try {
-
-            // mapNo를 DTO에 설정
-            request.setMapNo(mapNo);
-            // 여기서 emoReviewDTO 객체에 클라이언트로부터 받은 데이터가 매핑됩니다.
-            // 클라이언트로부터 받은 후기 내용을 감정 분석 서비스로 분석
-            double emoResult = emoService.emoAnal(request.getReview());
-
-            // 감정 분석 결과를 DTO에 설정
-            request.setEmo_result(emoResult);
-            // 컨트롤러 메서드에서 memo와 recomm 저장
-            request.setMemo(request.getMemo());
-            request.setRecomm(request.getRecomm());
-
-            // 서비스를 사용하여 후기정보 업데이트
-            reviewService.updateReview(request);
-
-            return ResponseEntity.ok("업데이트가 성공적으로 수행되었습니다.");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("업데이트 중 오류가 발생했습니다.");
-        }
-    }*/
         // 모달 후기수정
         @PostMapping(value="/updateReview/{mapNo}",
                 consumes ="application/json",
@@ -152,25 +96,6 @@ public class MymapController {
         myMapService.deleteHotpl(mapNo);
         return "redirect:/mymap/" + principal.getName(); // 삭제 후 리다이렉트
     }
-
-
-//    //ajax용 페이지네이션
-//    @GetMapping("/api/{user_id}/{pageNo}")
-//    @ResponseBody
-//    public Page<MyMapDTO> myMapHotplListApi(
-//            @PathVariable("user_id") String user_id,
-//            @PathVariable("pageNo") int pageNo, // 파라미터 이름 수정
-//            @RequestParam(defaultValue = "4") int size,
-//            Principal principal) {
-//        User loginUser = userService.getUser(principal.getName());
-//        int userNo = loginUser.getUser_no();
-//
-//        // 페이지네이션을 위해 Pageable 객체 생성
-//        Pageable pageable = PageRequest.of(pageNo - 1, size); // 페이지는 0부터 시작하므로 -1
-//
-//        return myMapService.getHotplacesByUserNo(userNo, pageable);
-//    }
-
 
 
     // 회원별 맛집 목록 & 지도를 보여줄 페이지 및 JSON 데이터를 반환
