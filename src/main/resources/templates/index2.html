@@ -273,6 +273,61 @@ document.addEventListener("DOMContentLoaded", function () {
     xhr.open("GET", "http://localhost/initialData", true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 
+      // 모달창 생성
+  var modal = document.createElement('div');
+  modal.id = 'myModal';
+  modal.className = 'modal fade';
+  modal.tabIndex = '-1';
+
+  var dialog = document.createElement('div');
+  dialog.className = 'modal-dialog';
+
+  var content = document.createElement('div');
+  content.className = 'modal-content';
+
+  // 모달 헤더 생성
+  var header= document.createElement('div');
+  header.className= 'modal-header';
+
+  var title= document.createElement('h5');
+  title.className= 'modal-title';
+  title.textContent='Review';
+
+  var closeButtonHeader= document.createElement('button');
+  closeButtonHeader.type='button';
+  closeButtonHeader.className='btn-close';
+  closeButtonHeader.setAttribute("data-bs-dismiss", "modal");
+
+  header.appendChild(title);
+  header.appendChild(closeButtonHeader);
+
+  content.appendChild(header);
+
+  //모달 바디 생성
+  var body = document.createElement('div');
+  body.className = 'modal-body';
+
+  content.appendChild(body);
+  dialog.appendChild(content);
+  modal.appendChild(dialog);
+
+  // 모달창을 body에 추가
+  document.body.appendChild(modal);
+
+  //모달 푸터 생성
+  var footer=document.createElement('div');
+  footer.className='modal-footer';
+
+  let closeModalButton=document.createElement('button')
+  closeModalButton.id="closeModal";
+  closeModalButton.type="button";
+  closeModalButton.className="btn btn-danger";
+  closeModalButton.setAttribute("data-bs-dismiss", "modal");
+  closeModalButton.textContent = 'Close';
+
+  footer.appendChild(closeModalButton);
+  content.appendChild(footer);
+
     xhr.onload = function () {
         if (xhr.status === 200) {
             try {
@@ -376,92 +431,98 @@ document.addEventListener("DOMContentLoaded", function () {
                             resultDiv.appendChild(noDataMessage);
                         } else {
                             // 결과가 있을 때 카드에 데이터 추가
-                            for (var i = 0; i < response.monthBestList.length; i++) {
-                                var entry = response.monthBestList[i];
+    for (var i = 0; i < response.monthBestList.length; i++) {
+        var entry = response.monthBestList[i];
 
-                                // 카드를 생성하여 데이터 표시
-                                var card = document.createElement("div");
-                                card.className = "card p-2 mb-2";
+        // 카드를 생성하여 데이터 표시
+        var card = document.createElement("div");
+        card.className = "card p-2 mb-2";
 
-                                var cardContent = document.createElement("div");
-                                cardContent.className = "mt-1";
-                                cardContent.style.padding = "15px";
+        var cardContent = document.createElement("div");
+        cardContent.className = "mt-1";
+        cardContent.style.padding = "15px";
 
-                                // 순위를 표시하는 열 추가
-                                var rankBadge = document.createElement("div");
-                                rankBadge.className = "badge";
-                                rankBadge.style.display = "inline-block";
-                                rankBadge.style.marginRight = "10px";
-                                rankBadge.textContent = "순위";
-                                rankBadge.style.marginBottom = "10px";
+        // 순위를 표시하는 열 추가
+        var rankBadge = document.createElement("div");
+        rankBadge.className = "badge";
+        rankBadge.style.display = "inline-block";
+        rankBadge.style.marginRight = "10px";
+        rankBadge.textContent = "순위";
+        rankBadge.style.marginBottom = "10px";
 
-                                var rankSpan = document.createElement("span");
-                                rankSpan.textContent = "Best "+ (i + 1); // 순위 계산 (0부터 시작하므로 +1)
+        var rankSpan = document.createElement("span");
+        rankSpan.textContent = "Best " + (i + 1); // 순위 계산 (0부터 시작하므로 +1)
 
-                                rankBadge.appendChild(rankSpan);
+        rankBadge.appendChild(rankSpan);
 
-                                // 가게 이름을 표시하는 열 추가
-                                var nameH6 = document.createElement("h5");
-                                nameH6.className = "heading2";
-                                nameH6.style.display = "inline-block";
-                                nameH6.textContent = entry.hotplace_name;
-                                nameH6.style.marginBottom = "10px"; // 상하 마진
-                               // 가게 주소를 표시하는 열 추가
-                                var addressDiv = document.createElement("div");
-                                addressDiv.className = "ms-2 c-details";
+        // 가게 이름을 표시하는 열 추가
+        var nameH6 = document.createElement("h5");
+        nameH6.className = "heading2";
+        nameH6.style.display = "inline-block";
+        nameH6.textContent = entry.hotplace_name;
+        nameH6.setAttribute("th:text", "'${monthBestList.hotplace_name}'");
+        nameH6.setAttribute("th:attr", "'data-hotplace-no=' + ${monthBestList.hotplace_no}");
+        nameH6.style.marginBottom = "10px"; // 상하 마진
 
-                                var addressSpan = document.createElement("span");
-                                addressSpan.className = "mb-0";
-                                addressSpan.textContent = entry.address; // monthBestList의 주소 정보를 표시
-                                addressDiv.appendChild(addressSpan);
+        // 가게 주소를 표시하는 열 추가
+        var addressDiv = document.createElement("div");
+        addressDiv.className = "ms-2 c-details";
 
-                                // 리뷰 온도를 표시하는 열 추가
-                                var reviewProgress = document.createElement("div");
-                                reviewProgress.className = "progress";
-                                reviewProgress.style.marginTop = "10px";
+        var addressSpan = document.createElement("span");
+        addressSpan.className = "mb-0";
+        addressSpan.textContent = entry.address; // monthBestList의 주소 정보를 표시
+        addressDiv.appendChild(addressSpan);
 
-                                var reviewProgressBar = document.createElement("div");
-                                reviewProgressBar.className = "progress-bar";
-                                reviewProgressBar.role = "progressbar";
-                                reviewProgressBar.style.width = entry.avg_emo_result + "%"; //리뷰 온도 값 사용
+        // 리뷰 온도를 표시하는 열 추가
+        var reviewProgress = document.createElement("div");
+        reviewProgress.className = "progress";
+        reviewProgress.style.marginTop = "10px";
 
-                                reviewProgress.appendChild(reviewProgressBar);
+        var reviewProgressBar = document.createElement("div");
+        reviewProgressBar.className = "progress-bar";
+        reviewProgressBar.role = "progressbar";
+        reviewProgressBar.style.width = entry.avg_emo_result + "%"; //리뷰 온도 값 사용
 
-                                var reviewText1 = document.createElement("span");
-                                reviewText1.className = "text1";
-                                reviewText1.textContent = "리뷰 온도 " + entry.avg_emo_result+"°C";
-                                reviewText1.style.float = "left";
-                                reviewText1.style.marginTop = "15px";
+        reviewProgress.appendChild(reviewProgressBar);
 
-                                // 찜 수를 표시하는 열 추가
-                                var jjimText2 = document.createElement("span");
-                                jjimText2.className = "text2";
-                                jjimText2.textContent = "이번달 저장수 " + entry.jjim;
-                                jjimText2.style.float = "right";
-                                jjimText2.style.marginTop = "15px";
+        var reviewText1 = document.createElement("span");
+        reviewText1.className = "text1";
+        reviewText1.textContent = "리뷰 온도 " + entry.avg_emo_result + "°C";
+        reviewText1.style.float = "left";
+        reviewText1.style.marginTop = "15px";
 
-                                cardContent.appendChild(rankBadge);
-                                cardContent.appendChild(nameH6);
-                                cardContent.appendChild(addressDiv);
-                                cardContent.appendChild(reviewProgress);
-                                cardContent.appendChild(reviewText1);
-                                cardContent.appendChild(jjimText2);
+        // 찜 수를 표시하는 열 추가
+        var jjimText2 = document.createElement("span");
+        jjimText2.className = "text2";
+        jjimText2.textContent = "이번달 저장수 " + entry.jjim;
+        jjimText2.style.float = "right";
+        jjimText2.style.marginTop = "15px";
 
-                                card.appendChild(cardContent);
+        cardContent.appendChild(rankBadge);
+        cardContent.appendChild(nameH6);
+        cardContent.appendChild(addressDiv);
+        cardContent.appendChild(reviewProgress);
+        cardContent.appendChild(reviewText1);
+        cardContent.appendChild(jjimText2);
 
-                                // 결과 테이블에 카드 추가
-                                resultDiv.appendChild(card);
+        card.appendChild(cardContent);
 
-                                // 마지막 리스트에는 수평선을 추가하지 않음
-                                if (i < response.monthBestList.length - 1) {
-                                    var horizontalLine = document.createElement("hr");
-                                    resultDiv.appendChild(horizontalLine);
+        // 결과 테이블에 카드 추가
+        resultDiv.appendChild(card);
+
+        // 마지막 리스트에는 수평선을 추가하지 않음
+        if (i < response.monthBestList.length - 1) {
+            var horizontalLine = document.createElement("hr");
+            resultDiv.appendChild(horizontalLine);
 
 
 
 
                                 }
                             }
+
+
+
                         }
                     } catch (error) {
                         console.error("JSON 파싱 오류:", error);
