@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
@@ -41,9 +42,13 @@ public class SecurityConfig{
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.
-                csrf().disable()// CSRF 보호 비활성화
-               // csrf().and() // CSRF 보호 활성화
-                .authorizeHttpRequests();
+                csrf().disable() // CSRF 비활성화
+                .authorizeHttpRequests()
+                .and()
+                .sessionManagement()
+                .maximumSessions(1) //최대 세션 허용 수
+                .maxSessionsPreventsLogin(false)    // 2중 로그인 방지 -> 먼저로그인한 user가 튕긴다.
+                .expiredUrl("/user/login");         // 튕겨지면 user/login페이지로 이동
         http.authorizeHttpRequests()
                 .requestMatchers(new AntPathRequestMatcher("/user/modifyForm/**")).authenticated()
                 .requestMatchers(new AntPathRequestMatcher("/mymap/**")).authenticated()
