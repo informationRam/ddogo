@@ -1,20 +1,24 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <title>오류 페이지</title>
-</head>
-<body>
-<div>
-  서버에서 문제가 발생했습니다.<br />
-  관리자에게 문의해주세요.
-  <p>경로: [[${path}]]</p>
-  <p>오류: [[${error}]]</p>
-  <p>메시지: [[${message}]]</p>
-  <p>오류 목록(BindingResult): [[${errors}]]</p>
-  <p>상태: [[${status}]]</p>
-  <p>발생 시간: [[${timestamp}]]</p>
-  <p>예외 클래스: [[${exception}]]</p>
+<html layout:decorate="~{layout}" xmlns:th="http://www.thymeleaf.org">
+<div layout:fragment="content" class="container my-3">
+  <div class="justify-content-center my-5">
+    <div class="spinner-border text-danger justify-content-center"></div>
+    <h2 class="my-5">서버에서 문제가 발생했습니다.</h2>
+    <h6 class="my-5">서비스 이용에 불편을 드려 죄송합니다. <br/> 아래의 정보를 복사하여 문의사항을 남겨주시면 더 신속하게 조치하도록 하겠습니다.</h6>
+    <p>경로: [[${path}]]</p>
+    <p>오류: [[${error}]]</p>
+    <p>메시지: [[${message}]]</p>
+    <p>오류 목록(BindingResult): [[${errors}]]</p>
+    <p>상태: [[${status}]]</p>
+    <p>발생 시간: [[${timestamp}]]</p>
+    <p>예외 클래스: [[${exception}]]</p>
+    <br/>
+    <div class="d-flex justify-content-center">
+      <a onclick="history.back();" class="btn btn-outline-danger mx-2">이전 화면으로 돌아가기</a>
+      <a th:href="@{/}" class="btn btn-danger mx-2">메인 화면으로 돌아가기</a>
+      <a th:href="@{/qna/add}" class="btn btn-warning mx-2">문의사항 남기기</a>
+    </div>
+  </div>
 </div>
+
 </body>
 </html>
