@@ -40,7 +40,6 @@ public class SecurityConfig{
                 .requestMatchers(new AntPathRequestMatcher("/user/modifyForm/**","/mymap/**")).authenticated()
                 .requestMatchers(new AntPathRequestMatcher("/admin/**")).hasRole("ADMIN")
                 .requestMatchers(new AntPathRequestMatcher("/user/joinForm")).denyAll() //로그인 후 회원가입접근불가
-                .requestMatchers(new AntPathRequestMatcher("/user/login")).denyAll() //로그인 후 로그인접근불가
                 .anyRequest().permitAll()
                 .and().formLogin().loginPage("/user/login").usernameParameter("user_id").passwordParameter("pwd").defaultSuccessUrl("/")
                 .and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/user/logout")).logoutSuccessUrl("/").invalidateHttpSession(true);

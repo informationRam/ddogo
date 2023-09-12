@@ -197,7 +197,7 @@
                 <!-- 지도를 표시할 div -->
                 <input type="hidden" id="userIdContainer" th:attr="data-user-id=${user.userId}">
                 <button id="gpsBtn" class="btn btn-danger mb-2"> 내 주변보기</button>
-                <button class="btn btn-outline-danger"><a href="#">내 정보 수정</a></button>
+                <button class="btn btn-outline-danger"><a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{|/user/modifyForm/${#authentication.principal.username}|}">내 정보 수정</a></button>
                 <!--<button><a href="/modifyForm/${user.user_id}" th:href="@{|/modifyForm/${user.user_id}|}">내 정보 수정</a></button>-->
                 <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
 

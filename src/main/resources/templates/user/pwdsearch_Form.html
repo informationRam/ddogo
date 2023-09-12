@@ -1,6 +1,8 @@
 <html layout:decorate="~{layout}" xmlns:th="http://www.thymeleaf.org">
 <div layout:fragment="content" class="container my-3">
     <link rel="stylesheet" href="/css/user/pwdsearch.css"/>
+
+
     <!-- 로고 위치 -->
     <div class="text-center" style="margin-bottom:100px;">
         <img src="/image/logo.png" class="img-fluid" alt="...">
@@ -19,6 +21,7 @@
     <div class="center-content">
         <div class="d-flex justify-content-center">
             <form class="row g-3 justify-content-center" id="pwdsearchForm" th:action="@{/user/pwdsearch}" method="post">
+
                 <div class="justify-content-center text-center">
                     <!-- 아이디, 이메일입력창 && 전송버튼 -->
                     <div class="form-floating justify-content-center mb-2">
@@ -61,7 +64,6 @@
 
            // 폼 요소와 버튼을 가져옵니다.
            var form = document.querySelector('form');
-
 
            // Enter 키를 누를 때 폼이 자동으로 제출되도록 합니다.
            form.addEventListener('keydown', function (e) {
