@@ -2,21 +2,24 @@
 <div layout:fragment="content" class="container my-3">
 
   <h5 class="my-3 border-bottom pb-2">공지사항등록</h5>
-  <form id="join" class="my-2" th:object="${noticeform}" th:action="@{/notice/add}" method="post">
+
+  <form id="join" class="my-2" th:object="${noticeform}" th:action="@{|/notice/modify/${notiNo}|}" method="post">
     <!-- 오류시 보여주는 문구-->
     <div th:replace="~{form_errors::formErrorsFragment}"></div>
     <!-- 공지사항 제목-->
     <div>
       <label for="notiTitle" class="form-label"></label>
-      <input type="text" class="form-control form-control-lg" th:field="*{notiTitle}" placeholder="공지제목">
+      <input type="text" class="form-control form-control-lg" th:field="*{notiTitle}" value="${noticeform.notiContent}" placeholder="공지제목">
     </div>
     <!-- 공지사항 내용-->
     <div>
       <label for="notiTitle" class="form-label"></label>
-      <textarea th:field="*{notiContent}" class="form-control" rows="8" placeholder="내용을 입력해주세요."></textarea>
+      <textarea th:field="*{notiContent}" class="form-control" rows="8" value="${noticeform.notiContent}" placeholder="내용을 입력해주세요."></textarea>
     </div>
+    <!-- userNo값 숨겨 가기 -->
+    <input type="hidden" th:name="notiNo" th:value="${notiNo}" />
     <div class="text-center my-2">
-      <input type="submit" value="등록하기" class="btn btn-outline-danger"/>
+      <input type="submit" value="수정하기" class="btn btn-outline-danger"/>
       <!--목록보기(이전페이지)-->
       <a href="/notice/list" th:href="@{/notice/list}" class="btn btn btn-outline-warning" style="text-decoration:none;">목록보기</a>
     </div>

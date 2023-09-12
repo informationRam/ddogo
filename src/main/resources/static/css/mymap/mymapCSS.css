@@ -3,17 +3,15 @@
 }
 
 .container-fluid  {
-       display: flex;
+    display: flex;
 /*       flex-basis: 0;*/
-       flex-direction: row;
-      /* position: relative;  이거하면 화면 작아질때 카드 줄어듬*/
-       flex-wrap: nowrap;
-   }
-
-
+    flex-direction: row;
+  /* position: relative;  이거하면 화면 작아질때 카드 줄어듬*/
+    flex-wrap: nowrap;
+}
 
 #listContainer {
-    width: 400px; /* .listContainer의 가로 사이즈 고정 */
+    width: 350px; /* .listContainer의 가로 사이즈 고정 */
     overflow-y: auto; /* 내용이 넘칠 경우 스크롤 표시 */
     padding: 20px; /* 영역 간격 설정 (원하는 값으로 조정) */
     border: 1px solid #ddd; /* 경계선 설정 (선택 사항) */
@@ -24,8 +22,8 @@
 
  #myMapContents{
      flex-grow: 1; /* .mapContainer의 가로 넓이 가변으로 설정 */
-     position: relative; /* 내용이 넘칠 경우 스크롤 표시 */
-     padding: 20px;
+     position: relative;
+     padding: 0 20px;
      height: 100vh;
   }
 
@@ -56,11 +54,9 @@
     cursor: pointer; /* 마우스 커서를 포인터로 변경 */
 }
 
-
 .modal{
- display: none;
+    display: none;
 }
-
 
 @font-face {
     font-family: 'MalangMalangR'; /* 폰트 패밀리 이름 설정 */
@@ -69,8 +65,19 @@
     font-style: normal;
 }
 
-/* 모든 HTML 요소에 폰트를 적용합니다. */
-html, body, p, h1, h2, h3, h4, h5, h6, a, span, div, /* 필요한 모든 요소를 나열하세요 */
-{
-    font-family: 'MalangMalangR', sans-serif; /* 폰트 패밀리 이름 설정 */
+    /* 모든 HTML 요소에 폰트를 적용합니다. */
+html, body, p, h1, h2, h3, h4, h5, h6, a, span, div {
+    font-family: 'MalangMalangR', sans-serif;
+}
+.mapBox{
+    position: relative;
+}
+.myBtnGroup{
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 20px;
+}
+#gpsBtn {
+
 }

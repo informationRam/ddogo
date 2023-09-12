@@ -8,8 +8,8 @@ var selectedMarker = null; // 선택한 마커를 저장할 변수
  // 커스텀마커
     var markerImage = new kakao.maps.MarkerImage(
         '/image/ddogo.png',
-        new kakao.maps.Size(35, 46),
-        new kakao.maps.Point(15, 35)
+        new kakao.maps.Size(49, 42),
+        new kakao.maps.Point(21, 40)
     );
 
 
@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
               // 인포윈도우 생성 및 열기
                 infowindow = new kakao.maps.InfoWindow({
-                    content:'<div style="padding:10px 10px; solid #FF69B4;">' + cardTitle + '</div>'
+                    content:'<div style="padding:10px; border: 1px solid #FF69B4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">' + cardTitle + '</div>'
                 });
                 infowindow.open(map, marker);
 
@@ -121,8 +121,8 @@ document.addEventListener("DOMContentLoaded", function () {
             // 커스텀마커
             var markerImage = new kakao.maps.MarkerImage(
                 '/image/ddogo.png',
-                new kakao.maps.Size(35, 46),
-                new kakao.maps.Point(15, 35)
+                new kakao.maps.Size(49, 42),
+                new kakao.maps.Point(21, 40)
             );
 
             // hotplList를 이용하여 마커 생성

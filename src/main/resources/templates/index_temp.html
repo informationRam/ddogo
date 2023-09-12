@@ -23,8 +23,6 @@
         <li><a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/user/logout}">로그아웃</a></li>
         <li><a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/admin}">admin</a></li>
         <li><a class="nav-link" th:href="@{/notice/list}">공지사항</a></li>
-        <li><a class="nav-link" th:href="@{/user/kakaoform}">kakao</a></li>
-        <li><a class="nav-link" th:href="@{/user/kakaoout}">kako로그아웃</a></li>
 
 
         <li>
@@ -34,5 +32,7 @@
         </li>
     </ul>
 
+
 </div>
+
 </html>

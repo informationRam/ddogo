@@ -2,94 +2,85 @@
 <div layout:fragment="content" > <!-- container-fluid-->
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="/css/mymap/mymapCSS.css" th:href="@{/css/mymap/mymapCSS.css}">
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=820d01b1cce59185ed776419691dab39&libraries=services"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/924c10682d.js" crossorigin="anonymous"></script>
 </head>
 <body>
-  <!-- 좌측에 맛집 리스트를 표시하는 부분 -->
+<!-- 좌측에 맛집 리스트를 표시하는 부분 -->
 <div class="container-fluid">
     <div id="listContainer" class="column">
-      <div class="cardBox">
-          <div class="useInfo" style="text-align: center; background-color: #FFD9DC; padding: 10px;">
-         <h2 style="margin: 10px 0;"><span th:text="${user.user_name}"></span>님의<br>또갈지도</h2>
-        </div>
-          <!-- 맛집 검색창 -->
-          <div class="input-group my-3">
-              <input type="text" class="form-control" placeholder="맛집 검색" id="searchInput">
-              <button class="btn btn-danger" onclick="search()">검색</button>
-          </div>
+        <div class="cardBox">
+            <div class="useInfo" style="text-align: center; background-color: #FFD9DC; padding: 10px;">
+                <h5 style="margin: 10px 0;"><span th:text="${user.user_name}"></span>님의<br>또갈지도</h5>
+            </div>
+            <!-- 맛집 검색창 -->
+            <div class="input-group my-3">
+                <input type="text" class="form-control" placeholder="지역명 또는 가게명" id="searchInput">
+                <button class="btn btn-danger" id="searchButton">검색</button>
+            </div>
 
-          <!-- 카테고리 버튼 -->
-          <div class="container-fluid" style="display: flex; flex-direction:column;">
-              <div class="button-container" style="display: flex; flex-basis: 0;">
-                  <!-- 전체 버튼 -->
-                  <button id="everyCateButton" class="btn btn-danger btn-lg" data-cate-no="0" onclick="filterCards(0)" style="flex: 1; margin-right: 10px;">전체</button>
+            <!-- 카테고리 버튼 -->
+            <div class="container-fluid" style="display: flex; flex-direction:column;">
+                <div class="button-container" style="display: flex; flex-basis: 0;">
+                    <!-- 전체 버튼 -->
+                    <button id="everyCateButton" class="btn btn-danger btn-lg" data-cate-no="0" onclick="filterCards(0)" style="flex: 1; margin-right: 10px;">전체</button>
                     <!-- 음식점 버튼 -->
-                      <button id="restaurantButton" class="btn btn-danger btn-lg" data-cate-no="1" onclick="filterCards(1)" style="flex: 1; margin-right: 10px;">식당</button>
+                    <button id="restaurantButton" class="btn btn-danger btn-lg" data-cate-no="1" onclick="filterCards(1)" style="flex: 1; margin-right: 10px;">식당</button>
                     <!-- 카페 버튼 -->
-                      <button id="cafeButton" class="btn btn-danger btn-lg" data-cate-no="2" onclick="filterCards(2)"   style="flex: 1; margin-left: 10px;">카페</button>
-
-              </div>
-          </div>
-
-
-      <!-- 카드로 목록 출력 -->
-      <div class="card my-2" th:each="myhotpl : ${hotplList}" th:attr="data-cate-no=${myhotpl.hotplaceCateNo}">
-
-          <div class="card-body" >
-                  <input type="hidden" id="lat" th:value="${myhotpl.lat}" />
-                  <input type="hidden" id="lng" th:value="${myhotpl.lng}" />
-                  <input type="hidden" id="sido" th:value="${myhotpl.sido}" />
-                  <input type="hidden" id="gugun" th:value="${myhotpl.gugun}" />
-                  <input type="hidden" id="review" th:value="${myhotpl.review}" />
-                  <input type="hidden" id="address" th:value="${myhotpl.address}" />
-
-                  <!--<h6 class="card-subtitle mb-2 text-muted" th:text="$${myhotpl.hotplaceName}"></h6>-->
-                  <div style="display: flex; align-items: center;">
-                      <h5 class="card-title">
-                          <strong th:text="${myhotpl.hotplaceName}" class="font-weight-bold"></strong>
-                            <!-- 카테고리 아이콘 -->
-                          <i th:if="${myhotpl.hotplaceCateNo == 1}" class="fa-solid fa-utensils fa-l" style="color: #c82f09;  margin-left: 5px;"></i>
-                          <i th:if="${myhotpl.hotplaceCateNo == 2}" class="fa-solid fa-mug-hot fa-l" style="color: #c82f09;  margin-left: 5px;"></i>
-                      </h5>
-                  </div>
-                     <!-- <div class="recommOrNot"  style="position: absolute; top: 10px; right: 10px;">
-                          &lt;!&ndash; 찜 확인 아이콘 &ndash;&gt;
-                          <img th:if="${myhotpl.recomm == 'Y'}" src="/static/image/bookmark-heart-fill.svg" style="color: #c82f09; margin-left: 5px;">
-                          <img th:if="${myhotpl.recomm == 'N'}" src="/static/image/bookmark-heart.svg" style="color: #c82f09; margin-left: 5px;">
-                      </div>-->
-
-              <p class="card-text text-muted" th:text="${myhotpl.address}"></p>
-                  <!-- 감정결과 박스 -->
-                  <div class="emoResult" style="margin: 5px; background-color: #f3c8c8; text-align: center; padding: 5px;">
-                    <strong>평균 후기 온도</strong>
-                      <p th:text="${myhotpl.avgEmoResult != null ? myhotpl.avgEmoResult.toString()+ ' &#47;100&#8451;' : ''}" style="margin: 0;"></p>
-                  </div>
-
-                  <div class="justify-content-end">
-
-                      <a th:href="@{'/mymap/delete/'+${myhotpl.mapNo}}" class="btn btn-outline-secondary btn-sm btn-delete"
-                         data-toggle="modal" data-target="#deleteModal"
-                         th:attr="data-map-id=${myhotpl.mapNo}" onclick="return false;">삭제</a>
-                      <!--   <a class="btn btn-outline-secondary btn-delete" onclick="return false;"
-                             data-toggle="modal" data-target="#deleteModal">삭제</a>-->
-                      <!-- 모달 열기 버튼 -->
-                      <button type="button" class="btn btn-outline-danger btn-sm btn-update-review"
-                              data-bs-toggle="modal" data-bs-target="#myModal"
-                              th:attr="data-review-no=${myhotpl.mapNo}, data-hotplace-no=${myhotpl.hotplaceNo}">내 후기</button>
+                    <button id="cafeButton" class="btn btn-danger btn-lg" data-cate-no="2" onclick="filterCards(2)"   style="flex: 1; margin-left: 10px;">카페</button>
+                </div>
+            </div>
 
 
+            <!-- 카드로 목록 출력 -->
+            <div class="card my-2" th:each="myhotpl : ${hotplList}" th:attr="data-cate-no=${myhotpl.hotplaceCateNo}">
+                <div class="card-body" >
+                    <input type="hidden" id="lat" th:value="${myhotpl.lat}" />
+                    <input type="hidden" id="lng" th:value="${myhotpl.lng}" />
+                    <input type="hidden" id="sido" th:value="${myhotpl.sido}" />
+                    <input type="hidden" id="gugun" th:value="${myhotpl.gugun}" />
+                    <input type="hidden" id="review" th:value="${myhotpl.review}" />
+                    <input type="hidden" id="address" th:value="${myhotpl.address}" />
+                    <input type="hidden" id="myHotplace" th:value="${myhotpl.hotplaceName}" />
 
+                    <!--<h6 class="card-subtitle mb-2 text-muted" th:text="$${myhotpl.hotplaceName}"></h6>-->
+                    <div style="display: flex; align-items: center;">
+                        <h5 class="card-title">
+                        <strong th:text="${myhotpl.hotplaceName}" class="font-weight-bold"></strong>
+                        <!-- 카테고리 아이콘 -->
+                        <i th:if="${myhotpl.hotplaceCateNo == 1}" class="fa-solid fa-utensils fa-l" style="color: #c82f09;  margin-left: 5px;"></i>
+                        <i th:if="${myhotpl.hotplaceCateNo == 2}" class="fa-solid fa-mug-hot fa-l" style="color: #c82f09;  margin-left: 5px;"></i>
+                        </h5>
+                    </div>
+                    <!-- <div class="recommOrNot"  style="position: absolute; top: 10px; right: 10px;">
+                    &lt;!&ndash; 찜 확인 아이콘 &ndash;&gt;
+                    <img th:if="${myhotpl.recomm == 'Y'}" src="/static/image/bookmark-heart-fill.svg" style="color: #c82f09; margin-left: 5px;">
+                    <img th:if="${myhotpl.recomm == 'N'}" src="/static/image/bookmark-heart.svg" style="color: #c82f09; margin-left: 5px;">
+                    </div>-->
+
+                    <p class="card-text text-muted" th:text="${myhotpl.address}"></p>
+                    <!-- 감정결과 박스 -->
+                    <div class="emoResult" style="margin: 5px; background-color: #f3c8c8; text-align: center; padding: 5px; border-radius: 10px;">
+                        <strong>리뷰 온도</strong>
+                        <p th:text="${myhotpl.avgEmoResult != null ? myhotpl.avgEmoResult.toString()+ ' &#47;100&#8451;' : ''}" style="margin: 0;"></p>
+                    </div>
+                    <div class="justify-content-end">
+                        <a th:href="@{'/mymap/delete/'+${myhotpl.mapNo}}" class="btn btn-outline-secondary btn-sm btn-delete" data-toggle="modal" data-target="#deleteModal" th:attr="data-map-id=${myhotpl.mapNo}" onclick="return false;">삭제</a>
+                        <!--   <a class="btn btn-outline-secondary btn-delete" onclick="return false;"
+                        data-toggle="modal" data-target="#deleteModal">삭제</a>-->
+                        <!-- 모달 열기 버튼 -->
+                        <button type="button" class="btn btn-outline-danger btn-sm btn-update-review" data-bs-toggle="modal" data-bs-target="#myModal" th:attr="data-review-no=${myhotpl.mapNo}, data-hotplace-no=${myhotpl.hotplaceNo}">내 후기</button>
 <!--                      &lt;!&ndash; 찜 확인 아이콘 &ndash;&gt;-->
 <!--                      <i th:if="${myhotpl.recomm == 'N'}" class="bi bi-bookmark-heart-fill" style="color: #c82f09; margin-left: 5px;"></i>-->
 <!--                      <i th:if="${myhotpl.recomm == 'Y'}" class="bi bi-bookmark-heart" style="color: #c82f09; margin-left: 5px;"></i>-->
-                </div>
-              </div> <!-- card- body -->
-          </div> <!-- card my-2 -->
-      </div>  <!-- cardBox : 스크롤 내려도 고정되게 구현필요 -->
+                    </div>
+                </div> <!-- card- body -->
+            </div> <!-- card my-2 -->
+        </div>  <!-- cardBox : 스크롤 내려도 고정되게 구현필요 -->
 
         <!-- 후기 조회&수정 모달 -->
         <div class="modal fade" id="myModal" tabindex="-1" aria-hidden="true">
@@ -104,8 +95,7 @@
                     <!-- 모달 본문 -->
                     <div class="modal-body">
                         <!-- 후기 입력 폼 -->
-                  <form id="updateReviewForm">
-
+                        <form id="updateReviewForm">
                             <div class="mb-3">
                                 <label for="review" class="form-label">REVIEW</label>
                                 <div id="error1"></div>
@@ -118,20 +108,19 @@
                                 <label for="memo" class="form-label">MEMO</label>
                                 <textarea class="form-control" id="memo" name="memo" rows="6"></textarea>
                             </div>
-                          <!-- 모달 폼 내에 숨겨진 input 요소 추가 -->
-                          <input type="hidden" id="mapNo" name="mapNo" />
-                          <input type="hidden" id="hotplaceNo" name="hotplaceNo" />
+                            <!-- 모달 폼 내에 숨겨진 input 요소 추가 -->
+                            <input type="hidden" id="mapNo" name="mapNo" />
+                            <input type="hidden" id="hotplaceNo" name="hotplaceNo" />
 
                             <!-- 라디오 버튼 -->
                             <div id="error2"></div>
                             <div class="d-flex justify-content-center">
                                 <div class="btn-group" role="group" aria-label="Radio buttons">
                                     <input class="btn-check" type="radio" name="recomm" id="recommY" value="Y">
-                                    <label class="btn btn-outline-primary mx-1" for="recommY">또갈지도</label>
+                                    <label class="btn btn-outline-danger mx-1" for="recommY">또갈지도</label>
 
-
-                                        <input class="btn-check" type="radio" name="recomm" id="recommN" value="N">
-                                    <label class="btn btn-outline-danger mx-1" for="recommN">안갈지도</label>
+                                    <input class="btn-check" type="radio" name="recomm" id="recommN" value="N">
+                                    <label class="btn btn-outline-secondary mx-1" for="recommN">안갈지도</label>
                                 </div>
                             </div>
                             <!-- 모달 푸터 -->
@@ -144,7 +133,7 @@
                 </div><!-- modalContent-->
             </div><!--modal dialog -->
         </div>    <!-- modal fade: 후기 조회&수정 모달 끝-->
-        <script src="/js/mymap/hotplCard.js" th:src="@{/js/mymap/hotplCard.js}"></script>
+<script src="/js/mymap/hotplCard.js" th:src="@{/js/mymap/hotplCard.js}"></script>
 
 <!--        &lt;!&ndash; ajax용 페이징 &ndash;&gt;-->
 <!--        <nav aria-label="PageNavi">-->
@@ -170,39 +159,39 @@
 <!--            </ul>-->
 <!--        </nav>-->
 
-<!--                 페이지네이션 컴포넌트-->
-                <nav aria-label="PageNavi"  class="mt-4">
-                    <ul class="pagination justify-content-center">
-                        <li class="page-item">
-                            <a class="page-link" th:href="@{/mymap/{user_id}(user_id=${user.userId},page=1)}" aria-label="Previous">
-                                <span aria-hidden="true">&lt;</span>
-                            </a>
-                        </li>
-                        <li class="page-item" th:each="pageNo : ${#numbers.sequence(1, totalPages)}"
-                            th:class="${pageNo == currentPage} ? 'page-item active' : 'page-item'">
-                            <a class="page-link" th:href="@{/mymap/{user_id}(user_id=${user.userId},page=${pageNo})}" th:text="${pageNo}"></a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" th:href="@{/mymap/{user_id}(user_id=${user.userId},page=${totalPages})}" aria-label="Next">
-                                <span aria-hidden="true">&gt;</span>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
+<!--                 <-- 페이지네이션 컴포넌트-->
+        <nav aria-label="PageNavi"  class="mt-4">
+            <ul class="pagination justify-content-center">
+                <li class="page-item">
+                    <a class="page-link" th:href="@{/mymap/{user_id}(user_id=${user.userId},page=1)}" aria-label="Previous">
+                        <span aria-hidden="true">&lt;</span>
+                    </a>
+                </li>
+                <li class="page-item" th:each="pageNo : ${#numbers.sequence(1, totalPages)}"
+                    th:class="${pageNo == currentPage} ? 'page-item active' : 'page-item'">
+                    <a class="page-link" th:href="@{/mymap/{user_id}(user_id=${user.userId},page=${pageNo})}" th:text="${pageNo}"></a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" th:href="@{/mymap/{user_id}(user_id=${user.userId},page=${totalPages})}" aria-label="Next">
+                        <span aria-hidden="true">&gt;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </div><!-- listContainer 끝 -->
 
-        <!-- 지도 영역 시작   -->
-        <div class="column" id="myMapContents">
-            <div class="mapBox" style="width:100%; height:93vh;">
-                <!-- 지도를 표시할 div -->
-                <input type="hidden" id="userIdContainer" th:attr="data-user-id=${user.userId}">
-                <button id="gpsBtn" class="btn btn-danger mb-2"> 내 주변보기</button>
-                <button class="btn btn-outline-danger"><a href="#">내 정보 수정</a></button>
-                <!--<button><a href="/modifyForm/${user.user_id}" th:href="@{|/modifyForm/${user.user_id}|}">내 정보 수정</a></button>-->
-                <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
-
+    <!-- 지도 영역 시작   -->
+    <div class="column" id="myMapContents">
+        <div class="mapBox" style="width:100%; height:100%;">
+        <!-- 지도를 표시할 div -->
+            <input type="hidden" id="userIdContainer" th:attr="data-user-id=${user.userId}">
+            <div class="myBtnGroup">
+                <button id="gpsBtn" class="btn btn-danger mx-2"> 내 주변보기</button>
+                <button class="btn btn-outline-danger mx-2" style="margin-right: 5px;" onclick="window.location.href='/modifyForm/+ userId">내 정보 수정</button>
             </div>
+            <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
         </div>
+    </div>
 </div> <!-- containerFluid-->
 </body>
   <!-- 지도 api 연동 Javascript 양역 ---------------- -->
@@ -213,15 +202,10 @@
         var userId = /*[[${user_id}]]*/;
         var pageNo = /*[[${pageNo}]]*/;
 
-
-
-
 </script>
 <script src="/js/mymap/mymapKAPI.js"></script>
-<!--<script src="/js/mymap/hotplPaging.js" th:src="@{/js/mymap/hotplPaging.js}"></script>-->
 <script src="/js/mymap/reviewModal.js" th:src="@{/js/mymap/reviewModal.js}"></script>
-
-
+<!--<script src="/js/mymap/hotplPaging.js" th:src="@{/js/mymap/hotplPaging.js}"></script>-->
 
 </div>
 </html>
