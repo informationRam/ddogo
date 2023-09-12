@@ -6,7 +6,7 @@
         <div class="row">
             <div class="col-md-12 mb-4">
                 <h1>회원 정보 수정</h1>
-                <div class="card">
+                <div class="card my-3">
                     <div class="card-body">
                         <form id="join" class="my-3" th:object="${userModifyForm}" th:action="@{|/user/modify/${#authentication.principal.username}|}"  method="post">
                             <table class="table">
@@ -16,25 +16,25 @@
                                 <tr>
                                     <th>이름</th>
                                     <td>
-                                        <input type="text" th:field="*{user_name}" value="${userModifyForm.user_name}" disabled readonly/><br/>
+                                        <input class="form-control" type="text" th:field="*{user_name}" value="${userModifyForm.user_name}" disabled readonly/><br/>
                                     </td>
                                 </tr>
                                 <tr>
                                     <th>회원id</th>
                                     <td>
-                                        <input type="text" th:field="*{user_id}" value="${userModifyForm.user_id}" disabled readonly/><br/>
+                                        <input class="form-control" type="text" th:field="*{user_id}" value="${userModifyForm.user_id}" disabled readonly/><br/>
                                     </td>
                                 </tr>
                                 <tr>
                                     <th>비밀번호</th>
                                     <td>
-                                        <input type="password" th:field="*{pwd1}" placeholder="비밀번호"/><br/>
+                                        <input class="form-control" type="password" th:field="*{pwd1}" placeholder="비밀번호"/><br/>
                                     </td>
                                 </tr>
                                 <tr>
                                     <th>비밀번호확인</th>
                                     <td>
-                                        <input type="password" th:field="*{pwd2}" placeholder="비밀번호 확인"/><br/>
+                                        <input class="form-control" type="password" th:field="*{pwd2}" placeholder="비밀번호 확인"/><br/>
                                     </td>
                                 </tr>
                                 <tr>
@@ -46,9 +46,9 @@
                                 <tr>
                                     <th>성별</th>
                                     <td>
-                                        <input type="radio" th:field="*{gender}" id="genderM" value="M" disabled/>
+                                        <input class="form-check-input" type="radio" th:field="*{gender}" id="genderM" value="M" disabled/>
                                         <label for="genderM">남성</label>
-                                        <input type="radio" th:field="*{gender}" id="genderF" value="F" disabled/>
+                                        <input class="form-check-input" type="radio" th:field="*{gender}" id="genderF" value="F" disabled/>
                                         <label for="genderF">여성</label><br/>
                                         <span class="ddo-error-text" th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}"></span>
                                     </td>
@@ -56,18 +56,16 @@
                                 <tr>
                                     <th>이메일</th>
                                     <td>
-                                        <input type="email" th:field="*{email}" value="${userModifyForm.email}" placeholder="ex)eeee@naver.com"/><br/>
+                                        <input class="form-control" type="email" th:field="*{email}" value="${userModifyForm.email}" placeholder="ex)eeee@naver.com"/><br/>
                                     </td>
                                 </tr>
                                 </tbody>
                             </table>
-                            <div>
-                                <button type="submit" class="btn btn-outline-danger my-2">저장</button>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-outline-danger btn-block">저장</button>
                             </div>
                         </form>
-                        <br/>
-                        <br/>
-                        <br/>
+
                     </div>
                 </div>
                 <!-- 회원 탈퇴 -->
