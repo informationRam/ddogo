@@ -38,81 +38,39 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
 
-//검색창
-// 검색어 입력 필드와 검색 버튼을 가져옵니다
-var searchInput = document.getElementById('searchInput');
-var searchButton = document.querySelector('.btn-danger');
+    //검색창 이벤트 리스너
+    // 검색어 입력 필드와 검색 버튼을 가져옵니다
+    document.addEventListener('DOMContentLoaded', function () {
+    var searchInput = document.getElementById('searchInput');
+    var searchButton = document.querySelector('.btn-danger');
 
-// 검색 버튼 클릭 시 검색 함수 호출
-searchButton.addEventListener('click', search);
-
-// 검색어 입력 필드에서 Enter 키 입력 시 검색 함수 호출
-searchInput.addEventListener('keydown', function (event) {
-    if (event.key === 'Enter') {
-        search();
-    }
-});
-
-function search() {
-    // 입력된 검색어 가져오기
-    var searchText = document.getElementById('searchInput').value.trim().toLowerCase();
-
-    // 모든 카드 요소 가져오기
-    var cards = document.querySelectorAll('.card');
-
-    // 카드를 순회하면서 검색어와 일치하는 카드 표시/숨김 설정
-    cards.forEach(function (card) {
-        var shouldDisplay = false;
-
-        // 카드에서 음식점 이름과 주소 가져오기
-        var hotplaceNameElement = card.querySelector('.card-title strong');
-        var addressElement = card.querySelector('.card-body .address');
-
-        if (hotplaceNameElement && addressElement) {
-            var hotplaceName = hotplaceNameElement.textContent.toLowerCase();
-            var address = addressElement.textContent.toLowerCase();
-
-            // 검색어가 음식점 이름 또는 주소에 포함되어 있다면 해당 카드를 표시
-            if (hotplaceName.includes(searchText) || address.includes(searchText)) {
-                shouldDisplay = true;
-            }
-        }
-
-        // 검색어와 일치하는 부분이 하나라도 있으면 카드 표시
-        if (shouldDisplay) {
-            card.style.display = 'block';
-        } else {
-            card.style.display = 'none';
-        }
+    // 검색 버튼 클릭 시 검색 함수 호출
+    searchButton.addEventListener('click', function(){
+         // 입력된 검색어 가져오기
+         var searchText = document.getElementById('searchInput').value.trim().toLowerCase();
+         filterCards(searchText);
     });
-}
 
+        function filterCards(searchText) {
+               var cards = document.querySelectorAll('.card');
+               cards.forEach(function (card) {
+                   var hotplaceNameElement = card.querySelector('.card-body #myHotplace');
+                   var addressElement = card.querySelector('.card-body #address');
 
+                   if (hotplaceNameElement && addressElement) {
+                       var hotplaceName = hotplaceNameElement.value.toLowerCase();
+                       var address = addressElement.value.toLowerCase();
 
+                       if (hotplaceName.includes(searchText) || address.includes(searchText)) {
+                           card.style.display = 'block';
+                       } else {
+                           card.style.display = 'none';
+                       }
+                   }
+               });
+           }
+       });
 
-
-//        // 각 카드의 속성 가져오기
-//        var title = card.querySelector('#hotplaceName').textContent.toLowerCase();
-//        var sido = card.querySelector('#sido').value.toLowerCase();
-//        var gugun = card.querySelector('#gugun').value.toLowerCase();
-//        var review = card.querySelector('#review').value.toLowerCase();
-//        var address = card.querySelector('#address').value.toLowerCase();
-//
-//        // 검색어와 일치하는 부분이 하나라도 있으면 카드 표시
-//        if (
-//            title.includes(searchText) ||
-//            sido.includes(searchText) ||
-//            gugun.includes(searchText) ||
-//            review.includes(searchText) ||
-//            address.includes(searchText) ||
-//            hotplaceCateNo.includes(searchText)
-//        ) {
-//            card.style.display = 'block';
-//        } else {
-//            card.style.display = 'none';
-//        }
-//    });
-//}
 
 
 

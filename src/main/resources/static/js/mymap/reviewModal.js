@@ -166,6 +166,7 @@ document.addEventListener("DOMContentLoaded", function () {
          console.log(jsonData);
    } //submitForm끝
 
+
      // 모달 닫기 시 백드롭 제거
         document.getElementById('myModal').addEventListener('hidden.bs.modal', function () {
             // 현재 모달의 백드롭 제거
