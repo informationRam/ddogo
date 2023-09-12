@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
               // 인포윈도우 생성 및 열기
                 infowindow = new kakao.maps.InfoWindow({
-                    content:'<div style="padding:10px; border: 1px solid #FF69B4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">' + cardTitle + '</div>'
+                    content:'<div style="padding:10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">' + cardTitle + '</div>'
                 });
                 infowindow.open(map, marker);
 

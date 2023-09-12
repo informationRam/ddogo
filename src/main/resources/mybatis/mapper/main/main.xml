@@ -82,7 +82,7 @@
         group by hotplace_no
         )
         select h.hotplace_name, h.hotplace_no, count(m.map_no) as jjim,
-               format(ra.avg_emo_result,2) as avg_emo_result
+               format(ra.avg_emo_result,2) as avg_emo_result, h.address
         from hotplace h
         left join mymap m on h.hotplace_no = m.hotplace_no
         left join ReviewAverages ra on h.hotplace_no = ra.hotplace_no
@@ -92,7 +92,7 @@
           and h.sido=#{sido}
           and h.gugun=#{gugun}
         group by h.hotplace_name, h.hotplace_no, ra.avg_emo_result
-        order by jjim desc,avg_emo_result desc
+        order by jjim desc, ra.avg_emo_result desc
         limit 5
 		]]>
     </select>
