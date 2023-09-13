@@ -2,9 +2,9 @@
 <div layout:fragment="content" class="container my-3">
     <link rel="stylesheet" href="/css/user/searchid.css"/>
     <!-- 로고 위치 -->
-<div class="text-center" style="margin-bottom:100px;">
-    <img src="/image/logo.png" class="img-fluid" alt="...">
-</div>
+    <div class="text-center" style="margin-bottom:100px;">
+        <img src="/image/logo.png" class="img-fluid" alt="...">
+    </div>
     <div class="col-auto">
         <!-- 내용 설명 -->
         <figure>
@@ -19,56 +19,60 @@
 
     <div class="center-content">
         <div class="d-flex justify-content-center">
-        <form class="row g-3 justify-content-center" th:action="@{/user/searchid}" method="post">
-            <div class="row g-3">
-                <!-- 이메일 입력창 && 전송버튼 -->
-                <div class="form-floating mb-3 col-md-8" style="width: 426px;">
-                    <input type ="email" class="form-control" id="email" name="email" placeholder="name@example.com">
-                    <label for="email">Email address</label>
-                    <!-- 전송버튼 -->
-                    <div class="col-auto d-flex justify-content-end mb-2">
-                        <button type="button" class="btn btn-outline-danger" id="button" name="button" data-bs-toggle="modal" data-bs-target="#myModal">아이디찾기</button>
-                    </div>
-                    <!-- 비밀번호찾기 | 로그인하기 | 회원가입 링크 -->
-                    <div class="justify-content-center text-centerr">
-                        <div class="justify-content-center mb-2">
-                            <div class="d-flex justify-content-center mb-2">
-                                <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/pwdsearchfrom}">비밀번호찾기</a>
-                                <span style="margin: 0 15px;">|</span> <!-- 구분선 -->
-                                <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/login}">로그인하기</a>
-                                <span style="margin: 0 15px;">|</span> <!-- 구분선 -->
-                                <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/joinForm}">회원가입</a>
+            <form class="row g-3 justify-content-center" th:action="@{/user/searchid}" method="post">
+                <div class="row g-3">
+                    <!-- 이메일 입력창 && 전송버튼 -->
+                    <div class="form-floating mb-3 col-md-8" style="width: 426px;">
+                        <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com">
+                        <label for="email">Email address</label>
+                        <!-- 전송버튼 -->
+                        <div class="col-auto d-flex justify-content-end mb-2">
+                            <button type="button" class="btn btn-outline-danger" id="button" name="button"
+                                    data-bs-toggle="modal" data-bs-target="#myModal">아이디찾기
+                            </button>
+                        </div>
+                        <!-- 비밀번호찾기 | 로그인하기 | 회원가입 링크 -->
+                        <div class="justify-content-center text-centerr">
+                            <div class="justify-content-center mb-2">
+                                <div class="d-flex justify-content-center mb-2">
+                                    <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/pwdsearchfrom}">비밀번호찾기</a>
+                                    <span style="margin: 0 15px;">|</span> <!-- 구분선 -->
+                                    <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/login}">로그인하기</a>
+                                    <span style="margin: 0 15px;">|</span> <!-- 구분선 -->
+                                    <a class="nav-link" sec:authorize="isAnonymous()"
+                                       th:href="@{/user/joinForm}">회원가입</a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </form>
+            </form>
         </div>
     </div>
-        <!-- 모달 HTML -->
-        <div class="modal" id="myModal" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">아이디찾기</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <!-- 아이디찾기 결과값 -->
-                    <div class="modal-body">
-                        <p id="text"></p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/login}"><button type="button" class="btn btn-danger">Login</button></a>
-                    </div>
+    <!-- 모달 HTML -->
+    <div class="modal" id="myModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">아이디찾기</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <!-- 아이디찾기 결과값 -->
+                <div class="modal-body">
+                    <p id="text"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/login}">
+                        <button type="button" class="btn btn-danger">Login</button>
+                    </a>
                 </div>
             </div>
         </div>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script th:src="@{/js/user/user.js}"></script>
-    </div>
-
+</div>
 </html>
 
 

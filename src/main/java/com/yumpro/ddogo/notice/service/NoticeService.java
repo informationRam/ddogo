@@ -1,12 +1,9 @@
 package com.yumpro.ddogo.notice.service;
 
 import com.yumpro.ddogo.common.entity.Notice;
-import com.yumpro.ddogo.common.entity.User;
 import com.yumpro.ddogo.notice.reprository.NoticeRepository;
 import com.yumpro.ddogo.notice.validation.Noticeform;
 import com.yumpro.ddogo.user.exception.DataNotFoundException;
-import com.yumpro.ddogo.user.reprository.UserRepository;
-import com.yumpro.ddogo.user.validation.UserCreateForm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,11 +23,11 @@ public class NoticeService {
     private final NoticeRepository noticeRepository;
 
     //공지사항목록조회 (페이징처리)
-    public Page<Notice> getList(int page){
+    public Page<Notice> getList(int page) {
 
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("notiDate"));     //등록일순
-        Pageable pageable = PageRequest.of(page,10,Sort.by(sorts));
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
         return noticeRepository.findAll(pageable);
     }
 
@@ -45,12 +42,12 @@ public class NoticeService {
     }
 
     // notiNo값을 주면 notice 값을
-    public Notice getNotice(Integer notiNo){
+    public Notice getNotice(Integer notiNo) {
         System.out.println("getNotice진입");
         Optional<Notice> notice = noticeRepository.findById(notiNo);
-        if(notice.isPresent()){
+        if (notice.isPresent()) {
             return notice.get();
-        }else {
+        } else {
             throw new DataNotFoundException("notice not Found");
         }
     }
@@ -60,7 +57,7 @@ public class NoticeService {
         Noticeform noticeform = new Noticeform();
         noticeform.setNotiTitle(notice.getNotiTitle());
         noticeform.setNotiContent(notice.getNotiContent());
-       return noticeform;
+        return noticeform;
     }
 
     //수정하기

@@ -10,7 +10,6 @@ import java.util.Date;
 @Setter
 public class UserDTO {
 
-
     private String user_name;          //'회원 이름'
 
     private String user_id;            //'회원 아이디'

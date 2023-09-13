@@ -22,7 +22,7 @@ public class UserService {
     private final PasswordEncoder PasswordEncoder;
 
     //회원가입처리
-    public void userJoin(UserCreateForm userCreateForm){
+    public void userJoin(UserCreateForm userCreateForm) {
         User user = new User();
         System.out.println("userjoin서비스진입!");
         user.setUser_name(userCreateForm.getUser_name());
@@ -52,12 +52,11 @@ public class UserService {
         return emailDuplicate;
     }
 
-
     //정보 수정시 사용
     @Transactional(readOnly = true)
-    public boolean checkEmailDuplication(User user,UserModifyForm userModifyForm) {
+    public boolean checkEmailDuplication(User user, UserModifyForm userModifyForm) {
         boolean emailDuplicate = false;
-        if(!user.getEmail().equals(userModifyForm.getEmail())){     //기존 이메일값, 변경한 이메일값이 다르면
+        if (!user.getEmail().equals(userModifyForm.getEmail())) {     //기존 이메일값, 변경한 이메일값이 다르면
             emailDuplicate = userRepository.existsByEmail(userModifyForm.getEmail());   //회원의 이메일값과 비교를 한다.
         }
         return emailDuplicate;
@@ -75,22 +74,22 @@ public class UserService {
         }
     }
 
-//비밀번호찾기 - id && email값 동시에 일치하는 회원이 있는지
-    public boolean pwdsearch(String user_id,String email){
+    //비밀번호찾기 - id && email값 동시에 일치하는 회원이 있는지
+    public boolean pwdsearch(String user_id, String email) {
         System.out.println("pwdsearch 서비스옴!");
-        Optional<User> byUserIdAndEmail = userRepository.findByUserIdAndEmail(user_id,email);
-        System.out.println("user_id: "+user_id);
-        System.out.println("email: "+email);
-        System.out.println("byUserIdAndEmail.isEmpty()?"+byUserIdAndEmail.isEmpty());
-        if(byUserIdAndEmail.isEmpty()){   //값이 비어있다면
+        Optional<User> byUserIdAndEmail = userRepository.findByUserIdAndEmail(user_id, email);
+        System.out.println("user_id: " + user_id);
+        System.out.println("email: " + email);
+        System.out.println("byUserIdAndEmail.isEmpty()?" + byUserIdAndEmail.isEmpty());
+        if (byUserIdAndEmail.isEmpty()) {   //값이 비어있다면
             return true;
-        }else {
+        } else {
             return false;
         }
     }
 
     //아이디값 넣어서 회원정보 가져오기
-    public User getUser(String user_id){
+    public User getUser(String user_id) {
         System.out.println("getUser진입");
         Optional<User> user = userRepository.findByUserId(user_id);
         if (user.isPresent()) {
@@ -99,7 +98,7 @@ public class UserService {
         return null;
     }
 
-//이메일 넣어 회원정보 찾기
+    //이메일 넣어 회원정보 찾기
     public User getUser2(String email) {
         Optional<User> user = userRepository.findByEmail(email);
         if (user.isPresent()) {
@@ -109,24 +108,25 @@ public class UserService {
     }
 
     // 비번 변경
-        public void userpwdModify(User user, String tempPassword){
-            user.setPwd(PasswordEncoder.encode(tempPassword));
-            userRepository.save(user);
+    public void userpwdModify(User user, String tempPassword) {
+        user.setPwd(PasswordEncoder.encode(tempPassword));
+        userRepository.save(user);
     }
 
     // 회원 정보 변경 -> email,pwd
     public void userModify(User user, UserModifyForm userModifyForm) {
-            user.setEmail(userModifyForm.getEmail());
-            user.setPwd(PasswordEncoder.encode(userModifyForm.getPwd1()));
-            userRepository.save(user);
+        user.setEmail(userModifyForm.getEmail());
+        user.setPwd(PasswordEncoder.encode(userModifyForm.getPwd1()));
+        userRepository.save(user);
     }
-//회원탈퇴
-    public void userDelete(User user){
+
+    //회원탈퇴
+    public void userDelete(User user) {
         userRepository.delete(user);
     }
 
     //DTO -> Entity로 변경
-    public User toEntity(UserDTO userDTO){
+    public User toEntity(UserDTO userDTO) {
         User user = new User();
         user.setUserId(userDTO.getUser_id());
         user.setUser_name(userDTO.getUser_name());
@@ -139,7 +139,7 @@ public class UserService {
     }
 
     //user -> userDTO
-    public UserDTO toDTO(User user){
+    public UserDTO toDTO(User user) {
         UserDTO userDTO = new UserDTO();
         userDTO.setUser_id(user.getUserId());
         userDTO.setUser_name(user.getUser_name());
@@ -152,7 +152,7 @@ public class UserService {
     }
 
     // user -> UserCreateForm 변경
-    public UserCreateForm toUserCreateForm(String user_id){
+    public UserCreateForm toUserCreateForm(String user_id) {
         Optional<User> user = userRepository.findByUserId(user_id);
         UserCreateForm userCreateForm = new UserCreateForm();
         userCreateForm.setUser_name(user.get().getUser_name());
@@ -175,7 +175,7 @@ public class UserService {
     }
 
     //인증값 확인, pwd1,pwd2 전달
-    public UserModifyForm touserModifyForm(User user,String pwd1,String pwd2,String email) {
+    public UserModifyForm touserModifyForm(User user, String pwd1, String pwd2, String email) {
         UserModifyForm userModifyForm = new UserModifyForm();
         userModifyForm.setUser_name(user.getUser_name());
         userModifyForm.setUser_id(user.getUserId());
