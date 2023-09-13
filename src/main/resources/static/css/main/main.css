@@ -100,9 +100,9 @@ font-family: "MALANGMALANGB";
     font-family: "MALANR";
     font-size: 20px;
 }
-.heading2{
+/*.heading2{
     font-family: "MALANGMALANGB";
-}
+}*/
 
 .heading:hover {
     cursor: pointer;

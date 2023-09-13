@@ -43,10 +43,9 @@ public class MainController {
         response.setContentType("text/html; charset=UTF-8");
         PrintWriter out = response.getWriter();
 
-        for (String sidoKey : sigunguMap.keySet()) { //map의 key의 개수만큼=<=(중복되지않는)sido의 개수만큼
+        for (String sidoKey : sigunguMap.keySet()) { //map의 key의 개수만큼<=(중복되지않는)sido의 개수만큼
             List<String> sigunguList = sigunguMap.get(sidoKey);
             JSONArray jsonArr = new JSONArray(); //배열준비
-            System.out.printf("시도별%s 시군구개수%d \r\n", sidoKey, sigunguList.size());
             for (String gugun : sigunguList) { //sido별  sigungu의 개수만큼
                 jsonArr.put(gugun);
             }
@@ -55,12 +54,11 @@ public class MainController {
 
         String jsonStr = obj.toString();
         System.out.println("jsonStr =" + jsonStr);
-        //out.print(jsonStr); //client로 보내기
         model.addAttribute(jsonStr);
         model.addAttribute("sigunguMap", sigunguMap);
         System.out.println("sigunguMap" + sigunguMap);
 
-        return "index2";
+        return "index4";
 
     }
 
@@ -69,7 +67,6 @@ public class MainController {
     @ResponseBody
     public List<HashMap<String, Object>> getReview(@PathVariable("hotplace_no") int hotplace_no,
                                                    Model model) {
-        System.out.println("컨트롤러getReview진입");
         List<HashMap<String, Object>> reviewList = mainService.getReview(hotplace_no);
         System.out.println("reviewList="+reviewList);
         model.addAttribute("reviewList",reviewList);
@@ -94,7 +91,6 @@ public class MainController {
             @RequestParam(name = "gugun") String selectedGugun,
             @RequestParam(name = "hotplace_cate_no") int selectedCategory,
             Model model) throws Exception {
-        System.out.println("post진입");
         System.out.println("selectedSido=" + selectedSido);
         System.out.println("selectedGugun=" + selectedGugun);
         System.out.println("hotplace_cate_no=" + selectedCategory);
@@ -104,7 +100,6 @@ public class MainController {
 
         // JSON 응답 객체 생성
         Map<String, Object> responseMap = new HashMap<>();
-        System.out.println("responseMap"+responseMap);
         responseMap.put("monthBestList", monthBestList);
         model.addAttribute("monthBestList", monthBestList);
 
