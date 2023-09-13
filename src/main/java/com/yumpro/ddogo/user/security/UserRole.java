@@ -7,11 +7,11 @@ import lombok.Getter;
 public enum UserRole {
     //ADMIN은 "ROLE_ADMIN"을 값으로,
     //USER은 "ROLE_USER"을 값으로 가진다
-    ADMIN("ROLE_ADMIN"),
-    USER("ROLE_USER");
+    ADMIN("ROLE_ADMIN"), USER("ROLE_USER");
 
-    UserRole(String value){
-        this.value=value;
+    UserRole(String value) {
+        this.value = value;
     }
+
     private String value;
 }

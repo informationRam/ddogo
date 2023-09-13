@@ -46,13 +46,11 @@ public class UserSecurityService implements UserDetailsService {
         } else {
             authorities.add(new SimpleGrantedAuthority(UserRole.USER.getValue()));
 
-            // Spring Security에서는 SecurityContextHolder를 이용하여 인증 정보를 관리
-
             // Create a custom UserPrincipal object that holds the user information including userId
             // 세션에 user1 정보 저장
             SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(user1, null, authorities));
-            System.out.println("getUserId:"+user1.getUserId());
-            System.out.println("getUse:"+user1);
+            System.out.println("getUserId:" + user1.getUserId());
+            System.out.println("getUse:" + user1);
 
             return new User(user1.getUserId(), user1.getPwd(), new ArrayList<>());
         }

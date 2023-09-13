@@ -52,7 +52,6 @@ public class UserService {
         return emailDuplicate;
     }
 
-
     //정보 수정시 사용
     @Transactional(readOnly = true)
     public boolean checkEmailDuplication(User user,UserModifyForm userModifyForm) {
