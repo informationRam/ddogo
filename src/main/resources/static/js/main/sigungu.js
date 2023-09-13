@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // 페이지 로드 시 초기 데이터를 가져와서 선택 상자를 생성
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", "http://localhost/initialData", true);
+    xhr.open("GET", "/initialData", true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 
     xhr.onload = function () {
@@ -90,7 +90,7 @@ document.addEventListener("DOMContentLoaded", function () {
             formData.append("hotplace_cate_no", selectedCategory);
 
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", "http://localhost/main", true);
+            xhr.open("POST", "/main", true);
             xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
 
             xhr.onload = function () {
