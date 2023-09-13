@@ -45,6 +45,7 @@ public class SecurityConfig {
                 .requestMatchers(new AntPathRequestMatcher("/user/modifyForm/**")).authenticated()
                 .requestMatchers(new AntPathRequestMatcher("/mymap/**")).authenticated()
                 .requestMatchers(new AntPathRequestMatcher("/admin/**")).hasRole("ADMIN")
+                .requestMatchers(new AntPathRequestMatcher("/notice/**")).hasRole("USER")
                 .requestMatchers(new AntPathRequestMatcher("/user/joinForm")).denyAll() //로그인 후 회원가입접근불가
                 .anyRequest().permitAll()
                 .and().formLogin().loginPage("/user/login").usernameParameter("user_id").passwordParameter("pwd").defaultSuccessUrl("/")

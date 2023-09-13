@@ -27,9 +27,11 @@ public class DashboardController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/admin")
     public String dashBoardWithoutYear(Model model, Principal principal) throws NotFoundException {
+
         if ( !principal.getName().equals("admin") ) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"권한이 없습니다");
         }
+
         return dashBoard(Optional.empty(), model);
     }
     @PreAuthorize("isAuthenticated()")

@@ -1,7 +1,9 @@
 package com.yumpro.ddogo.common.entity;
 
+import com.yumpro.ddogo.user.security.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.Cleanup;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -38,5 +40,9 @@ public class User {
 
     @NotNull
     private String pwd;                 //'비밀번호'
+
+    @Column
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
 }
