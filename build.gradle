@@ -45,7 +45,6 @@ dependencies {
 	//시큐리티 외부인증관련
 	implementation 'org.springframework.security:spring-security-oauth2-client'
 
-
 	// json
 	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 	compileOnly 'org.projectlombok:lombok'

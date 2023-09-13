@@ -136,7 +136,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     title: hotplData.hotplaceName
                 });
                 // 마커를 지도에 표시
-                        marker.setMap(map);
+                marker.setMap(map);
                 // 생성한 마커를 배열에 추가
                 markerList.push(marker);
                 }
