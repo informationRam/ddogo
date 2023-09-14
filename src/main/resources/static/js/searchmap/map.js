@@ -119,7 +119,7 @@ function displayPlaces(places) {
             overlay.setMap(null);
         }
         (function(marker, places) {
-            kakao.maps.event.addListener(marker, 'click', function(){ //커스텀오버레이호출.
+            kakao.maps.event.addListener(marker, 'click', function(){ //마커 클릭시 커스텀오버레이호출.
                 displayMyOverlay(marker, places); //검색 결과를 인자로 넣어준다.
             });
             kakao.maps.event.addListener(marker, 'mouseover', function() {
@@ -128,6 +128,9 @@ function displayPlaces(places) {
             kakao.maps.event.addListener(marker, 'mouseout', function() {
                 infowindow.close();
             });
+            itemEl.onclick = function(){ //검색 결과 목록 클릭시 커스텀오버레이호출.
+                displayMyOverlay(marker, places); //검색 결과를 인자로 넣어준다.
+            };
             itemEl.onmouseover =  function () {
                 displayInfowindow(marker, places);
             };
@@ -221,7 +224,6 @@ function displayPagination(pagination) {
 
 // 검색결과 목록 또는 마커를 마우스오버했을 때 호출되는 함수입니다
 // 인포윈도우에 장소명을 표시합니다.
-// 몸체랑 꼬리가 분리되는게 맘에 안들어서 수정하고 싶음...
 function displayInfowindow(marker, places) {
     var content = '<div style="top:0px; padding:5px; z-index:1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">'+
                       places.place_name +
