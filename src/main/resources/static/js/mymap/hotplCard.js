@@ -1,4 +1,4 @@
-//<!-- 카테고리별 카드 출력 -->
+// 카테고리별 카드 출력
 
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 });
 
-//<!-- 맛집 카드 삭제 -->
+//맛집 카드 삭제
 
 const deleteButtons = document.querySelectorAll('.btn-delete');
 

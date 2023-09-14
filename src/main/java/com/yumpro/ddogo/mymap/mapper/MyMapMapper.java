@@ -9,6 +9,9 @@ import java.util.List;
 @Mapper
 public interface MyMapMapper {
 
+    //ajax페이지별 저장한 맛집 리스트 조회
+    List<MyMapDTO> hotplacesByUserNoPaged(@Param("userNo") int userNo, @Param("offset") int offset, @Param("limit") int limit);
+
     //회원별 맛집 목록 불러오기 :=>  mymap.xml에서 쿼리 작성
    List<MyMapDTO> hotplacesByUserNo(@Param("userNo") int userNo);
 
@@ -17,9 +20,5 @@ public interface MyMapMapper {
     void deleteMyHotpl(@Param("mapNo") Integer mapNo);
 
 
-//   // 후기정보 수정 -2: 마커번호, 추천유무, 메모
-//    //void updateReview(@Param("mapNo") Integer mapNo, @Param("recomm") String recomm,
-//                      //@Param("memo") String memo);
-//    void updateReview(EmoReviewDTO emoReviewDTO);
 
 }

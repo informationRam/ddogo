@@ -46,8 +46,42 @@ GROUP BY
             ]]>
     </delete>
 
-
-
+    <!-- ajax 페이징을 위한 페이지별 맛집 정보 조회 -->
+    <select id="hotplacesByUserNoPaged" resultType="com.yumpro.ddogo.mymap.domain.MyMapDTO">
+        <![CDATA[
+    SELECT
+        m.user_no AS userNo,
+        e.map_no AS mapNo,
+        h.hotplace_no AS hotplaceNo,
+        h.hotplace_name AS hotplaceName,
+        e.review AS review,
+        m.recom AS recomm,
+        h.sido AS sido,
+        h.gugun AS gugun,
+        h.address AS address,
+        h.lat AS lat,
+        h.lng AS lng,
+        AVG(COALESCE(e.emo_result, 0)) AS avgEmoResult,
+        hc.hotplace_cate_no AS hotplaceCateNo,
+        u.user_name AS userName
+    FROM
+        emoreview e
+    JOIN
+        hotplace h ON e.hotplace_no = h.hotplace_no
+    JOIN
+        mymap m ON e.map_no = m.map_no
+    JOIN
+        hotplace_cate hc ON h.hotplace_cate_no = hc.hotplace_cate_no
+    JOIN
+        user u ON m.user_no = u.user_no
+    WHERE
+        m.user_no = #{userNo}
+    GROUP BY
+        h.hotplace_no, h.hotplace_name, h.address, h.sido, h.gugun, h.lat, h.lng,
+        e.review, e.map_no, m.user_no, m.recom, hc.hotplace_cate_no, u.user_name
+    LIMIT #{offset}, #{limit}
+    ]]>
+    </select>
 </mapper>
 
 

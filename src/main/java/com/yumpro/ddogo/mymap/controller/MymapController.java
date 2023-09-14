@@ -154,24 +154,6 @@ public class MymapController {
     }
 
 
-//    //ajax용 페이지네이션
-//    @GetMapping("/api/{user_id}/{pageNo}")
-//    @ResponseBody
-//    public Page<MyMapDTO> myMapHotplListApi(
-//            @PathVariable("user_id") String user_id,
-//            @PathVariable("pageNo") int pageNo, // 파라미터 이름 수정
-//            @RequestParam(defaultValue = "4") int size,
-//            Principal principal) {
-//        User loginUser = userService.getUser(principal.getName());
-//        int userNo = loginUser.getUser_no();
-//
-//        // 페이지네이션을 위해 Pageable 객체 생성
-//        Pageable pageable = PageRequest.of(pageNo - 1, size); // 페이지는 0부터 시작하므로 -1
-//
-//        return myMapService.getHotplacesByUserNo(userNo, pageable);
-//    }
-
-
 
     // 회원별 맛집 목록 & 지도를 보여줄 페이지 및 JSON 데이터를 반환
     @GetMapping("/{user_id}")

@@ -7,5 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface MyMapRepository extends JpaRepository<MyMap,Integer> {
 
 
-
+//    @Query("SELECT m FROM mymap m WHERE m.hotplaceName LIKE %:keyword% OR m.address LIKE %:keyword%")
+//    List<MyMapDTO> searchHotplaces(String keyword);
 }

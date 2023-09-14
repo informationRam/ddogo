@@ -2,6 +2,7 @@ package com.yumpro.ddogo.mymap.service;
 
 import com.yumpro.ddogo.mymap.domain.MyMapDTO;
 import com.yumpro.ddogo.mymap.mapper.MyMapMapper;
+import com.yumpro.ddogo.mymap.repository.MyMapRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -16,6 +17,20 @@ public class MymapService {
 
 
     private final MyMapMapper myMapMapper;
+    private MyMapRepository myMapRepository;
+
+//    // 검색창 결과 반환
+//    public List<MyMapDTO> searchHotplaces(String keyword) {
+//        return myMapRepository.searchHotplaces(keyword);
+//    }
+
+
+    // 페이지별 저장한 맛집 리스트 조회 : ajax
+    public List<MyMapDTO> getHotplacesByUserNoPaged(int userNo, int page, int size) {
+        int offset = (page - 1) * size; // 오프셋 계산:페이지는 0부터 시작
+        return myMapMapper.hotplacesByUserNoPaged(userNo, offset, size);
+    }
+
 
     //회원별 저장한 맛집 리스트 조회 - mapper
     public Page<MyMapDTO> getHotplacesByUserNo(int userNo, Pageable pageable) {
@@ -36,19 +51,4 @@ public class MymapService {
         }
     }
 }
-
-/*
-    //회원별 저장한 맛집 리스트 조회 - repository버전
-    public List<MyMapDTO> getSavedHotplaces(int userNo){
-      List<MyMapDTO> myHotplList = mymapRepository.findHotplacesByUserNo(userNo);
-      return myHotplList;
-    }
-*/
-
-
-// 전체 db test용
-//    public List<MymapMarkerDTO> getLatLngNames(){
-//        List<MymapMarkerDTO> mymapMarkerDTOS = mymapHotplRepository.findLatLngNames();
-//        return mymapMarkerDTOS;
-//    }
 
