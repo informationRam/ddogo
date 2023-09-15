@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -94,18 +96,21 @@ public class NoticeController {
         System.out.println("수정 ㅇㅋ");
         return "redirect:/notice/detail/" + notiNo; // 수정 후 공지사항 상세페이지로 리다이렉트
     }
-
-    //공지사항 삭제처리
+    // 공지사항 삭제처리
     @GetMapping("/delete/{notiNo}")
-    public String noticeDelete(@PathVariable("notiNo") Integer notiNo,
-                               Principal principal) {
-        Notice notice = noticeService.getNotice(notiNo);    //notice 상세
-        User user = userService.getUser(principal.getName());   //로그인한 정보가져오기
-        if (!user.getUserId().equals("admin")) {
+    public String noticeDelete(@PathVariable("notiNo") Integer notiNo, Principal principal) {
+        Notice notice = noticeService.getNotice(notiNo);    // notice 상세
+
+        // 현재 사용자의 인증 정보를 가져옴
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        // 현재 사용자의 권한 중 하나라도 "ROLE_ADMIN"인 경우
+        if (authentication.getAuthorities().stream()
+                .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
+            noticeService.noticeDelete(notice);
+            return "redirect:/notice/list";    // 공지사항 목록으로 이동
+        } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
         }
-        noticeService.noticeDelete(notice);
-        return "redirect:/notice/list";    // 공지사항목록으로이동
     }
-
 }

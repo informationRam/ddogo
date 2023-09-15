@@ -19,14 +19,16 @@
     height: 80%
     position: sticky;
     top:0; /*화면 상단에 고정*/
-  }
-
- #myMapContents{
-     flex-grow: 1; /* .mapContainer의 가로 넓이 가변으로 설정 */
-     position: relative;
-     padding: 0 20px;
-     height: 93vh;
-  }
+}
+#listContainer::-webkit-scrollbar {/*스크롤바 안보이게*/
+    display: none;
+}
+#myMapContents{
+    flex-grow: 1; /* .mapContainer의 가로 넓이 가변으로 설정 */
+    position: relative;
+    padding: 0 20px;
+    height: 93vh;
+}
 
  /* 임시용 감정 출력 영역 */
 .square {

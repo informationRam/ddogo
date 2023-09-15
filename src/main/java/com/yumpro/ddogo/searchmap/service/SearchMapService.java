@@ -56,7 +56,6 @@ public class SearchMapService {
         emoReview.setReview(inputReview);
         emoReview.setEmoResult(emoResult);
         emoreviewRepository.save(emoReview);
-        System.out.println("emoReview입력 완");
     }
 
     public Integer findHistory(Map<String, Object>map){
