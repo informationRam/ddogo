@@ -43,6 +43,29 @@ WHERE
     WHERE hp1.hotplace_no = hp.hotplace_no) > 0
 GROUP BY
     hp.sido, hp.gugun, hp.hotplace_name, hc.hotplace_cate_name
+        SELECT
+            MAX(hp.hotplace_no) AS hotplace_no,
+            hp.sido,
+            hp.gugun,
+            hp.hotplace_name,
+            hc.hotplace_cate_name,
+            SUM(CASE WHEN mm.recom = 'Y' THEN 1 ELSE 0 END) AS recom_count,
+            round(AVG(COALESCE(er.emo_result, 0)),3) AS emo_result
+        FROM
+            ddogo.hotplace hp
+        JOIN
+            ddogo.hotplace_cate hc ON hp.hotplace_cate_no = hc.hotplace_cate_no
+        LEFT JOIN
+            ddogo.mymap mm ON hp.hotplace_no = mm.hotplace_no
+        LEFT JOIN
+            ddogo.emoreview er ON mm.map_no = er.map_no AND mm.hotplace_no = er.hotplace_no
+        WHERE
+           (SELECT COUNT(mm1.map_no)
+            FROM ddogo.mymap mm1
+            JOIN ddogo.hotplace hp1 ON mm1.hotplace_no = hp1.hotplace_no
+            WHERE hp1.hotplace_no = hp.hotplace_no) > 0
+        GROUP BY
+            hp.sido, hp.gugun, hp.hotplace_name, hc.hotplace_cate_name
       ]]>
     </select>
 

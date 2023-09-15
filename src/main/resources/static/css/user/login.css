@@ -267,6 +267,7 @@ footer a {
   .form-container.sign-up-container {
       overflow-y: auto;
       max-height: 80vh; /* Remove the max-height constraint */
+       overflow-x: hidden; /* 가로 스크롤 제거 */
   }
 
 .gender-container {

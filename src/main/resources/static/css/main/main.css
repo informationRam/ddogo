@@ -29,11 +29,10 @@ body {
 }
 
 .badge span {
-    font-size: 14px;
+    font-size: 10px;
     background-color: #ffc0cb;
-    width: 65px;
-    height: 30px;
-    padding-bottom: 3px;
+    width: 40px;
+    height: 22px;
     border-radius: 5px;
     display: flex;
     color: #000000;
@@ -58,12 +57,14 @@ font-family: "MALANGMALANGB";
 
 .text1 {
     font-size: 15px;
-    font-weight: 600
+    font-weight: 600;
+    margin:4px;
 }
 
 .text2 {
     font-size: 15px;
-    color: #808080
+    color: #808080;
+    padding: 5px;
 }
 
 .container2 {
@@ -92,17 +93,25 @@ font-family: "MALANGMALANGB";
 
 .heading{
     font-family: "MALANGMALANGB";
+    margin: 0;
 }
 
 .form-label{
     font-family: "MALANR";
     font-size: 20px;
 }
-.heading2{
-    font-family: "MALANGMALANGB";
-}
+
 
 .heading:hover {
     cursor: pointer;
     color: rgba(0, 0, 0, 0.5); /* Change this to the desired color */
+}
+
+.modalReviewCard{
+    border: 1px solid #FFA8A8;
+    border-radius: 10px;
+    padding: 15px 15px 0 15px;
+}
+.modalReviewCard p {
+    font-size: 0.8em;
 }

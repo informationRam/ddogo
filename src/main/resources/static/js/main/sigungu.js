@@ -1,141 +1,11 @@
-<html lang="ko" layout:decorate="~{layout}" xmlns:th="http://www.thymeleaf.org">
-<div layout:fragment="content" class="container my-3">
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App</title>
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"/>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css"/>
-    <link rel="stylesheet" type="text/css"
-          href="/css/main/main.css" th:href="@{/css/main/main.css}" />
-
-<!-- index로 옮김. 나중에 삭제..!! -->
-    <div class="container mt-2 mb-2">
-        <div class="row">
-            <div class="col-md-6" >
-                <h4 class="title" style="margin:20px;">오늘의 Best 음식점</h4>
-                <div th:each="eatjjim,  idx :${eatjjim}" class="card p-1 mb-2">
-                    <div class="mt-1" style="padding: 20px;">
-                        <div class="badge" style="display: inline-block; margin-right: 10px;">
-                            <span th:text="'베스트 ' + (${idx.index + 1})">베스트</span>
-                        </div>
-                        <h5 class="heading" th:text="${eatjjim.hotplace_name}" style="display: inline-block;"></h5>
-                        <div class="ms-2 c-details">
-                            <span class="mb-0" th:text="${eatjjim.address}"></span>
-                        </div>
-                        <div class="mt-3">
-                            <div class="progress">
-                                <div class="progress-bar" role="progressbar" th:style="'width: ' + ${eatjjim.avg_emo_result} + '%'" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                            <div class="mt-3">
-                                <span class="text1" th:text="'리뷰 온도 ' + ${eatjjim.avg_emo_result}+'°C'" style="float: left;"></span>
-                                <span class="text2" th:text="'오늘의 저장수 ' + ${eatjjim.jjim}" style="float: right;"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <h4 class="title" style="margin:20px;">오늘의 Best 카페</h4>
-                <div th:each="cafejjim,  idx :${cafejjim}" class="card p-2 mb-2">
-                    <div class="mt-1" style="padding: 15px;">
-                        <div class="badge" style="display: inline-block; margin-right: 10px;">
-                            <span th:text="'베스트 ' + (${idx.index + 1})">베스트</span>
-                        </div>
-                        <h5 class="heading" th:text="${cafejjim.hotplace_name}" style="display: inline-block;"></h5>
-                        <div class="ms-2 c-details">
-                            <span class="mb-0" th:text="${cafejjim.address}"></span>
-                        </div>
-                        <div class="mt-3">
-                            <div class="progress">
-                                <div class="progress-bar" role="progressbar" th:style="'width: ' + ${cafejjim.avg_emo_result} + '%'" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                            <div class="mt-3">
-                                <span class="text1" th:text="'리뷰 온도 ' + ${cafejjim.avg_emo_result}+'°C'" style="float: left;"></span>
-                                <span class="text2" th:text="'오늘의 저장수 ' + ${cafejjim.jjim}" style="float: right;"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <br/>
-    <br/>
-    <!-- 시도 select -->
-    <h4 class="title" style="margin-left:50px;">이번달 Best</h4>
-    <div class="container2 mt-1 mb-1">
-        <div>
-            <label for="sido" class="form-label" style="margin:10px;">시/도</label>
-        </div>
-        <div class="col-md-2" style="margin:10px;">
-            <select name="sido" id="sido" class="form-select">
-                <option value="">선택하세요</option>
-            </select>
-        </div>
-        <div>
-            <label for="gugun" class="form-label" style="margin:10px;">구/군</label>
-        </div>
-        <div class="col-md-2" style="margin:10px;">
-            <select name="gugun" id="gugun" class="form-select">
-                <option value="">선택하세요</option>
-            </select>
-        </div>
-        <div>
-            <label for="category" class="form-label" style="margin:10px;">카테고리</label>
-        </div>
-        <div class="col-md-2" style="margin:10px;">
-            <select name="category" id="category" class="form-select">
-                <option value="">선택하세요</option>
-                <option value="1">음식점</option>
-                <option value="2">카페</option>
-            </select>
-        </div>
-        <div class="col-md-2">
-            <button type="button" class="btn btn-outline-danger" id="sendButton" style="margin:10px;">검색</button>
-        </div>
-    </div>
-
-    <!--월별 Best 자바스크립트에서 처리-->
-    <div id="result" class="card p-2 mb-2" style="padding: 30px;">
-        <div class="mx-3" style="padding: 30px;">
-            <div class="badge" style="display: inline-block; margin-right: 10px;">
-                <span>순위</span>
-            </div>
-            <h6 class="heading" style="display: inline-block;">가게이름</h6>
-            <div class="ms-2 c-details">
-                <span class="mb-0"></span>
-            </div>
-            <div class="mt-3" style="width: 50%;">
-                <div class="progress2">
-                    <div class="progress2-bar justify-content-center" role="progressbar" th:style="'width: ' + 리뷰온도 + '%'" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-                <div class="mt-3">
-                    <span class="text1" th:text="'리뷰온도 ' + 리뷰온도" style="float: left;"></span>
-                    <span class="text2" th:text="'찜수 ' + 찜수" style="float: right;"></span>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-</html>
-
-<!-- 자바스크립트 -->
-<script layout:fragment="script">
-    document.addEventListener("DOMContentLoaded", function () {
+//시군구 카테고리 & 리뷰 모달js
+document.addEventListener("DOMContentLoaded", function () {
     var resultDiv = document.getElementById("result");
     resultDiv.style.display = "none"; // 페이지 로드 시 결과 숨기기
 
-    // 페이지 로드 시 초기 데이터를 가져와서 선택 상자를 생성하는 부분
+    // 페이지 로드 시 초기 데이터를 가져와서 선택 상자를 생성
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", "http://localhost/initialData", true);
+    xhr.open("GET", "/initialData", true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 
     xhr.onload = function () {
@@ -147,7 +17,7 @@
                 var sidoSelect = document.getElementById("sido");
                 var gugunSelect = document.getElementById("gugun");
 
-                // JSON 객체를 가나다순으로 정렬
+               // JSON 객체를 가나다순으로 정렬
                 var sortedResponse = {};
                 Object.keys(response).sort().forEach(function(key) {
                     sortedResponse[key] = response[key];
@@ -208,7 +78,7 @@
         if (selectedSido === "" || selectedGugun === "" || isNaN(selectedCategory)) {
             // 사용자가 조건을 선택하지 않은 경우 결과를 숨김
             resultDiv.style.display = "none";
-            alert("시도, 구군, 카테고리를 선택해주세요.");
+            alert("시도, 시군구, 카테고리를 모두 선택해주세요.");
         } else {
             // 선택한 조건에 따라 결과를 표시
             resultDiv.style.display = "block";
@@ -220,7 +90,7 @@
             formData.append("hotplace_cate_no", selectedCategory);
 
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", "http://localhost/main", true);
+            xhr.open("POST", "/main", true);
             xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
 
             xhr.onload = function () {
@@ -261,7 +131,7 @@
                                 rankBadge.style.marginBottom = "10px";
 
                                 var rankSpan = document.createElement("span");
-                                rankSpan.textContent = "베스트 "+ (i + 1); // 순위 계산 (0부터 시작하므로 +1)
+                                rankSpan.textContent = "Best " + (i + 1); // 순위 계산 (0부터 시작하므로 +1)
 
                                 rankBadge.appendChild(rankSpan);
 
@@ -270,8 +140,17 @@
                                 nameH6.className = "heading";
                                 nameH6.style.display = "inline-block";
                                 nameH6.textContent = entry.hotplace_name;
+                                nameH6.setAttribute("data-hotplace-no", entry.hotplace_no); // 제목을 클릭했을 때 hotplace_no data전달
                                 nameH6.style.marginBottom = "10px"; // 상하 마진
 
+                                // 가게 주소를 표시하는 열 추가
+                                var addressDiv = document.createElement("div");
+                                addressDiv.className = "ms-2 c-details";
+
+                                var addressSpan = document.createElement("span");
+                                addressSpan.className = "mb-0";
+                                addressSpan.textContent = entry.address; // monthBestList의 주소 정보를 표시
+                                addressDiv.appendChild(addressSpan);
 
                                 // 리뷰 온도를 표시하는 열 추가
                                 var reviewProgress = document.createElement("div");
@@ -287,7 +166,7 @@
 
                                 var reviewText1 = document.createElement("span");
                                 reviewText1.className = "text1";
-                                reviewText1.textContent = "리뷰 온도 " + entry.avg_emo_result+"°C";
+                                reviewText1.textContent = "리뷰 온도 " + entry.avg_emo_result + "°C";
                                 reviewText1.style.float = "left";
                                 reviewText1.style.marginTop = "15px";
 
@@ -300,6 +179,7 @@
 
                                 cardContent.appendChild(rankBadge);
                                 cardContent.appendChild(nameH6);
+                                cardContent.appendChild(addressDiv);
                                 cardContent.appendChild(reviewProgress);
                                 cardContent.appendChild(reviewText1);
                                 cardContent.appendChild(jjimText2);
@@ -314,6 +194,113 @@
                                     var horizontalLine = document.createElement("hr");
                                     resultDiv.appendChild(horizontalLine);
                                 }
+
+                               // 모달창 생성
+                              var modal = document.createElement('div');
+                              modal.id = 'myModal'+ (i + 1);  // 각각 다른 ID 부여
+                              modal.className = 'modal fade';
+                              modal.tabIndex = '-1';
+
+                              var dialog = document.createElement('div');
+                              dialog.className = 'modal-dialog';
+
+                              var content = document.createElement('div');
+                              content.className = 'modal-content';
+
+                              // 모달 헤더 생성
+                              var header= document.createElement('div');
+                              header.className= 'modal-header';
+
+                              var title= document.createElement('h5');
+                              title.className= 'modal-title';
+                              title.textContent='Review';
+
+                              var closeButtonHeader= document.createElement('button');
+                              closeButtonHeader.type='button';
+                              closeButtonHeader.className='btn-close';
+                              closeButtonHeader.setAttribute("data-bs-dismiss", "modal");
+
+                              header.appendChild(title);
+                              header.appendChild(closeButtonHeader);
+
+                              content.appendChild(header);
+
+                              //모달 바디 생성
+                              var body = document.createElement('div');
+                              body.className = 'modal-body';
+
+                              content.appendChild(body);
+                              dialog.appendChild(content);
+                              modal.appendChild(dialog);
+
+                              // 모달창을 body에 추가
+                              document.body.appendChild(modal);
+
+                              //모달 푸터 생성
+                              var footer=document.createElement('div');
+                              footer.className='modal-footer';
+
+                              let closeModalButton=document.createElement('button')
+                              closeModalButton.id="closeModal";
+                              closeModalButton.type="button";
+                              closeModalButton.className="btn btn-danger";
+                              closeModalButton.setAttribute("data-bs-dismiss", "modal");
+                              closeModalButton.textContent = 'Close';
+
+                              footer.appendChild(closeModalButton);
+                              content.appendChild(footer);
+
+                               nameH6.addEventListener("click", (function(i) {
+                                   return function () {
+                                       var hotplace_no = this.getAttribute('data-hotplace-no'); // hotplace_no정보 받음.
+                                       var url = '/review/' + hotplace_no;
+
+                                       var xhr = new XMLHttpRequest();
+                                       xhr.open('GET', url, true);
+                                       xhr.setRequestHeader('Content-Type', 'application/json');
+
+                                       xhr.onreadystatechange = function () {
+                                           if (xhr.readyState === 4 && xhr.status === 200) {
+                                               var data = JSON.parse(xhr.responseText);
+
+                                               console.log(data);
+
+                                               // AJAX 요청이 성공적으로 완료된 후에만 모달 창 열기
+                                               let reviewModalElmId='myModal'+(i+1);
+                                               let reviewModalElm=document.getElementById(reviewModalElmId);
+
+                                               if (reviewModalElm != null) {
+                                                   let modalBody = reviewModalElm.querySelector('.modal-body');
+                                                   modalBody.innerHTML = '';
+
+                                                   data.forEach(function(reviewList) {
+                                                       let reviewBody = document.createElement('div');
+                                                       reviewBody.classList.add('modalReviewCard', 'my-2');
+                                                       let reviewTextElement = document.createElement('p');
+                                                       reviewTextElement.textContent = reviewList.review;
+
+                                                       let emoResultElement = document.createElement('p');
+                                                       emoResultElement.style.textAlign='right';
+                                                       emoResultElement.textContent='리뷰 온도 '+reviewList.emo_result+'°C';
+                                                       emoResultElement.classList.add('text1');
+
+                                                       reviewBody.appendChild(reviewTextElement);
+                                                       reviewBody.appendChild(emoResultElement);
+
+                                                      modalBody.appendChild(reviewBody);
+                                                   });
+
+                                                  var modalInstance=new bootstrap.Modal(reviewModalElm);
+                                                  modalInstance.show();
+                                              }
+                                           } else if (xhr.readyState === 4) {
+                                              alert('요청 실패: ' + xhr.status);
+                                           }
+                                      };
+
+                                      xhr.send();
+                                  };
+                               })(i)); // IIFE 종료
                             }
                         }
                     } catch (error) {
@@ -321,7 +308,7 @@
                     }
                 } else {
                     console.log("Error:", xhr.statusText);
-                    alert("시도, 구군, 카테고리를 모두 선택해주세요." + xhr.statusText);
+                    alert("Error" + xhr.statusText);
                 }
             };
 
@@ -333,5 +320,3 @@
         }
     });
 });
-
-</script>

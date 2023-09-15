@@ -7,5 +7,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MymapRepository extends JpaRepository<MyMap, Integer> {
 
-    //MyMap findByUserNoAndHotplaceNo(Integer userNo, Integer hotplaceNo);
 }
