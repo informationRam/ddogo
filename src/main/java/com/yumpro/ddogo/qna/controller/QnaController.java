@@ -166,7 +166,7 @@ public class QnaController {
         if (!authentication.getAuthorities().stream()
                 .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
             if(!qna.getQnaPwd().equals(inputPwd)){
-                redirectAttributes.addFlashAttribute("error", "문의글 상세보기는 비밀번호 후 이용해주세요");
+                redirectAttributes.addFlashAttribute("error", "문의글 상세보기는 비밀번호가 일치할 경우에만 가능합니다");
                 return "redirect:/qna/list";
             }
         }
