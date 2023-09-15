@@ -1,5 +1,6 @@
-<html layout:decorate="~{layout_for_main_notice_qna}">
-<div layout:fragment="content" class="container my-3">
+<html xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{|${userRole == 'admin' ? 'qna/qnabar' : 'layout_for_main_notice_qna'}|}">
+<div layout:fragment="content" th:class="${userRole == 'admin'} ? '' : 'container my-5'">
     <link rel="stylesheet" href="/css/notice/noticelist.css" th:href="@{/css/notice/noticelist.css}"/>
     <h1 class="text-center my-4" style="font-weight: bold;">공지사항</h1><br/>
     <table class="table table-danger">

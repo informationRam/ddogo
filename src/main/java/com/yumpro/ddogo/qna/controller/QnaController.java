@@ -9,6 +9,7 @@ import com.yumpro.ddogo.qna.service.QnaService;
 import com.yumpro.ddogo.admin.service.UserListService;
 import com.yumpro.ddogo.qna.validation.QnaAddForm;
 import com.yumpro.ddogo.qna.validation.QnaSolveAddForm;
+import com.yumpro.ddogo.user.security.Role;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -85,7 +86,16 @@ public class QnaController {
         int totalCount = qnaService.getQnaListCount(map); // 전체 데이터 수를 가져오는 메서드를 추가해야 합니다.
         int totalPages = (int) Math.ceil((double) totalCount / limit);
         int notSolvedCnt=dashboardService.notSolvedCnt();
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userRole=null;
+        if (authentication.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
+            userRole="admin";
+        }else{
+            userRole="user";
+        }
         //3.Model
+        model.addAttribute("userRole",userRole);
         model.addAttribute("notSolvedCnt",notSolvedCnt);
         model.addAttribute("totalCnt",totalCount);
         model.addAttribute("currentPage", currentPage);
@@ -105,7 +115,15 @@ public class QnaController {
     @GetMapping("/add")
     public String qnaAdd(QnaAddForm qnaAddForm,Model model,Principal principal){
         int notSolvedCnt=dashboardService.notSolvedCnt();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userRole=null;
+        if (authentication.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
+            userRole="admin";
+        }else{
+            userRole="user";
+        }
         //3.Model
+        model.addAttribute("userRole",userRole);
         model.addAttribute("notSolvedCnt",notSolvedCnt);
         model.addAttribute("userId",principal.getName());
         return "qna/qna_add";
@@ -137,7 +155,7 @@ public class QnaController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/detail/{id}")
     public String qnaDetailGet(@PathVariable int id,@RequestParam(value="inputPwd", required = false) String inputPwd,RedirectAttributes redirectAttributes,Model model){
-        redirectAttributes.addFlashAttribute("error", "문의글 상세보기는 비밀번호 후 이용해주세요");
+        redirectAttributes.addFlashAttribute("error", "문의글 상세보기는 비밀번호 인증 후 이용해주세요");
         int notSolvedCnt=dashboardService.notSolvedCnt();
         //3.Model
         model.addAttribute("notSolvedCnt",notSolvedCnt);
@@ -156,7 +174,7 @@ public class QnaController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if(inputPwd==null){
-            redirectAttributes.addFlashAttribute("error", "문의글 상세보기는 비밀번호 후 이용해주세요");
+            redirectAttributes.addFlashAttribute("error", "문의글 상세보기는 비밀번호 인증 후 이용해주세요");
             return "redirect:/qna/list";
         }
 
@@ -173,7 +191,6 @@ public class QnaController {
 
         QnaSolve qnaSolve = qnaService.getQnaSolveByQna(qna);
 
-        String userId=principal.getName();
         String userRole=null;
         if (authentication.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
             userRole="admin";
@@ -273,7 +290,15 @@ public class QnaController {
         qnaSolveAddForm.setQnaSolveTitle(qnaSolve.getQnaSolveTitle());
         qnaSolveAddForm.setQnaSolveContent(qnaSolve.getQnaSolveContent());
         int notSolvedCnt=dashboardService.notSolvedCnt();
+
+        String userRole=null;
+        if (authentication.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
+            userRole="admin";
+        }else{
+            userRole="user";
+        }
         //3.Model
+        model.addAttribute("userRole",userRole);
         model.addAttribute("notSolvedCnt",notSolvedCnt);
         model.addAttribute("qna",qna);
         model.addAttribute("userId",principal.getName());
@@ -366,7 +391,15 @@ public class QnaController {
         QnaAddForm.setQna_title(qna.getQnaTitle());
         QnaAddForm.setQna_content(qna.getQnaContent());
         int notSolvedCnt=dashboardService.notSolvedCnt();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userRole=null;
+        if (authentication.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
+            userRole="admin";
+        }else{
+            userRole="user";
+        }
         //3.Model
+        model.addAttribute("userRole",userRole);
         model.addAttribute("notSolvedCnt",notSolvedCnt);
         model.addAttribute("qna",qna);
         model.addAttribute("userId",principal.getName());
@@ -389,7 +422,15 @@ public class QnaController {
         }
         if(bindingResult.hasErrors()){  //유효성검사시 에러가 발생하면
             int notSolvedCnt=dashboardService.notSolvedCnt();
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String userRole=null;
+            if (authentication.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
+                userRole="admin";
+            }else{
+                userRole="user";
+            }
             //3.Model
+            model.addAttribute("userRole",userRole);
             model.addAttribute("notSolvedCnt",notSolvedCnt);
             model.addAttribute("qna",qna);
             model.addAttribute("userId",principal.getName());
@@ -399,7 +440,15 @@ public class QnaController {
         if(!qnaAddForm.getQna_pwd().equals(qna.getQnaPwd())){
             bindingResult.rejectValue("qna_pwd","qnaPwdInCorrect","문의 비밀번호가 일치하지 않습니다");
             int notSolvedCnt=dashboardService.notSolvedCnt();
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String userRole=null;
+            if (authentication.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
+                userRole="admin";
+            }else{
+                userRole="user";
+            }
             //3.Model
+            model.addAttribute("userRole",userRole);
             model.addAttribute("notSolvedCnt",notSolvedCnt);
             model.addAttribute("qna",qna);
             model.addAttribute("userId",principal.getName());
