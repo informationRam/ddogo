@@ -45,7 +45,6 @@ GROUP BY
     hp.sido, hp.gugun, hp.hotplace_name, hc.hotplace_cate_name
       ]]>
     </select>
-
     <select id="newPlaceCnt" resultType="int">
         <![CDATA[
         select COUNT(hp.hotplace_no)
