@@ -18,20 +18,23 @@
                 <!-- 작성일 -->
                 <div th:text="${#temporals.format(notice.notiDate,'yyyy-MM-dd HH:mm')}"/>
             </div>
-            <!--목록보기(이전페이지)-->
-            <button class="btn btn-sm btn-outline-warning" onclick="history.back()">목록보기</button>
-            <!-- 공지사항수정: 관리자만 가능 -->
-            <a th:href="@{|/notice/modify/${notice.notiNo}|}"
-               class="btn btn-sm btn-outline-secondary"
-               sec:authorize="isAuthenticated()"
-               th:if="${#authentication.getPrincipal().getUsername()=='admin'}"
-               th:text="수정"></a>
-            <!-- 공지사항삭제:  관리자만 가능-->
-            <a href="javascript:void(0);" th:data-uri="@{|/notice/delete/${notice.notiNo}|}"
-               class="delete btn btn-sm btn-outline-secondary"
-               sec:authorize="isAuthenticated()"
-               th:if="${#authentication.getPrincipal().getUsername()=='admin'}"
-               th:text="삭제"></a>
+            <div class="row">
+                <div class="col-md-1 text-left">
+                    <button class="btn btn-sm btn-outline-warning" onclick="history.back()">목록보기</button>
+                </div>
+                <div class="col-md-6 text-right">
+                    <div sec:authorize="hasRole('ROLE_ADMIN')">
+                        <a th:href="@{|/notice/modify/${notice.notiNo}|}"
+                           class="btn btn-sm btn-outline-secondary"
+                           sec:authorize="isAuthenticated()"
+                           th:text="수정"></a>
+                        <a href="javascript:void(0);" th:data-uri="@{|/notice/delete/${notice.notiNo}|}"
+                           class="delete btn btn-sm btn-outline-secondary"
+                           sec:authorize="isAuthenticated()"
+                           th:text="삭제"></a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <!-- javascript부분 -- ----------------------------->
