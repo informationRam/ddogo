@@ -8,6 +8,7 @@ import com.yumpro.ddogo.admin.service.UserListService;
 import com.yumpro.ddogo.admin.validation.UserModiForm;
 import com.yumpro.ddogo.common.entity.User;
 
+import com.yumpro.ddogo.user.security.Role;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -15,6 +16,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -67,7 +70,12 @@ public class UserListController {
         map.put("sortField", sortField);
         map.put("sortOrder", sortOrder);
 
-        if ( !principal.getName().equals("admin") ) {
+        // 현재 사용자의 인증 정보를 가져옴
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        // 현재 사용자의 권한 중 하나라도 "ROLE_ADMIN"이 아니라면
+        if (!authentication.getAuthorities().stream()
+                .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"권한이 없습니다.");
         }
         List<UserDTO> userList = userService.userList(map);
@@ -97,8 +105,12 @@ public class UserListController {
         //2.비즈니스로직수행
         User user =userService.getUser(userNo);
         UserModiForm userModiForm=userService.toModifyForm(user);
+        // 현재 사용자의 인증 정보를 가져옴
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if ( !principal.getName().equals("admin") ) {
+        // 현재 사용자의 권한 중 하나라도 "ROLE_ADMIN"이 아니라면
+        if (!authentication.getAuthorities().stream()
+                .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"수정권한이 없습니다.");
         }
         int notSolvedCnt=dashboardService.notSolvedCnt();
@@ -119,8 +131,12 @@ public class UserListController {
         int notSolvedCnt=dashboardService.notSolvedCnt();
         model.addAttribute("notSolvedCnt",notSolvedCnt);
         model.addAttribute("userModiForm", userModiForm);
+        // 현재 사용자의 인증 정보를 가져옴
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if ( !principal.getName().equals("admin") ) {
+        // 현재 사용자의 권한 중 하나라도 "ROLE_ADMIN"이 아니라면
+        if (!authentication.getAuthorities().stream()
+                .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"수정권한이 없습니다.");
         }
 
