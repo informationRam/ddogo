@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,6 +24,7 @@ import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 
+//시큐리티 저장 값 가져오기 세션대용
    /* User user = userService.getUser(principal.getName());
         model.addAttribute("user", user.get().getUser_no());        ==> 유저의 no를 가져옴    */
 
@@ -37,6 +39,7 @@ public class UserController {
     //세션값 담기(1)
     private final HttpSession session;
 
+    //회원가입 폼
     @GetMapping("/joinForm")
     public String joinForm(UserCreateForm userCreateForm, Model model) {
         model.addAttribute("userCreateForm", userCreateForm);
@@ -48,25 +51,25 @@ public class UserController {
     public String userJoin(@Valid UserCreateForm userCreateForm, BindingResult bindingResult, Model model) {
 
         if (bindingResult.hasErrors()) {
-            return "/user/joinForm";
+            return "/user/loginForm";
         }
 
         // 아이디 중복 여부체크
         if (userService.checkUserIdDuplication(userCreateForm.getUser_id())) {
             bindingResult.rejectValue("user_id", "User_idInCorrect", "이미 사용중인 아이디입니다.");
-            return "/user/joinForm";
+            return "/user/loginForm";
         }
 
         // 이메일 중복 여부체크
         if (userService.checkEmailDuplication(userCreateForm.getEmail())) {
             bindingResult.rejectValue("email", "EmailInCorrect", "이미 사용중인 이메일 입니다.");
-            return "/user/joinForm";
+            return "/user/loginForm";
         }
 
         // 비밀번호, 비밀번호 확인 동일 체크
         if (!userCreateForm.getPwd1().equals(userCreateForm.getPwd2())) {
             bindingResult.rejectValue("pwd2", "pwdInCorrect", "비밀번호 확인 값이 다릅니다.");
-            return "/user/joinForm";
+            return "/user/loginForm";
         } else {
             userService.userJoin(userCreateForm);
             return "redirect:/user/login";
@@ -168,7 +171,8 @@ public class UserController {
     // 정보수정 실행
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{user_id}")
-    public String userUpdate(Model model, @Valid UserModifyForm userModifyForm, BindingResult bindingResult, Principal principal) {
+    public String userUpdate(Model model, @Valid UserModifyForm userModifyForm,
+                             BindingResult bindingResult, Principal principal) {
 
         User user = userService.getUser(principal.getName());
         model.addAttribute("userModifyForm", userModifyForm);
@@ -198,7 +202,8 @@ public class UserController {
 
     //  탈퇴하기
     @GetMapping("/delete/{user_id}")
-    public String questionDelete(@PathVariable("user_id") String user_id, Principal principal) {
+    public String questionDelete(@PathVariable("user_id") String user_id,
+                                 Principal principal) {
         User user = userService.getUser(user_id); //회원상세
         if (!user.getUserId().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");

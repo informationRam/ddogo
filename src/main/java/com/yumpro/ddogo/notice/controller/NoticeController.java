@@ -107,4 +107,5 @@ public class NoticeController {
         noticeService.noticeDelete(notice);
         return "redirect:/notice/list";    // 공지사항목록으로이동
     }
+
 }
