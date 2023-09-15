@@ -159,13 +159,14 @@
 
     </script>
     <script th:inline="javascript">
-        var userId = /*[[${userId}]]*/;
+        /*<![CDATA[*/
+        var isAdmin = /*[[${#authorization.expression('hasRole(''ROLE_ADMIN'')')}]]*/;
 
         function showCard(qnaNo) {
-            if(userId==='admin'){
+            if (isAdmin) {
                 document.getElementById('qnaDetailForm' + qnaNo).submit();
-            } else{
-                // 모든 카드를 숨깁니다.
+            } else {
+                 // 모든 카드를 숨깁니다.
                 document.querySelectorAll('.card').forEach(function(card) {
                     card.style.display = 'none';
                 });
@@ -174,7 +175,7 @@
                 document.getElementById('hiddenCard' + qnaNo).style.display = 'block';
             }
         }
-
+        /*]]>*/
     </script>
 </div>
 </html>

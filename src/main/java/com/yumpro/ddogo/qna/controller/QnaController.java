@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -142,10 +144,16 @@ public class QnaController {
         return"redirect:/qna/list";
     }
 
+
+
+
+
     //문의글 상세 보기 (비밀번호 확인 / 관리자는 free)
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/detail/{id}")
     public String qnaDetail(@PathVariable int id, @RequestParam(value="inputPwd", required = false) String inputPwd, Model model, Principal principal, QnaSolveAddForm qnaSolveAddForm,RedirectAttributes redirectAttributes){
+        // 현재 사용자의 인증 정보를 가져옴
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if(inputPwd==null){
             redirectAttributes.addFlashAttribute("error", "문의글 상세보기는 비밀번호 후 이용해주세요");
@@ -154,7 +162,9 @@ public class QnaController {
 
         Qna qna = qnaService.getQnaById(id);
 
-        if(!principal.getName().equals("admin")){
+        // 현재 사용자의 권한 중 하나라도 "ROLE_ADMIN"이 아니라면
+        if (!authentication.getAuthorities().stream()
+                .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
             if(!qna.getQnaPwd().equals(inputPwd)){
                 redirectAttributes.addFlashAttribute("error", "문의글 상세보기는 비밀번호 후 이용해주세요");
                 return "redirect:/qna/list";
@@ -165,7 +175,7 @@ public class QnaController {
 
         String userId=principal.getName();
         String userRole=null;
-        if(userId.equals("admin")){
+        if (authentication.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
             userRole="admin";
         }else{
             userRole="user";
@@ -192,13 +202,17 @@ public class QnaController {
         //아이디로 질문 가져오기
         Qna qna = qnaService.getQnaById(id);
         QnaSolve qnaSolve = qnaService.getQnaSolveByQna(qna);
+        // 현재 사용자의 인증 정보를 가져옴
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if ( !principal.getName().equals("admin") ) {
+        // 현재 사용자의 권한 중 하나라도 "ROLE_ADMIN"이 아니라면
+        if (!authentication.getAuthorities().stream()
+                .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"권한이 없습니다.");
         }
         String userId=principal.getName();
         String userRole=null;
-        if(userId.equals("admin")){
+        if (authentication.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
             userRole="admin";
         }else{
             userRole="user";
@@ -243,8 +257,12 @@ public class QnaController {
 
         Qna qna = qnaService.getQnaById(id);
         QnaSolve qnaSolve = qnaService.getQnaSolveByQna(qna);
+        // 현재 사용자의 인증 정보를 가져옴
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if(!principal.getName().equals("admin")){
+        // 현재 사용자의 권한 중 하나라도 "ROLE_ADMIN"이 아니라면
+        if (!authentication.getAuthorities().stream()
+                .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
             redirectAttributes.addFlashAttribute("error", "문의 답글은 관리자만 수정할 수 있습니다");
             int notSolvedCnt=dashboardService.notSolvedCnt();
             //3.Model
@@ -267,7 +285,13 @@ public class QnaController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/solve/modify/{id}")
     public String qnaSolveMofiy(@PathVariable int id,@Valid QnaSolveAddForm qnaSolveAddForm,BindingResult bindingResult,Model model,Principal principal,RedirectAttributes redirectAttributes){
-        if(!principal.getName().equals("admin")){
+        // 현재 사용자의 인증 정보를 가져옴
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+
+        // 현재 사용자의 권한 중 하나라도 "ROLE_ADMIN"이 아니라면
+        if (!authentication.getAuthorities().stream()
+                .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
             redirectAttributes.addFlashAttribute("error", "답변 수정은 관리자만 가능합니다");
             int notSolvedCnt=dashboardService.notSolvedCnt();
             //3.Model
@@ -309,7 +333,12 @@ public class QnaController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/solve/delete/{id}")
     public String qnaSolveDelete(@PathVariable("id") Integer id,Principal principal,RedirectAttributes redirectAttributes,Model model){
-        if(!principal.getName().equals("admin")){
+        // 현재 사용자의 인증 정보를 가져옴
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        // 현재 사용자의 권한 중 하나라도 "ROLE_ADMIN"이 아니라면
+        if (!authentication.getAuthorities().stream()
+                .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
             redirectAttributes.addFlashAttribute("error", "답글 삭제는 관리자만 가능합니다");
             int notSolvedCnt=dashboardService.notSolvedCnt();
             //3.Model
@@ -385,7 +414,10 @@ public class QnaController {
         Qna qna1 = qnaService.getQnaById(id);
         QnaSolve qnaSolve = qnaService.getQnaSolveByQna(qna1);
         String userRole=null;
-        if(principal.getName().equals("admin")){
+        // 현재 사용자의 인증 정보를 가져옴
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
             userRole="admin";
         }else{
             userRole="user";
