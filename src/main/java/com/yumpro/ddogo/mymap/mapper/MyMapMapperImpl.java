@@ -18,11 +18,11 @@ public class MyMapMapperImpl implements MyMapMapper {
 
     //검색결과 조회
     @Override
-    public List<MyMapDTO> getHotplacesByUserNoWithSearch(int userNo, String search, int limit, int offset) {
+    public List<MyMapDTO> getHotplacesByUserNoWithSearch(int userNo, String search, int pageSize, int offset) {
         Map<String, Object> params = new HashMap<>();
         params.put("userNo", userNo);
         params.put("search", search);
-        params.put("limit", limit);
+        params.put("pageSize", pageSize);
         params.put("offset", offset);
         return sqlSession.selectList("com.yumpro.ddogo.mymap.mapper.MyMapMapperImpl.getHotplacesByUserNoWithSearch", params);
     }

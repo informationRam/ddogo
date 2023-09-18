@@ -12,7 +12,7 @@ public interface MyMapMapper {
     //검색, 페이지네이션
     List<MyMapDTO> getHotplacesByUserNoWithSearch(@Param("userNo") int userNo, 
                                                   @Param("search") String search,
-                                                  @Param("limit") int limit,
+                                                  @Param("pageSize") int pageSize,
                                                   @Param("offset") int offset);
 
     //회원별 맛집 목록 불러오기 :=>  mymap.xml에서 쿼리 작성

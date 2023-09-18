@@ -120,12 +120,12 @@ public class MymapController {
         return searchResult; // JSON 데이터 반환
     }*/
 
-    // 회원별 지도를 보여줄 페이지 및 JSON 데이터를 반환
+    // 회원별 지도를 보여줄 페이지 반환
     @GetMapping("/{user_id}")
     public String showUserMyMap(@PathVariable("user_id") String user_id,
-                                @RequestParam(value = "page", defaultValue = "0") int page,
-                                @RequestParam(value = "pageSize", defaultValue = "4") int pageSize,
                                 @RequestParam(value = "search", required = false) String search,
+                                @RequestParam(value = "page", defaultValue = "0") int page, //기본페이지
+                                @RequestParam(value = "pageSize", defaultValue = "4") int pageSize, //보여줄 카드 개수
                                 Model model, Principal principal) {
         User loginUser = userService.getUser(principal.getName());
         int userNo = loginUser.getUser_no();
@@ -133,6 +133,9 @@ public class MymapController {
         if (!"admin".equals(principal.getName()) && !user_id.equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 사용자의 맛집지도에 접근할 권한이 없습니다");
         }
+
+        // 페이지 번호를 1부터 시작하도록 수정
+        int offset = page * pageSize;
 
         List<MyMapDTO> hotplList;
         int totalItems;
@@ -148,7 +151,7 @@ public class MymapController {
         }
 
         // 페이지네이션 설정
-        Pageable pageable = PageRequest.of(page, pageSize);
+        Pageable pageable = PageRequest.of(page, pageSize); // 페이지 번호를 0부터 시작하도록 수정
         Page<MyMapDTO> hotplPage = new PageImpl<>(hotplList, pageable, totalItems);
 
         model.addAttribute("userNo", userNo);

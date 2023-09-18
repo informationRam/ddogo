@@ -18,10 +18,10 @@ public class MymapService {
 
 
     // 사용자 번호와 검색어를 이용하여 맛집 목록 조회
-    public List<MyMapDTO> getHotplacesByUserNoWithSearch(int userNo, String search, int limit, int offset) {
+    public List<MyMapDTO> getHotplacesByUserNoWithSearch(int userNo, String search, int pageSize, int offset) {
         // 사용자 번호와 검색어를 이용하여 맛집 목록 조회
         // MyMapRepository를 사용하여 XML 쿼리 실행
-        return myMapMapper.getHotplacesByUserNoWithSearch(userNo, search, limit, offset);
+        return myMapMapper.getHotplacesByUserNoWithSearch(userNo, search, pageSize, offset);
     }
 
     //회원별 저장한 맛집 리스트 조회 - mapper
