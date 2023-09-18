@@ -4,7 +4,6 @@ import com.yumpro.ddogo.emoAnal.repository.EmoRepository;
 import com.yumpro.ddogo.mymap.domain.ReviewDTO;
 import com.yumpro.ddogo.mymap.domain.ReviewUpdateDTO;
 import com.yumpro.ddogo.mymap.mapper.ReviewMapper;
-import com.yumpro.ddogo.mymap.repository.MyMapRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 public class ReviewService {
 
     private final ReviewMapper reviewMapper;
-    private final MyMapRepository myMapRepository;
     private final EmoRepository emoRepository;
 
 

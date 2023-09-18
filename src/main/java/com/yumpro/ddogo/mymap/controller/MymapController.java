@@ -10,6 +10,7 @@ import com.yumpro.ddogo.mymap.service.ReviewService;
 import com.yumpro.ddogo.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -19,9 +20,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.security.Principal;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Controller
@@ -32,6 +33,11 @@ public class MymapController {
     private final ReviewService reviewService;
     private final UserService userService;
     private final EmoService emoService;
+
+
+
+
+
 
 
     //mapNo로 모달에 기존 후기 보여주기
@@ -49,63 +55,7 @@ public class MymapController {
         }
 
     }
-//
-//    // 모달 후기수정
-//    @PostMapping(value="/updateReview/{mapNo}",
-//            consumes ="application/json",
-//            produces={MediaType.TEXT_PLAIN_VALUE})
-//    public ResponseEntity<String> updateReview(@PathVariable Integer mapNo,
-//                                               @RequestBody ReviewUpdateDTO request
-//                                               ) {
-//        try {
-//            // request 객체에 포함된 데이터 사용
-//            String review = request.getReview();
-//            char recom = request.getRecomm();
-//            String memo = request.getMemo();
-//            int hotplaceNo = request.getHotplaceNo();
-//
-//            // 클라이언트로부터 받은 후기 내용을 감정 분석 서비스로 분석
-//            double emoResult = emoService.emoAnal(request.getReview());
-//
-//            // 감정 분석 결과 서비스 전달, 후기 저장 :request는 dto
-//            reviewService.updateReviewandMemo(mapNo, request, emoResult);
-//
-//            return ResponseEntity.ok("업데이트가 성공적으로 수행되었습니다.");
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("업데이트 중 오류가 발생했습니다.");
-//        }
-//    }
 
-
-/*
-    // 모달 후기수정
-    @PostMapping(value="/updateReview/{mapNo}",
-    consumes ="application/x-www-form-urlencoded",
-    produces={MediaType.TEXT_PLAIN_VALUE})
-    public ResponseEntity<String> updateReviewAndMemo(@PathVariable Integer mapNo,
-                                                      @RequestBody ReviewUpdateDTO request) {
-        try {
-
-            // mapNo를 DTO에 설정
-            request.setMapNo(mapNo);
-            // 여기서 emoReviewDTO 객체에 클라이언트로부터 받은 데이터가 매핑됩니다.
-            // 클라이언트로부터 받은 후기 내용을 감정 분석 서비스로 분석
-            double emoResult = emoService.emoAnal(request.getReview());
-
-            // 감정 분석 결과를 DTO에 설정
-            request.setEmo_result(emoResult);
-            // 컨트롤러 메서드에서 memo와 recomm 저장
-            request.setMemo(request.getMemo());
-            request.setRecomm(request.getRecomm());
-
-            // 서비스를 사용하여 후기정보 업데이트
-            reviewService.updateReview(request);
-
-            return ResponseEntity.ok("업데이트가 성공적으로 수행되었습니다.");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("업데이트 중 오류가 발생했습니다.");
-        }
-    }*/
         // 모달 후기수정
         @PostMapping(value="/updateReview/{mapNo}",
                 consumes ="application/json",
@@ -153,16 +103,10 @@ public class MymapController {
         return "redirect:/mymap/" + principal.getName(); // 삭제 후 리다이렉트
     }
 
-
-
-    // 회원별 맛집 목록 & 지도를 보여줄 페이지 및 JSON 데이터를 반환
-    @GetMapping("/{user_id}")
-    public ModelAndView showUserMyMap(
-            @PathVariable("user_id") String user_id,
-            @RequestParam(defaultValue="1") int page, // 기본 페이지 1
-            @RequestParam(defaultValue="4") int size, // 페이지당 카드 수 4
-            Model model, Principal principal) {
-
+  /*  //검색창 결과
+    @GetMapping("/{user_id}/search")
+    @ResponseBody
+    public List<MyMapDTO> searchHotplaces(@PathVariable("user_id") String user_id, @RequestParam("query") String query, Principal principal) {
         User loginUser = userService.getUser(principal.getName());
         int userNo = loginUser.getUser_no();
 
@@ -170,42 +114,66 @@ public class MymapController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 사용자의 맛집지도에 접근할 권한이 없습니다");
         }
 
-        // 페이지네이션을 위해 Pageable 객체 생성
-        Pageable pageable = PageRequest.of(page - 1, size); // 페이지는 0부터 시작하므로 -1
+        // 서비스를 통해 검색 로직 수행
+        List<MyMapDTO> searchResult = myMapService.searchHotplaces(userNo, query);
 
-        Page<MyMapDTO> hotplPage = myMapService.getHotplacesByUserNo(userNo, pageable);
+        return searchResult; // JSON 데이터 반환
+    }*/
 
-        // ModelAndView를 사용하여 View 이름과 데이터 모델을 설정
-        ModelAndView modelAndView = new ModelAndView("myMap/kakaoMapT"); // View 이름 설정
-        modelAndView.addObject("userNo", userNo); // 회원번호
-        modelAndView.addObject("user", loginUser); // 로그인 회원 정보 all
-        modelAndView.addObject("hotplList", hotplPage.getContent()); // 현재 페이지의 데이터만 추가
-        modelAndView.addObject("totalPages", hotplPage.getTotalPages()); // 전체 페이지 수 추가
-        modelAndView.addObject("currentPage", page); // 현재 페이지 번호 추가
+    // 회원별 지도를 보여줄 페이지 및 JSON 데이터를 반환
+    @GetMapping("/{user_id}")
+    public String showUserMyMap(@PathVariable("user_id") String user_id,
+                                @RequestParam(value = "page", defaultValue = "0") int page,
+                                @RequestParam(value = "pageSize", defaultValue = "4") int pageSize,
+                                @RequestParam(value = "search", required = false) String search,
+                                Model model, Principal principal) {
+        User loginUser = userService.getUser(principal.getName());
+        int userNo = loginUser.getUser_no();
 
-        return modelAndView;
+        if (!"admin".equals(principal.getName()) && !user_id.equals(principal.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 사용자의 맛집지도에 접근할 권한이 없습니다");
+        }
+
+        List<MyMapDTO> hotplList;
+        int totalItems;
+
+        if (search != null && !search.isEmpty()) {
+            // 검색어가 있는 경우
+            hotplList = myMapService.getHotplacesByUserNoWithSearch(userNo, search, pageSize, page * pageSize);
+            totalItems = hotplList.size(); // 검색 결과의 총 아이템 수
+        } else {
+            // 검색어가 없는 경우
+            hotplList = myMapService.getHotplacesByUserNo(userNo);
+            totalItems = hotplList.size(); // 전체 아이템 수
+        }
+
+        // 페이지네이션 설정
+        Pageable pageable = PageRequest.of(page, pageSize);
+        Page<MyMapDTO> hotplPage = new PageImpl<>(hotplList, pageable, totalItems);
+
+        model.addAttribute("userNo", userNo);
+        model.addAttribute("user", loginUser);
+        model.addAttribute("hotplPage", hotplPage);
+        model.addAttribute("hotplList", hotplPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", hotplPage.getTotalPages());
+
+        return "myMap/kakaoMapT";
     }
 
     // JSON 데이터를 반환할 엔드포인트 =>
     @GetMapping("/hotplaces/{user_id}")
     @ResponseBody
-    public Page<MyMapDTO> myMapHotplList(
-            @PathVariable("user_id") String user_id,
-            @RequestParam(defaultValue="1") int page,// 기본 페이지 1
-            @RequestParam(defaultValue="4") int size, // 페이지당 카드 수 4
-            Principal principal) {
-
+    public List<MyMapDTO> myMapHotplList(@PathVariable("user_id") String user_id, Principal principal) {
         User loginUser = userService.getUser(principal.getName());
         int userNo = loginUser.getUser_no();
 
         if (!"admin".equals(principal.getName()) && !user_id.equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 사용자의 맛집지도에 접근할 권한이 없습니다");
         }
-        // 페이지네이션을 위해 Pageable 객체 생성
-        Pageable pageable = PageRequest.of(page - 1, size); // 페이지는 0부터 시작하므로 -1
-        Page<MyMapDTO> myHotplPage  = myMapService.getHotplacesByUserNo(userNo, pageable);
+        List<MyMapDTO> myHotplList = myMapService.getHotplacesByUserNo(userNo);
 
-        return myHotplPage ; // JSON 데이터 반환
+        return myHotplList; // JSON 데이터 반환
     }
 
 

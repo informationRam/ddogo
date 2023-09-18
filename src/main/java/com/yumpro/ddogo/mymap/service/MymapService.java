@@ -2,11 +2,7 @@ package com.yumpro.ddogo.mymap.service;
 
 import com.yumpro.ddogo.mymap.domain.MyMapDTO;
 import com.yumpro.ddogo.mymap.mapper.MyMapMapper;
-import com.yumpro.ddogo.mymap.repository.MyMapRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,27 +13,21 @@ public class MymapService {
 
 
     private final MyMapMapper myMapMapper;
-    private MyMapRepository myMapRepository;
-
-//    // 검색창 결과 반환
-//    public List<MyMapDTO> searchHotplaces(String keyword) {
-//        return myMapRepository.searchHotplaces(keyword);
-//    }
 
 
-    // 페이지별 저장한 맛집 리스트 조회 : ajax
-    public List<MyMapDTO> getHotplacesByUserNoPaged(int userNo, int page, int size) {
-        int offset = (page - 1) * size; // 오프셋 계산:페이지는 0부터 시작
-        return myMapMapper.hotplacesByUserNoPaged(userNo, offset, size);
+
+
+    // 사용자 번호와 검색어를 이용하여 맛집 목록 조회
+    public List<MyMapDTO> getHotplacesByUserNoWithSearch(int userNo, String search, int limit, int offset) {
+        // 사용자 번호와 검색어를 이용하여 맛집 목록 조회
+        // MyMapRepository를 사용하여 XML 쿼리 실행
+        return myMapMapper.getHotplacesByUserNoWithSearch(userNo, search, limit, offset);
     }
 
-
     //회원별 저장한 맛집 리스트 조회 - mapper
-    public Page<MyMapDTO> getHotplacesByUserNo(int userNo, Pageable pageable) {
-        List<MyMapDTO> hotplList = myMapMapper.hotplacesByUserNo(userNo);
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), hotplList.size());
-        return new PageImpl<>(hotplList.subList(start, end), pageable, hotplList.size());
+    public List<MyMapDTO> getHotplacesByUserNo(int userNo) {
+          // MyMapRepository를 사용하여 XML 쿼리 실행
+        return myMapMapper.getHotplacesByUserNo(userNo);
     }
 
     // 저장한 맛집(마커) 삭제

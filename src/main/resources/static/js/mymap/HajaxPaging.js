@@ -1,62 +1,83 @@
 
-    //페이지네이션 버튼 ajax 요청
-    function loadPage(page,user_id) {
+    // 페이지네이션 버튼 ajax 요청
+    function loadPage(page, user_id) {
         $.ajax({
-            url: "/mymap/hotplaces/" + user_id + "?page=" + page, // 서버 엔드포인트 URL
+            url: `/mymap/hotplaces/${user_id}?page=${page}`,
             type: "GET",
-            dataType: "json", // 예상되는 응답 형식 (JSON)
-            success: function(data) {
-                // 페이지 데이터를 성공적으로 받았을 때 실행되는 코드
-                // 받은 데이터를 사용하여 카드 영역을 업데이트
+            dataType: "json",
+            success: function (data) {
                 updateCardArea(data);
             },
-            error: function() {
-                // 오류 발생 시 실행되는 코드
-                alert("데이터 로드 중 오류가 발생했습니다.");
-            }
+            error: function () {
+                handleError("데이터 로드 중 오류가 발생했습니다.");
+            },
         });
     }
 
-    //카드영역 업데이트
-    function updateCardArea(data) {
-        var cardContainer = $("#listContainer"); // 카드 컨테이너 선택
-        cardContainer.empty(); // 기존 카드를 모두 제거
+// 오류 처리 함수
+function handleError(errorMessage) {
+    // 오류 메시지를 화면에 표시하는 등의 처리 가능
+    alert("페이징오류");
+    console.error(errorMessage);
+}
+// 카드 생성 함수
+function createCardItem(item) {
+    const cardItem = $("<div>", { class: "card my-2" });
+    const cardBody = $("<div>", { class: "card-body" });
 
-        $.each(data, function(index, item) {
-            var cardHtml = '<div class="card my-2">' +
-                '<div class="card-body">' +
-                '<input type="hidden" id="lat" value="' + item.lat + '"/>' +
-                '<input type="hidden" id="lng" value="' + item.lng + '"/>' +
-                '<input type="hidden" id="sido" value="' + item.sido + '"/>' +
-                '<input type="hidden" id="gugun" value="' + item.gugun + '"/>' +
-                '<input type="hidden" id="review" value="' + item.review + '"/>' +
-                '<input type="hidden" id="address" value="' + item.address + '"/>' +
-                '<input type="hidden" id="myHotplace" value="' + item.hotplaceName + '"/>' +
-                '<div style="display: flex; align-items: center;">' +
-                '<h5 class="card-title"><strong>' + item.hotplaceName + '</strong>';
+    // hotplace 정보
+    const hotplaceInfo = $("<div>", { style: "display: flex; align-items: center;" });
+    hotplaceInfo.append(`<h5 class="card-title"><strong>${item.hotplaceName}</strong></h5>`);
 
-            if (item.hotplaceCateNo === 1) {
-                cardHtml += '<i class="fa-solid fa-utensils fa-l" style="color: #c82f09; margin-left: 5px;"></i>';
-            } else if (item.hotplaceCateNo === 2) {
-                cardHtml += '<i class="fa-solid fa-mug-hot fa-l" style="color: #c82f09; margin-left: 5px;"></i>';
-            }
+    // hotplace 카테고리 아이콘
+    if (item.hotplaceCateNo === 1) {
+        hotplaceInfo.append('<i class="fa-solid fa-utensils fa-l" style="color: #c82f09; margin-left: 5px;"></i>');
+    } else if (item.hotplaceCateNo === 2) {
+        hotplaceInfo.append('<i class="fa-solid fa-mug-hot fa-l" style="color: #c82f09; margin-left: 5px;"></i>');
+    }
+  // 주소 정보
+    const addressInfo = $("<p>", {
+        class: "card-text text-muted mb-0",
+        style: "font-size: 0.8em;",
+        text: item.address
+    });
 
-            cardHtml += '</h5></div>' +
-                '<p class="card-text text-muted mb-0" style="font-size: 0.8em;">' + item.address + '</p>';
-
-            if (item.avgEmoResult !== null) {
-                cardHtml += '<div class="emoResult" style="margin: 5px; background-color: #f3c8c8; text-align: center; padding: 5px; border-radius: 10px;">' +
-                    '<strong>리뷰 온도</strong>' +
-                    '<a>' + item.avgEmoResult + '&#8451;</a>' +
-                    '</div>';
-            }
-
-            cardHtml += '<div class="d-flex justify-content-end">' +
-                '<button type="button" class="btn btn-outline-danger btn-sm btn-update-review mx-1" data-bs-toggle="modal" data-bs-target="#myModal" data-review-no="' + item.mapNo + '" data-hotplace-no="' + item.hotplaceNo + '">내 후기</button>' +
-                '<a href="/mymap/delete/' + item.mapNo + '" class="btn btn-outline-secondary btn-sm btn-delete mx-1" data-toggle="modal" data-target="#deleteModal" data-map-id="' + item.mapNo + '" onclick="return false;">삭제</a>' +
-                '</div></div></div>';
-
-            cardContainer.append(cardHtml); // 카드를 카드 컨테이너에 추가
+    // 리뷰 온도 정보 (avgEmoResult가 null이 아닐 때)
+    if (item.avgEmoResult !== null) {
+        const emoResultInfo = $("<div>", {
+            class: "emoResult",
+            style: "margin: 5px; background-color: #f3c8c8; text-align: center; padding: 5px; border-radius: 10px;"
         });
+
+        emoResultInfo.append("<strong>리뷰 온도</strong>");
+        emoResultInfo.append($("<a>").text(`${item.avgEmoResult}℃`));
+
+        // 카드 본문에 추가
+        cardBody.append(emoResultInfo);
     }
 
+    // 내 후기 및 삭제 버튼
+    const buttonGroup = $("<div>", { class: "d-flex justify-content-end" });
+    buttonGroup.append(`<button type="button" class="btn btn-outline-danger btn-sm btn-update-review mx-1" data-bs-toggle="modal" data-bs-target="#myModal" data-review-no="${item.mapNo}" data-hotplace-no="${item.hotplaceNo}">내 후기</button>`);
+    buttonGroup.append(`<a href="/mymap/delete/${item.mapNo}" class="btn btn-outline-secondary btn-sm btn-delete mx-1" data-toggle="modal" data-target="#deleteModal" data-map-id="${item.mapNo}" onclick="return false;">삭제</a>`);
+
+    // 카드 본문에 주소 정보, 버튼 그룹 추가
+    cardBody.append(addressInfo);
+    cardBody.append(buttonGroup);
+
+    // 카드 아이템에 카드 본문 추가
+    cardItem.append(cardBody);
+
+    return cardItem ;
+}
+
+// 카드영역 업데이트
+function updateCardArea(data) {
+    const cardContainer = $("#listContainer");
+    cardContainer.empty();
+
+    $.each(data, function (index, item) {
+        const cardItem = createCardItem(item);
+        cardContainer.append(cardItem);
+    });
+}

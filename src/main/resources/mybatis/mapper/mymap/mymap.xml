@@ -3,51 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yumpro.ddogo.mymap.mapper.MyMapMapper">
 
-    <!-- 회원번호로 마이맵 데이터 조회 -->
-    <select id="hotplacesByUserNo" resultType="com.yumpro.ddogo.mymap.domain.MyMapDTO">
-        <![CDATA[
-    SELECT
-    m.user_no AS userNo,
-    e.map_no AS mapNo,
-    h.hotplace_no AS hotplaceNo,
-    h.hotplace_name AS hotplaceName,
-    e.review AS review,
-    m.recom AS recomm,
-    h.sido AS sido,
-    h.gugun AS gugun,
-    h.address AS address,
-    h.lat AS lat,
-    h.lng AS lng,
-    AVG(COALESCE(e.emo_result, 0)) AS avgEmoResult,
-    hc.hotplace_cate_no AS hotplaceCateNo,
-    u.user_name AS userName  -- user_name 추가
-FROM
-    emoreview e
-JOIN
-    hotplace h ON e.hotplace_no = h.hotplace_no
-JOIN
-    mymap m ON e.map_no = m.map_no
-JOIN
-    hotplace_cate hc ON h.hotplace_cate_no = hc.hotplace_cate_no
-JOIN
-    user u ON m.user_no = u.user_no  -- user 테이블 조인
-WHERE
-    m.user_no = #{userNo}
-GROUP BY
-    h.hotplace_no, h.hotplace_name, h.address, h.sido, h.gugun, h.lat, h.lng, e.review, e.map_no, m.user_no, m.recom, hc.hotplace_cate_no, u.user_name
-    ]]>
-    </select>
-
-    <!-- 회원 저장 맛집 삭제 -->
-    <delete id="deleteMyHotpl" parameterType="Integer">
-        <![CDATA[
-        DELETE FROM MYMAP
-        WHERE map_no = #{mapNo}
-            ]]>
-    </delete>
-
-    <!-- ajax 페이징을 위한 페이지별 맛집 정보 조회 -->
-    <select id="hotplacesByUserNoPaged" resultType="com.yumpro.ddogo.mymap.domain.MyMapDTO">
+    <select id="getHotplacesByUserNo" resultType="com.yumpro.ddogo.mymap.domain.MyMapDTO">
         <![CDATA[
     SELECT
         m.user_no AS userNo,
@@ -75,13 +31,29 @@ GROUP BY
     JOIN
         user u ON m.user_no = u.user_no
     WHERE
-        m.user_no = #{userNo}
+          </if>
     GROUP BY
-        h.hotplace_no, h.hotplace_name, h.address, h.sido, h.gugun, h.lat, h.lng,
-        e.review, e.map_no, m.user_no, m.recom, hc.hotplace_cate_no, u.user_name
-    LIMIT #{offset}, #{limit}
+        m.user_no, e.map_no, h.hotplace_no
+    <if test="limit != null and offset != null">
+        LIMIT #{pageSize} OFFSET #{offset}
+    </if>
     ]]>
     </select>
+
+
+
+
+
+
+    <!-- 회원 저장 맛집 삭제 -->
+    <delete id="deleteMyHotpl" parameterType="Integer">
+        <![CDATA[
+        DELETE FROM MYMAP
+        WHERE map_no = #{mapNo}
+            ]]>
+    </delete>
+
+<!--   -->
 </mapper>
 
 

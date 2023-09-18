@@ -9,11 +9,14 @@ import java.util.List;
 @Mapper
 public interface MyMapMapper {
 
-    //ajax페이지별 저장한 맛집 리스트 조회
-    List<MyMapDTO> hotplacesByUserNoPaged(@Param("userNo") int userNo, @Param("offset") int offset, @Param("limit") int limit);
+    //검색, 페이지네이션
+    List<MyMapDTO> getHotplacesByUserNoWithSearch(@Param("userNo") int userNo, 
+                                                  @Param("search") String search,
+                                                  @Param("limit") int limit,
+                                                  @Param("offset") int offset);
 
     //회원별 맛집 목록 불러오기 :=>  mymap.xml에서 쿼리 작성
-   List<MyMapDTO> hotplacesByUserNo(@Param("userNo") int userNo);
+   List<MyMapDTO> getHotplacesByUserNo(@Param("userNo") int userNo);
 
 
     //맛집 삭제
