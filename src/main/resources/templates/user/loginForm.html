@@ -10,7 +10,9 @@
                 <div th:replace="~{form_errors::formErrorsFragment}"></div>
                 <input type="text" th:field="*{user_name}" placeholder="이름">
                 <input type="text" name="user_id" id="user_id" placeholder="아이디">
+                <!-- 이메일 입력란 -->
                 <input type="email" th:field="*{email}" placeholder="ex)eeee@naver.com">
+                <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="error-message"></span>
                 <!-- 성별 -->
                 <div class="gender-container">
                     <div class="radio-group">
@@ -42,7 +44,7 @@
                 <input type="password" name="pwd" id="pwd" placeholder="비밀번호">
                 <!-- 오류시 보여주는 문구 -->
                 <div th:if="${param.error}">
-                    <div class="alert alert-danger">
+                    <div class="alert alert-danger text-xs">
                         사용자ID 또는 비밀번호를 확인해주세요.
                     </div>
                 </div>

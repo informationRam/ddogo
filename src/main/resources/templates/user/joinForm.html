@@ -6,32 +6,40 @@
             <form id="join" class="my-2" th:object="${userCreateForm}" th:action="@{/user/join}" method="post">
                 <h1>Create Account</h1>
                 <span>or use your email for registration</span>
-                <!-- 오류시 보여주는 문구-->
-                <div th:replace="~{form_errors::formErrorsFragment}"></div>
+                 <!--오류시 보여주는 문구--
+               <div th:replace="~{form_errors::formErrorsFragment}"></div>-->
                 <!-- 이름 -->
                 <input type="text" th:field="*{user_name}" placeholder="이름">
+                <span th:if="${#fields.hasErrors('user_name')}" th:errors="*{user_name}" class="error-message text-danger"></span>
                 <!-- 아이디 -->
-                <input type="text" name="user_id" id="user_id" placeholder="아이디">
+               <!-- <input type="text" name="user_id" id="user_id" placeholder="아이디">-->
+                <input type="text" th:field="*{user_id}" placeholder="아이디">
+                <span th:if="${#fields.hasErrors('user_id')}" th:errors="*{user_id}" class="error-message text-danger"></span>
                 <!-- 이메일 -->
                 <input type="email" th:field="*{email}" placeholder="ex)eeee@naver.com">
+                <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="error-message text-danger"></span>
                 <!-- 성별 -->
                 <div class="gender-container">
                     <div class="radio-group">
                         <input type="radio" class="btn-check" th:field="*{gender}" value="M" id="genderMale"
                                autocomplete="off">
-                        <label class="btn btn-light" for="genderMale" style="width: 10px;">남자</label>
+                        <label class="btn btn-light" for="genderMale" style="width: 131px;">남자</label>
                     </div>
                     <div class="radio-group">
                         <input type="radio" class="btn-check" th:field="*{gender}" value="F" id="genderFemale"
                                autocomplete="off">
-                        <label class="btn btn-light" for="genderFemale" style="width: 10px;">여자</label>
+                        <label class="btn btn-light" for="genderFemale" style="width: 131px;">여자</label>
                     </div>
                 </div>
+                <span th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}" class="error-message text-danger"></span>
                 <!-- 생일 -->
                 <input type="date" th:field="*{birth}" th:format="'yyyy-MM-dd'">
+                <span th:if="${#fields.hasErrors('birth')}" th:errors="*{birth}" class="error-message text-danger"></span>
                 <!-- 비밀번호 -->
                 <input type="password" th:field="*{pwd1}" placeholder="비밀번호">
+                <span th:if="${#fields.hasErrors('pwd1')}" th:errors="*{pwd1}" class="error-message text-danger"></span>
                 <input type="password" th:field="*{pwd2}" placeholder="비밀번호확인">
+                <span th:if="${#fields.hasErrors('pwd2')}" th:errors="*{pwd2}" class="error-message text-danger"></span>
                 <button type="submit">Sign Up</button>
             </form>
         </div>
@@ -77,17 +85,17 @@
     const signInButton = document.getElementById('signIn');
     const container = document.getElementById('container');
 
-       // 페이지가 로드될 때 Sign Up 패널을 먼저 표시
-       container.classList.add("right-panel-active");
-
-    signUpButton.addEventListener('click', () => {
+    // 페이지가 로드될 때 Sign Up 패널을 먼저 표시
     container.classList.add("right-panel-active");
 
+    signUpButton.addEventListener('click', () => {
+        container.classList.add("right-panel-active");
     });
 
     signInButton.addEventListener('click', () => {
-    container.classList.remove("right-panel-active");
-
+        container.classList.remove("right-panel-active");
     });
+
 </script>
+
 </html>
