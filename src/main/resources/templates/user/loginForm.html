@@ -29,6 +29,7 @@
                 <!-- 생일 -->
                 <input type="date" th:field="*{birth}" th:format="'yyyy-MM-dd'">
                 <input type="password" th:field="*{pwd1}" placeholder="비밀번호">
+                <span class="password-requirements">비밀번호 8자리 이상(숫자, 문자, 특수문자 각각 1개 이상 포함)</span>
                 <input type="password" th:field="*{pwd2}" placeholder="비밀번호확인">
                 <button type="submit" id="toSignUp">Sign Up</button>
             </form>

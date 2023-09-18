@@ -32,6 +32,15 @@ public class NoticeController {
     @GetMapping("/list")
     public String noticeList(Model model, @RequestParam(value = "page", defaultValue = "0") int page, Noticeform noticeform) {
         Page<Notice> noticePage = this.noticeService.getList(page);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userRole=null;
+        if (authentication.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
+            userRole="admin";
+        }else{
+            userRole="user";
+        }
+        //3.Model
+        model.addAttribute("userRole",userRole);
         model.addAttribute("noticeform", noticeform);
         model.addAttribute("noticePage", noticePage);
         return "/notice/noticeList_Form";
@@ -42,6 +51,15 @@ public class NoticeController {
     public String noticeDetail(@PathVariable Integer notiNo, Model model) {
         System.out.println("notiNo:" + notiNo);
         Notice notice = noticeService.getNotice(notiNo);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userRole=null;
+        if (authentication.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
+            userRole="admin";
+        }else{
+            userRole="user";
+        }
+        //3.Model
+        model.addAttribute("userRole",userRole);
         model.addAttribute("notice", notice);
         return "/notice/noticeDetail_Form";
     }
@@ -49,7 +67,16 @@ public class NoticeController {
     // 공지사항 작성 form
     @PreAuthorize("isAuthenticated()") //인증을 요청
     @GetMapping("/add")
-    public String noticeaddForm(Noticeform noticeform) {
+    public String noticeaddForm(Noticeform noticeform,Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userRole=null;
+        if (authentication.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
+            userRole="admin";
+        }else{
+            userRole="user";
+        }
+        //3.Model
+        model.addAttribute("userRole",userRole);
         return "/notice/noticeadd_Form";
     }
 
@@ -75,6 +102,15 @@ public class NoticeController {
     public String noticeModifyForm(@PathVariable Integer notiNo, Model model) {
         Notice notice = noticeService.getNotice(notiNo);
         Noticeform noticeform = noticeService.toNoticeform(notice);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userRole=null;
+        if (authentication.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
+            userRole="admin";
+        }else{
+            userRole="user";
+        }
+        //3.Model
+        model.addAttribute("userRole",userRole);
         model.addAttribute("noticeform", noticeform);
         model.addAttribute("notiNo", notiNo);
         return "/notice/noticeModify_Form";
