@@ -53,23 +53,22 @@ public class EmoService {
                         response.append(line);
                     }
                 }
-                //JSONObject result = new JSONObject(response.toString());
-                String jsonString = response.toString(); // Replace with your JSON response string
+
+                String jsonString = response.toString(); // json응답을 문자열로 바꾸기
                 JSONObject result2 = new JSONObject(jsonString);
 
-                // Extracting document object
+                // document객체 추출
                 JSONObject document = result2.getJSONObject("document");
 
-                // Extracting sentiment and confidence from the document object
-                String sentiment = document.getString("sentiment");
-                JSONObject confidence = document.getJSONObject("confidence");
-                float negativeConfidence = (float) confidence.getDouble("negative");
-                float neutralConfidence = (float) confidence.getDouble("neutral");
-                float positiveConfidence = (float) confidence.getDouble("positive");
-                emo_result = Math.round(positiveConfidence * 100) / 100.0; //소수점 둘째자리까지 보여줌.
+                // document로부터 감정과 신뢰도 추출
+                JSONObject confidence = document.getJSONObject("confidence"); //감정
+                float negativeConfidence = (float) confidence.getDouble("negative"); //긍정
+                float neutralConfidence = (float) confidence.getDouble("neutral"); //부정
+                float positiveConfidence = (float) confidence.getDouble("positive"); //중립
+                emo_result = Math.round(positiveConfidence * 100) / 100.0; //소수점 둘째 자리까지 보여줌.
 
-                // Printing extracted data
-                System.out.println("Document Sentiment: " + sentiment);
+                //데이터 콘솔창 출력
+                System.out.println("confidence="+confidence);
                 System.out.println("Negative Confidence: " + negativeConfidence);
                 System.out.println("Neutral Confidence: " + neutralConfidence);
                 System.out.println("Positive Confidence: " + positiveConfidence);

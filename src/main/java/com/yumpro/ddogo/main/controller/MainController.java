@@ -31,8 +31,8 @@ public class MainController {
         //일별 베스트
         List<HashMap<String, Object>> eatjjim = mainService.eatjjim(); //맛집
         List<HashMap<String, Object>> cafejjim = mainService.cafejjim(); //카페
-        System.out.println("eatjjim"+eatjjim);
-        System.out.println("cafejjim"+cafejjim);
+        System.out.println("eatjjim="+eatjjim);
+        System.out.println("cafejjim="+cafejjim);
 
         model.addAttribute("cafejjim",cafejjim);
         model.addAttribute("eatjjim",eatjjim);
@@ -53,10 +53,9 @@ public class MainController {
         }
 
         String jsonStr = obj.toString();
-        System.out.println("jsonStr =" + jsonStr);
         model.addAttribute(jsonStr);
         model.addAttribute("sigunguMap", sigunguMap);
-        System.out.println("sigunguMap" + sigunguMap);
+        System.out.println("sigunguMap=" + sigunguMap);
 
         return "index";
 
