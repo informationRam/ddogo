@@ -1,9 +1,10 @@
 package com.yumpro.ddogo.mymap.domain;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
-@AllArgsConstructor
-@NoArgsConstructor
+@Accessors(chain = true)
 @Getter
 @Setter 
 
@@ -11,7 +12,7 @@ import lombok.*;
 public class MyMapDTO {
 
     //회원별 저장 맛집 리스트 정보를 가져오기 위한 dto
-    private int userNo;              // 회원번호
+    private Integer userNo;              // 회원번호
     private String userName;           //회원이름
     private Integer mapNo;           // 마커생성번호
     private Integer hotplaceNo;      // 맛집번호
@@ -27,6 +28,7 @@ public class MyMapDTO {
     private Integer hotplaceCateNo;  // 맛집 카테고리 번호
 
     //생성자
+
     //메서드
 
 }

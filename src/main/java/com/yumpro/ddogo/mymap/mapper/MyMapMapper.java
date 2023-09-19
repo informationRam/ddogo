@@ -10,13 +10,22 @@ import java.util.List;
 public interface MyMapMapper {
 
     //검색, 페이지네이션
-    List<MyMapDTO> getHotplacesByUserNoWithSearch(@Param("userNo") int userNo, 
-                                                  @Param("search") String search,
-                                                  @Param("pageSize") int pageSize,
-                                                  @Param("offset") int offset);
+    List<MyMapDTO> getHotplacesByUserNo(@Param("userNo") Integer userNo,
+                                        @Param("search") String search,
+                                        @Param("pageSize") int pageSize,
+                                        @Param("offset") int offset);
 
-    //회원별 맛집 목록 불러오기 :=>  mymap.xml에서 쿼리 작성
-   List<MyMapDTO> getHotplacesByUserNo(@Param("userNo") int userNo);
+    //검색어가 있을때 총 게시글 개수
+    int countHotplacesByUserNoWithSearch(
+            @Param("userNo") Integer userNo,
+            @Param("search") String search
+    );
+
+    //검색어가 있을때 총 게시글 개수
+    int countHotplacesByUserNo(@Param("userNo") Integer userNo);
+
+//    //회원별 맛집 목록 불러오기 :=>  mymap.xml에서 쿼리 작성
+//   List<MyMapDTO> getHotplacesByUserNo(@Param("userNo") int userNo);
 
 
     //맛집 삭제

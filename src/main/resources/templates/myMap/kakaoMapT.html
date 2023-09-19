@@ -124,24 +124,26 @@
                 </div><!--modal dialog -->
             </div>    <!-- modal fade: 후기 조회&수정 모달 끝-->
 
-
-            <nav aria-label="Page navigation">
-                <ul class="pagination">
-                    <li th:classappend="${currentPage == 0} ? 'disabled' : ''">
-                        <a th:if="${currentPage != 0}" th:href="@{/mymap/{user_id}(user_id=${user.user_id}, page=${currentPage - 1})}" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
+            <!-- 페이지네이션 UI -->
+            <nav aria-label="PageNavi" class="mt-4">
+                <ul class="qna-pagination justify-content-center">
+                    <li class="qna-page-item">
+                        <a class="qna-page-link" th:href="@{/mymap/{user_id}(user_id=${userId},page=1)}" aria-label="Previous">
+                            <span aria-hidden="true">&lt;</span>
                         </a>
                     </li>
-                    <li th:each="pageNo : ${#numbers.sequence(0, totalPages - 1)}" th:classappend="${currentPage == pageNo} ? 'active' : ''">
-                        <a th:if="${currentPage != pageNo}" th:href="@{/mymap/{user_id}(user_id=${user.user_id}, page=${pageNo})}" th:text="${pageNo + 1}"></a>
+                    <li class="qna-page-item" th:each="pageNo : ${#numbers.sequence(1, totalPages)}"
+                        th:class="${pageNo == pageNo} ? 'qna-page-item active' : 'qna-page-item'">
+                        <a class="qna-page-link" th:href="@{/mymap/{user_id}(user_id=${userId},page=${pageNo})}" th:text="${pageNo}"></a>
                     </li>
-                    <li th:classappend="${currentPage == totalPages - 1} ? 'disabled' : ''">
-                        <a th:if="${currentPage != totalPages - 1}" th:href="@{/mymap/{user_id}(user_id=${user.user_id}, page=${currentPage + 1})}" aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
+                    <li class="qna-page-item">
+                        <a class="qna-page-link" th:href="@{/mymap/{user_id}(user_id=${userId},page=${totalPages})}" aria-label="Next">
+                            <span aria-hidden="true">&gt;</span>
                         </a>
                     </li>
                 </ul>
             </nav>
+
 
 
 
@@ -168,7 +170,7 @@
         // Thymeleaf를 이용하여 사용자 ID를 가져와서 JavaScript 변수로 설정
 
         var userId = /*[[${user_id}]]*/;
-        var pageNo = /*[[${pageNo}]]*/;
+        var pageNo = /*[[${currentPage}]]*/;
 
     </script>
     <script src="/js/mymap/hotplCard.js" th:src="@{/js/mymap/hotplCard.js}"></script>
@@ -179,22 +181,24 @@
 </div>
 </html>
 
-<!--&lt;!&ndash;                         페이지네이션&ndash;&gt;-->
-<!--                        <nav aria-label="PageNavi"  class="mt-4">-->
-<!--                            <ul class="qna-pagination justify-content-center">-->
-<!--                                <li class="qna-page-item">-->
-<!--                                    <a class="qna-page-link" th:href="@{/mymap/{user_id}(user_id=${user.userId},page=1)}" aria-label="Previous">-->
-<!--                                        <span aria-hidden="true">&lt;</span>-->
-<!--                                    </a>-->
-<!--                                </li>-->
-<!--                                <li class="qna-page-item" th:each="pageNo : ${#numbers.sequence(1, totalPages)}"-->
-<!--                                    th:class="${pageNo == currentPage} ? 'qna-page-item active' : 'qna-page-item'">-->
-<!--                                    <a class="qna-page-link" th:href="@{/mymap/{user_id}(user_id=${user.userId},page=${pageNo})}" th:text="${pageNo}"></a>-->
-<!--                                </li>-->
-<!--                                <li class="qna-page-item">-->
-<!--                                    <a class="qna-page-link" th:href="@{/mymap/{user_id}(user_id=${user.userId},page=${totalPages})}" aria-label="Next">-->
-<!--                                        <span aria-hidden="true">&gt;</span>-->
-<!--                                    </a>-->
-<!--                                </li>-->
-<!--                            </ul>-->
-<!--                        </nav>-->
+                       <!-- &lt;!&ndash; 페이지네이션
+                        <nav aria-label="PageNavi"  class="mt-4">
+                            <ul class="qna-pagination justify-content-center">
+                                <li class="qna-page-item">
+                                    <a class="qna-page-link" th:href="@{/mymap/{user_id}(user_id=${user.userId},page=1)}" aria-label="Previous">
+                                        <span aria-hidden="true">&lt;</span>
+                                    </a>
+                                </li>
+                                <li class="qna-page-item" th:each="pageNo : ${#numbers.sequence(1, totalPages)}"
+                                    th:class="${pageNo == currentPage} ? 'qna-page-item active' : 'qna-page-item'">
+                                    <a class="qna-page-link" th:href="@{/mymap/{user_id}(user_id=${user.userId},page=${pageNo})}" th:text="${pageNo}"></a>
+                                </li>
+                                <li class="qna-page-item">
+                                    <a class="qna-page-link" th:href="@{/mymap/{user_id}(user_id=${user.userId},page=${totalPages})}" aria-label="Next">
+                                        <span aria-hidden="true">&gt;</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+-->
+

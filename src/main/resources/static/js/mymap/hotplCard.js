@@ -181,4 +181,4 @@ function updateHotplaceList(searchResult) {
 //            }
 //        });
 //    }
-});
+
