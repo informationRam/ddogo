@@ -3,8 +3,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yumpro.ddogo.mymap.mapper.MyMapMapper">
 
-    <select id="getHotplacesByUserNo" resultType="com.yumpro.ddogo.mymap.domain.MyMapDTO">
-        <![CDATA[
+        <select id="getHotplacesByUserNo" resultType="com.yumpro.ddogo.mymap.domain.MyMapDTO">
+            <![CDATA[
      SELECT
             m.user_no AS userNo,
             e.map_no AS mapNo,
@@ -32,10 +32,7 @@
             user u ON m.user_no = u.user_no
         WHERE
             m.user_no = #{userNo}
-           <!-- 검색어가 있을 때 조건 추가 -->
-                <if test="search != null and search != ''">
-                    AND (h.address LIKE CONCAT('%', #{search}, '%') OR h.hotplace_name LIKE CONCAT('%', #{search}, '%'))
-                </if>
+            AND (h.address LIKE CONCAT('%${search}%') OR h.hotplace_name LIKE CONCAT('%${search}%'))
         GROUP BY
             m.user_no, e.map_no, h.hotplace_no, h.hotplace_name, m.recom, h.sido, h.gugun, h.address, h.lat, h.lng, hc.hotplace_cate_no, u.user_name
         ORDER BY
@@ -43,43 +40,7 @@
         LIMIT
             #{pageSize} OFFSET #{offset}
     ]]>
-    </select>
-
-    <select id="countHotplacesByUserNo" resultType="int">
-        <![CDATA[
-        SELECT COUNT(*) FROM (
-            SELECT
-                m.user_no
-            FROM
-                mymap m
-            WHERE
-                m.user_no = #{userNo}
-        ) AS temp
-        ]]>
-    </select>
-
-    <select id="countHotplacesByUserNoWithSearch" resultType="int">
-        <![CDATA[
-        SELECT COUNT(*) FROM (
-            SELECT
-                m.user_no
-            FROM
-                emoreview e
-            JOIN
-                hotplace h ON e.hotplace_no = h.hotplace_no
-            JOIN
-                mymap m ON e.map_no = m.map_no
-            WHERE
-                m.user_no = #{userNo}
-                <!-- 검색어가 있을 때 조건 추가 -->
-                <if test="search != null and search != ''">
-                    AND (h.address LIKE CONCAT('%', #{search}, '%') OR h.hotplace_name LIKE CONCAT('%', #{search}, '%'))
-                </if>
-            GROUP BY
-                m.user_no
-        ) AS temp
-        ]]>
-    </select>
+        </select>
 
 
     <!-- 회원 저장 맛집 삭제 -->

@@ -15,25 +15,20 @@ public class MymapService {
     private final MyMapMapper myMapMapper;
 
 
-    // 검색어가 있는 경우
-    public List<MyMapDTO> getHotplacesByUserNo(Integer userNo, String search, int pageSize, int offset) {
-        return myMapMapper.getHotplacesByUserNo(userNo, search, pageSize, offset);
+
+
+    // 사용자 번호와 검색어를 이용하여 맛집 목록 조회
+    public List<MyMapDTO> getHotplacesByUserNoWithSearch(int userNo, String search, int pageSize, int offset) {
+        // 사용자 번호와 검색어를 이용하여 맛집 목록 조회
+        // MyMapRepository를 사용하여 XML 쿼리 실행
+        return myMapMapper.getHotplacesByUserNoWithSearch(userNo, search, pageSize, offset);
     }
 
-    // 검색어가 없는 경우
-    public List<MyMapDTO> getHotplacesByUserNo(Integer userNo, int pageSize, int offset) {
-        return myMapMapper.getHotplacesByUserNo(userNo, null, pageSize, offset);
+    //회원별 저장한 맛집 리스트 조회 - mapper
+    public List<MyMapDTO> getHotplacesByUserNo(int userNo) {
+        // MyMapRepository를 사용하여 XML 쿼리 실행
+        return myMapMapper.getHotplacesByUserNo(userNo);
     }
-    // 검색어가 있는 경우의 총 아이템 수
-    public int countHotplacesByUserNoWithSearch(Integer userNo, String search) {
-        return myMapMapper.countHotplacesByUserNoWithSearch(userNo, search);
-    }
-
-    // 검색어가 없는 경우의 총 아이템 수
-    public int countHotplacesByUserNo(Integer userNo) {
-        return myMapMapper.countHotplacesByUserNo(userNo);
-    }
-
 
     // 저장한 맛집(마커) 삭제
     public void deleteHotpl(Integer mapNo) {

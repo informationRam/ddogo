@@ -81,9 +81,11 @@ document.addEventListener("DOMContentLoaded", function () {
             xhr.open('GET', '/mymap/hotplaces/' + userId, true);
             xhr.onload = function () {
                 if (xhr.status === 200) {
-                    hotplList = JSON.parse(xhr.responseText);
+                   console.log(xhr.responseText); // 서버 응답 확인
+                   hotplList = JSON.parse(xhr.responseText); // 서버로부터 받은 JSON 데이터를 hotplList에 할당
                     console.log(hotplList);
-                    displayMarkers();
+                    console.log(userId)
+                   displayMarkers();
                 } else {
                     console.error('Error fetching data: ' + xhr.status);
                 }
