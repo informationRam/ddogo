@@ -53,8 +53,8 @@ function searchHotplaces(searchInput) {
         var userIdContainer = document.getElementById('userIdContainer');
         var userId = userIdContainer.getAttribute('data-user-id');
 
-   // 검색어와 페이지 정보를 쿼리 매개변수로 전달
-         var url = '/mymap/' + userId + '?search=' + encodeURIComponent(searchInput) + '&page=' + page;
+  // 검색어와 페이지 정보를 쿼리 매개변수로 전달
+     var url = '/mymap/' + userId + '?search=' + encodeURIComponent(searchInput) + '&page=' + page;
 
    // XMLHttpRequest 객체 생성
         var xhr = new XMLHttpRequest();

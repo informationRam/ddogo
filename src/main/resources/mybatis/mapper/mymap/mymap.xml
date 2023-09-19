@@ -1,46 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yumpro.ddogo.mymap.mapper.MyMapMapper">
+<mapper namespace="com.yumpro.ddogo.mymap.mapper.MyMapMapper" >
 
-        <select id="getHotplacesByUserNo" resultType="com.yumpro.ddogo.mymap.domain.MyMapDTO">
-            <![CDATA[
-     SELECT
-            m.user_no AS userNo,
-            e.map_no AS mapNo,
-            h.hotplace_no AS hotplaceNo,
-            h.hotplace_name AS hotplaceName,
-            AVG(e.review) AS avgReview,
-            m.recom AS recomm,
-            h.sido AS sido,
-            h.gugun AS gugun,
-            h.address AS address,
-            h.lat AS lat,
-            h.lng AS lng,
-            AVG(COALESCE(e.emo_result, 0)) AS avgEmoResult,
-            hc.hotplace_cate_no AS hotplaceCateNo,
-            u.user_name AS userName
+    <!-- MyBatis XML 매퍼 파일에서 해당 쿼리의 정의 -->
+    <select id="getHotplaces" resultType="com.yumpro.ddogo.mymap.domain.MyMapDTO">
+        <![CDATA[
+        SELECT
+        m.user_no AS userNo,
+        e.map_no AS mapNo,
+        h.hotplace_no AS hotplaceNo,
+        h.hotplace_name AS hotplaceName,
+        AVG(e.review) AS avgReview,
+        m.recom AS recomm,
+        h.sido AS sido,
+        h.gugun AS gugun,
+        h.address AS address,
+        h.lat AS lat,
+        h.lng AS lng,
+        AVG(COALESCE(e.emo_result, 0)) AS avgEmoResult,
+        hc.hotplace_cate_no AS hotplaceCateNo,
+        u.user_name AS userName
         FROM
-            emoreview e
+        emoreview e
         JOIN
-            hotplace h ON e.hotplace_no = h.hotplace_no
+        hotplace h ON e.hotplace_no = h.hotplace_no
         JOIN
-            mymap m ON e.map_no = m.map_no
+        mymap m ON e.map_no = m.map_no
         JOIN
-            hotplace_cate hc ON h.hotplace_cate_no = hc.hotplace_cate_no
+        hotplace_cate hc ON h.hotplace_cate_no = hc.hotplace_cate_no
         JOIN
-            user u ON m.user_no = u.user_no
+        user u ON m.user_no = u.user_no
         WHERE
-            m.user_no = #{userNo}
-            AND (h.address LIKE CONCAT('%${search}%') OR h.hotplace_name LIKE CONCAT('%${search}%'))
+        m.user_no = #{userNo}
+
+        <!-- 검색어가 있을 때 조건 추가 -->
+        <if test="search != null or search != ''">
+            AND (h.address LIKE CONCAT('%#{search}%') OR h.hotplace_name LIKE CONCAT('%#{search}%'))
+        </if>
         GROUP BY
-            m.user_no, e.map_no, h.hotplace_no, h.hotplace_name, m.recom, h.sido, h.gugun, h.address, h.lat, h.lng, hc.hotplace_cate_no, u.user_name
+        m.user_no, e.map_no, h.hotplace_no, h.hotplace_name, m.recom, h.sido, h.gugun, h.address, h.lat, h.lng, hc.hotplace_cate_no, u.user_name
         ORDER BY
-            hotplaceName ASC
+        hotplaceName ASC
         LIMIT
-            #{pageSize} OFFSET #{offset}
-    ]]>
-        </select>
+        #{pageSize} OFFSET #{offset}
+          ]]>
+    </select>
 
 
     <!-- 회원 저장 맛집 삭제 -->
@@ -51,42 +56,7 @@
             ]]>
     </delete>
 
-<!--    &lt;!&ndash; ajax 페이징을 위한 페이지별 맛집 정보 조회 &ndash;&gt;-->
-<!--    <select id="hotplacesByUserNoPaged" resultType="com.yumpro.ddogo.mymap.domain.MyMapDTO">-->
-<!--        <![CDATA[-->
-<!--    SELECT-->
-<!--        m.user_no AS userNo,-->
-<!--        e.map_no AS mapNo,-->
-<!--        h.hotplace_no AS hotplaceNo,-->
-<!--        h.hotplace_name AS hotplaceName,-->
-<!--        e.review AS review,-->
-<!--        m.recom AS recomm,-->
-<!--        h.sido AS sido,-->
-<!--        h.gugun AS gugun,-->
-<!--        h.address AS address,-->
-<!--        h.lat AS lat,-->
-<!--        h.lng AS lng,-->
-<!--        AVG(COALESCE(e.emo_result, 0)) AS avgEmoResult,-->
-<!--        hc.hotplace_cate_no AS hotplaceCateNo,-->
-<!--        u.user_name AS userName-->
-<!--    FROM-->
-<!--        emoreview e-->
-<!--    JOIN-->
-<!--        hotplace h ON e.hotplace_no = h.hotplace_no-->
-<!--    JOIN-->
-<!--        mymap m ON e.map_no = m.map_no-->
-<!--    JOIN-->
-<!--        hotplace_cate hc ON h.hotplace_cate_no = hc.hotplace_cate_no-->
-<!--    JOIN-->
-<!--        user u ON m.user_no = u.user_no-->
-<!--    WHERE-->
-<!--        m.user_no = #{userNo}-->
-<!--    GROUP BY-->
-<!--        h.hotplace_no, h.hotplace_name, h.address, h.sido, h.gugun, h.lat, h.lng,-->
-<!--        e.review, e.map_no, m.user_no, m.recom, hc.hotplace_cate_no, u.user_name-->
-<!--    LIMIT #{offset}, #{limit}-->
-<!--    ]]>-->
-<!--    </select>-->
+
 </mapper>
 
 

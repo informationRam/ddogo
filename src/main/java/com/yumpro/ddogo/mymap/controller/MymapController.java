@@ -103,32 +103,15 @@ public class MymapController {
         return "redirect:/mymap/" + principal.getName(); // 삭제 후 리다이렉트
     }
 
-  /*  //검색창 결과
-    @GetMapping("/{user_id}/search")
-    @ResponseBody
-    public List<MyMapDTO> searchHotplaces(@PathVariable("user_id") String user_id, @RequestParam("query") String query, Principal principal) {
-        User loginUser = userService.getUser(principal.getName());
-        int userNo = loginUser.getUser_no();
-
-        if (!"admin".equals(principal.getName()) && !user_id.equals(principal.getName())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 사용자의 맛집지도에 접근할 권한이 없습니다");
-        }
-
-        // 서비스를 통해 검색 로직 수행
-        List<MyMapDTO> searchResult = myMapService.searchHotplaces(userNo, query);
-
-        return searchResult; // JSON 데이터 반환
-    }*/
-
     // 회원별 지도를 보여줄 페이지 반환
     @GetMapping("/{user_id}")
     public String showUserMyMap(@PathVariable("user_id") String user_id,
                                 @RequestParam(value = "search", required = false) String search,
-                                @RequestParam(value = "page", defaultValue = "0") int page, //기본페이지
-                                @RequestParam(value = "pageSize", defaultValue = "4") int pageSize, //보여줄 카드 개수
+                                @RequestParam(value = "page", defaultValue = "0") int page, // 기본페이지
+                                @RequestParam(value = "pageSize", defaultValue = "4") int pageSize, // 보여줄 카드 개수
                                 Model model, Principal principal) {
         User loginUser = userService.getUser(principal.getName());
-        int userNo = loginUser.getUser_no();
+        int userNo = loginUser.getUser_no(); //출력확인
 
         if (!"admin".equals(principal.getName()) && !user_id.equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 사용자의 맛집지도에 접근할 권한이 없습니다");
@@ -142,11 +125,12 @@ public class MymapController {
 
         if (search != null && !search.isEmpty()) {
             // 검색어가 있는 경우
-            hotplList = myMapService.getHotplacesByUserNoWithSearch(userNo, search, pageSize, page * pageSize);
+            hotplList = myMapService.getHotplaces(userNo, search, pageSize, offset);
             totalItems = hotplList.size(); // 검색 결과의 총 아이템 수
         } else {
             // 검색어가 없는 경우
-            hotplList = myMapService.getHotplacesByUserNo(userNo);
+            hotplList = myMapService.getHotplaces(userNo, null, pageSize, offset); // null로 검색어를 전달
+            System.out.println("getHotplaces="+userNo);
             totalItems = hotplList.size(); // 전체 아이템 수
         }
 
@@ -167,17 +151,24 @@ public class MymapController {
     // JSON 데이터를 반환할 엔드포인트 =>
     @GetMapping("/hotplaces/{user_id}")
     @ResponseBody
-    public List<MyMapDTO> myMapHotplList(@PathVariable("user_id") String user_id, Principal principal) {
+    public ResponseEntity<List<MyMapDTO>> myMapHotplList(@PathVariable("user_id") String user_id, Principal principal) {
         User loginUser = userService.getUser(principal.getName());
         int userNo = loginUser.getUser_no();
 
         if (!"admin".equals(principal.getName()) && !user_id.equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 사용자의 맛집지도에 접근할 권한이 없습니다");
         }
-        List<MyMapDTO> myHotplList = myMapService.getHotplacesByUserNo(userNo);
 
-        return myHotplList; // JSON 데이터 반환
+        List<MyMapDTO> myHotplList = myMapService.getHotplaces(userNo, null, 0, 0); // 검색어를 null로 전달
+
+        if (myHotplList != null) {
+            return ResponseEntity.ok(myHotplList); // 데이터가 있을 경우 200 OK 응답 반환
+        } else {
+            return ResponseEntity.notFound().build(); // 데이터가 없을 경우 404 Not Found 응답 반환
+        }
     }
+
+
 
 
 }
