@@ -4,8 +4,7 @@
 <mapper namespace="com.yumpro.ddogo.mymap.mapper.MyMapMapper" >
 
     <!-- MyBatis XML 매퍼 파일에서 해당 쿼리의 정의 -->
-    <select id="getHotplaces" resultType="com.yumpro.ddogo.mymap.domain.MyMapDTO">
-        <![CDATA[
+    <select id="getHotplacesWithSearch" resultType="com.yumpro.ddogo.mymap.domain.MyMapDTO" parameterType="map">
         SELECT
         m.user_no AS userNo,
         e.map_no AS mapNo,
@@ -33,18 +32,53 @@
         user u ON m.user_no = u.user_no
         WHERE
         m.user_no = #{userNo}
-
-        <!-- 검색어가 있을 때 조건 추가 -->
-        <if test="search != null or search != ''">
-            AND (h.address LIKE CONCAT('%#{search}%') OR h.hotplace_name LIKE CONCAT('%#{search}%'))
+        <if test="search != null and search != ''">
+            AND (h.address LIKE CONCAT('%', #{search}, '%') OR h.hotplace_name LIKE CONCAT('%', #{search}, '%'))
         </if>
         GROUP BY
         m.user_no, e.map_no, h.hotplace_no, h.hotplace_name, m.recom, h.sido, h.gugun, h.address, h.lat, h.lng, hc.hotplace_cate_no, u.user_name
         ORDER BY
         hotplaceName ASC
-        LIMIT
-        #{pageSize} OFFSET #{offset}
-          ]]>
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+
+    <!-- 검색 결과에 따른 전체 데이터 수를 가져오는 쿼리 -->
+    <select id="getTotalCountWithSearch" resultType="int" parameterType="map">
+        SELECT COUNT(*) FROM (
+        SELECT
+        m.user_no AS userNo,
+        e.map_no AS mapNo,
+        h.hotplace_no AS hotplaceNo,
+        h.hotplace_name AS hotplaceName,
+        AVG(e.review) AS avgReview,
+        m.recom AS recomm,
+        h.sido AS sido,
+        h.gugun AS gugun,
+        h.address AS address,
+        h.lat AS lat,
+        h.lng AS lng,
+        AVG(COALESCE(e.emo_result, 0)) AS avgEmoResult,
+        hc.hotplace_cate_no AS hotplaceCateNo,
+        u.user_name AS userName
+        FROM
+        emoreview e
+        JOIN
+        hotplace h ON e.hotplace_no = h.hotplace_no
+        JOIN
+        mymap m ON e.map_no = m.map_no
+        JOIN
+        hotplace_cate hc ON h.hotplace_cate_no = hc.hotplace_cate_no
+        JOIN
+        user u ON m.user_no = u.user_no
+        WHERE
+        m.user_no = #{userNo}
+        <if test="search != null and search != ''">
+            AND (h.address LIKE CONCAT('%', #{search}, '%') OR h.hotplace_name LIKE CONCAT('%', #{search}, '%'))
+        </if>
+        GROUP BY
+        m.user_no, e.map_no, h.hotplace_no, h.hotplace_name, m.recom, h.sido, h.gugun, h.address, h.lat, h.lng, hc.hotplace_cate_no, u.user_name
+        ) AS total_data
     </select>
 
 

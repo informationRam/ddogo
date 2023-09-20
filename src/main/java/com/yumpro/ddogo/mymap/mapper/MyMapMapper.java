@@ -5,17 +5,29 @@ import org.apache.ibatis.annotations.Mapper;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface MyMapMapper {
 
-    // 새로운 쿼리를 사용하는 메서드
+
+
+    List<MyMapDTO> getHotplacesWithSearch(Map<String, Object> searchParams);
+
+    int getTotalCountWithSearch(Map<String, Object> searchParams);
+
+
+
+
+
+/*    // 새로운 쿼리를 사용하는 메서드
     List<MyMapDTO> getHotplaces(
             @Param("userNo") Integer userNo,
             @Param("search") String search,
             @Param("pageSize") int pageSize,
             @Param("offset") int offset
-    );
+    );*/
+
 //    //검색, 페이지네이션
 //    List<MyMapDTO> getHotplacesByUserNoWithSearch(@Param("userNo") Integer userNo,
 //                                                  @Param("search") String search,

@@ -124,25 +124,32 @@
                 </div><!--modal dialog -->
             </div>    <!-- modal fade: 후기 조회&수정 모달 끝-->
 
+
             <!-- 페이지네이션 UI -->
             <nav aria-label="PageNavi" class="mt-4">
                 <ul class="qna-pagination justify-content-center">
                     <li class="qna-page-item">
-                        <a class="qna-page-link" th:href="@{/mymap/{user_id}(user_id=${userId},page=1)}" aria-label="Previous">
+                        <!-- 이전 페이지로 이동 -->
+                        <a class="qna-page-link" th:href="@{/mymap/{user_id}(user_id=${userId},page=1,search=${search})}" aria-label="Previous">
                             <span aria-hidden="true">&lt;</span>
                         </a>
                     </li>
-                    <li class="qna-page-item" th:each="pageNo : ${#numbers.sequence(1, totalPages)}"
-                        th:class="${pageNo == pageNo} ? 'qna-page-item active' : 'qna-page-item'">
-                        <a class="qna-page-link" th:href="@{/mymap/{user_id}(user_id=${userId},page=${pageNo})}" th:text="${pageNo}"></a>
+                    <!-- 페이지 번호들을 루프로 생성 -->
+                    <li class="qna-page-item" th:each="pageNo : ${#numbers.sequence(1, totalPages)}" th:class="${pageNo == currentPage} ? 'qna-page-item active' : 'qna-page-item'">
+                        <a class="qna-page-link" th:href="@{/mymap/{user_id}(user_id=${userId},page=${pageNo},search=${search})}" th:text="${pageNo}"></a>
                     </li>
                     <li class="qna-page-item">
-                        <a class="qna-page-link" th:href="@{/mymap/{user_id}(user_id=${userId},page=${totalPages})}" aria-label="Next">
+                        <!-- 다음 페이지로 이동 -->
+                        <a class="qna-page-link" th:href="@{/mymap/{user_id}(user_id=${userId},page=${totalPages},search=${search})}" aria-label="Next">
                             <span aria-hidden="true">&gt;</span>
                         </a>
                     </li>
                 </ul>
             </nav>
+
+
+
+
 
 
 
@@ -170,7 +177,7 @@
         // Thymeleaf를 이용하여 사용자 ID를 가져와서 JavaScript 변수로 설정
 
         var userId = /*[[${user_id}]]*/;
-        var pageNo = /*[[${currentPage}]]*/;
+
 
     </script>
     <script src="/js/mymap/hotplCard.js" th:src="@{/js/mymap/hotplCard.js}"></script>
