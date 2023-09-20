@@ -143,7 +143,7 @@ public class MymapController {
     // JSON 데이터를 반환할 엔드포인트 =>
     @GetMapping("/hotplaces/{user_id}")
     @ResponseBody
-    public ResponseEntity<List<MyMapDTO>> myMapHotplList(@PathVariable("user_id") String user_id,
+    public List<MyMapDTO> myMapHotplList(@PathVariable("user_id") String user_id,
                                          @RequestParam(value = "search", required = false) String search,
                                          @PageableDefault(page = 1, size = 4) Pageable pageable,
                                          Principal principal ) {
@@ -156,19 +156,16 @@ public class MymapController {
         }
 
         List<MyMapDTO> myHotplList;
-        int totalItems;
 
         if (search != null && !search.isEmpty()) {
             // 검색어가 있는 경우
             myHotplList = myMapService.getHotplacesWithSearch(userNo, search, pageable.getPageNumber(), pageable.getPageSize());
-            totalItems = myMapService.getTotalCountWithSearch(userNo, search);
         } else {
             // 검색어가 없는 경우
             myHotplList = myMapService.getHotplacesWithSearch(userNo, null, pageable.getPageNumber(), pageable.getPageSize());
-            totalItems = myMapService.getTotalCountWithSearch(userNo, null);
         }
 
-        return new ResponseEntity<>(myHotplList, HttpStatus.OK);
+        return myHotplList;
     }
 
 }

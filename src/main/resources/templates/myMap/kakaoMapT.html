@@ -130,17 +130,17 @@
                 <ul class="qna-pagination justify-content-center">
                     <li class="qna-page-item">
                         <!-- 이전 페이지로 이동 -->
-                        <a class="qna-page-link" th:href="@{/mymap/{user_id}(user_id=${userId},page=1,search=${search})}" aria-label="Previous">
+                        <a class="qna-page-link" th:href="@{/mymap/{user_id}(user_id=${user.userId},page=1,search=${search})}" aria-label="Previous">
                             <span aria-hidden="true">&lt;</span>
                         </a>
                     </li>
                     <!-- 페이지 번호들을 루프로 생성 -->
                     <li class="qna-page-item" th:each="pageNo : ${#numbers.sequence(1, totalPages)}" th:class="${pageNo == currentPage} ? 'qna-page-item active' : 'qna-page-item'">
-                        <a class="qna-page-link" th:href="@{/mymap/{user_id}(user_id=${userId},page=${pageNo},search=${search})}" th:text="${pageNo}"></a>
+                        <a class="qna-page-link" th:href="@{/mymap/{user_id}(user_id=${user.userId},page=${pageNo},search=${search})}" th:text="${pageNo}"></a>
                     </li>
                     <li class="qna-page-item">
                         <!-- 다음 페이지로 이동 -->
-                        <a class="qna-page-link" th:href="@{/mymap/{user_id}(user_id=${userId},page=${totalPages},search=${search})}" aria-label="Next">
+                        <a class="qna-page-link" th:href="@{/mymap/{user_id}(user_id=${user.userId},page=${totalPages},search=${search})}" aria-label="Next">
                             <span aria-hidden="true">&gt;</span>
                         </a>
                     </li>

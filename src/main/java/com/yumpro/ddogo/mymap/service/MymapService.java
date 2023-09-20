@@ -17,7 +17,7 @@ public class MymapService {
     private final MyMapMapper myMapMapper;
 
 
-    //신규
+    //회원 맛집 정보 조회 & 검색 & 페이지네이션
     public List<MyMapDTO> getHotplacesWithSearch(int userNo, String search, int page, int pageSize) {
         Map<String, Object> searchParams = new HashMap<>();
         searchParams.put("userNo", userNo);
@@ -27,6 +27,7 @@ public class MymapService {
         return myMapMapper.getHotplacesWithSearch(searchParams);
     }
 
+    //회원 맛집 정보 총 갯수
     public int getTotalCountWithSearch(int userNo, String search) {
         Map<String, Object> searchParams = new HashMap<>();
         searchParams.put("userNo", userNo);
