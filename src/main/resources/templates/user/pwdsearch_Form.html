@@ -18,16 +18,17 @@
     </div>
     <div class="center-content">
         <div class="d-flex justify-content-center">
-            <form class="row g-3 justify-content-center" id="pwdsearchForm" th:action="@{/user/pwdsearch}" method="post">
+            <form class="row g-3 justify-content-center" id="pwdsearchForm" th:action="@{/user/pwdsearch}"
+                  method="post">
                 <div class="justify-content-center text-center">
                     <!-- 아이디, 이메일입력창 && 전송버튼 -->
                     <div class="form-floating justify-content-center mb-2">
-                        <input type ="text" class="form-control" id="user_id" name="user_id" placeholder="id">
+                        <input type="text" class="form-control" id="user_id" name="user_id" placeholder="id">
                         <label for="user_id">ID</label>
                     </div>
                     <!-- 이메일입력창 -->
                     <div class="form-floating ustify-content-center mb-2">
-                        <input type ="email" class="form-control" id="email" name="email" placeholder="name@example.com">
+                        <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com">
                         <label for="email">Email address</label>
                     </div>
                 </div>
@@ -51,60 +52,60 @@
         </div>
     </div>
 </div>
-    <script layout:fragment="script">
-        document.getElementById('button').addEventListener('click', function(event) {
-             event.preventDefault(); // Prevent the default form submission
-             loadText();
-         });
+<script layout:fragment="script">
+    document.getElementById('button').addEventListener('click', function(event) {
+         event.preventDefault(); // Prevent the default form submission
+         loadText();
+     });
 
-         console.log("1");
+     console.log("1");
 
-           // 폼 요소와 버튼을 가져옵니다.
-           var form = document.querySelector('form');
+       // 폼 요소와 버튼을 가져옵니다.
+       var form = document.querySelector('form');
 
 
-           // Enter 키를 누를 때 폼이 자동으로 제출되도록 합니다.
-           form.addEventListener('keydown', function (e) {
-               if (e.key === "Enter") {
-                   e.preventDefault(); // Enter 키의 기본 동작을 막습니다.
-                   loadText(); // loadText 함수를 호출하여 "POST" 요청을 보냅니다.
-               }
-           });
+       // Enter 키를 누를 때 폼이 자동으로 제출되도록 합니다.
+       form.addEventListener('keydown', function (e) {
+           if (e.key === "Enter") {
+               e.preventDefault(); // Enter 키의 기본 동작을 막습니다.
+               loadText(); // loadText 함수를 호출하여 "POST" 요청을 보냅니다.
+           }
+       });
 
-       function loadText() {
-        console.log("2");
-           var emailValue = document.getElementById('email').value;
-            var user_idValue = document.getElementById('user_id').value;
-           var xhr = new XMLHttpRequest();
-           xhr.open('POST', '/user/pwdsearch', true);
+   function loadText() {
+    console.log("2");
+       var emailValue = document.getElementById('email').value;
+        var user_idValue = document.getElementById('user_id').value;
+       var xhr = new XMLHttpRequest();
+       xhr.open('POST', '/user/pwdsearch', true);
 
-           xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+       xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
-           // email 값, user_id값 전송
-             var params = 'email=' + emailValue + '&user_id=' + user_idValue;
-           xhr.onload = function () {
-            console.log("3: ",this.status );
-               if (this.status == 200) {
-               console.log("4");
-                   // JSON 응답 파싱
-                   var responseJson = JSON.parse(this.responseText);
+       // email 값, user_id값 전송
+         var params = 'email=' + emailValue + '&user_id=' + user_idValue;
+       xhr.onload = function () {
+        console.log("3: ",this.status );
+           if (this.status == 200) {
+           console.log("4");
+               // JSON 응답 파싱
+               var responseJson = JSON.parse(this.responseText);
 
-                   // user.userid 값을 가져와서 화면에 출력
-                   var message = responseJson.message;
-                   console.log("message:", message);
-                   if (message === "사용자 정보를 찾을 수 없습니다.") {
-                    alert("사용자 정보를 찾을 수 없습니다.");
-
-                   }
-                    if (message === "메일을 발송하였습니다.") {
-                    alert("메일을 발송하였습니다.");
-                     window.location.href = '/user/login';
-                   }
+               // user.userid 값을 가져와서 화면에 출력
+               var message = responseJson.message;
+               console.log("message:", message);
+               if (message === "사용자 정보를 찾을 수 없습니다.") {
+                alert("사용자 정보를 찾을 수 없습니다.");
 
                }
-           };
+                if (message === "메일을 발송하였습니다.") {
+                alert("메일을 발송하였습니다.");
+                 window.location.href = '/user/login';
+               }
 
-           xhr.send(params);
-       }a
-    </script>
+           }
+       };
+
+       xhr.send(params);
+   }a
+</script>
 </html>

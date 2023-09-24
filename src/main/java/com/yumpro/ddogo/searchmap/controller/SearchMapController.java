@@ -2,7 +2,6 @@ package com.yumpro.ddogo.searchmap.controller;
 
 import com.yumpro.ddogo.common.entity.Hotplace;
 import com.yumpro.ddogo.common.entity.User;
-import com.yumpro.ddogo.searchmap.dto.BeforeLocation;
 import com.yumpro.ddogo.searchmap.dto.SearchMapDTO;
 import com.yumpro.ddogo.searchmap.repository.HotplaceRepository;
 import com.yumpro.ddogo.searchmap.repository.MymapRepository;
@@ -12,7 +11,6 @@ import com.yumpro.ddogo.emoAnal.service.EmoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -20,7 +18,6 @@ import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 
-//@RequestMapping("/search")
 @RequiredArgsConstructor
 @Controller
 public class SearchMapController {
@@ -53,8 +50,6 @@ public class SearchMapController {
         String strLng = String.valueOf(markerLng);
 
         if(hotplace != null && checkRecord(hotplace, user)!=null){
-            System.out.println("내 지도에 이미 입력된 경우.");
-            BeforeLocation beforeLocation = new BeforeLocation(markerLat, markerLng);
             redirectAttributes.addFlashAttribute("msg", "이미 저장된 맛집입니다.");
             redirectAttributes.addAttribute("lat",strLat);
             redirectAttributes.addAttribute("lng",strLng);
@@ -62,14 +57,12 @@ public class SearchMapController {
             return "redirect:/search"; //lat와 lng를 문자열로 요청파라미터로 넣기
         }
         if(hotplace != null && checkRecord(hotplace, user) == null){
-            System.out.println("DB엔 있지만 내 지도엔 없는 경우. hotplace_no:"+hotplace.getHotplaceNo());
             // 1) DB에는 있지만 내지도에 저장된 적 없는 경우
             int mapNo = addMymap(hotplace, user, inputMemo, myRecommend); //방금입력된 mymap의 pk
             double emoResult = emoService.emoAnal(inputReview); //감정분석결과
             searchMapService.insertEmoReview(mapNo, hotplace.getHotplaceNo(), inputReview, emoResult);
         }
         if(hotplace == null){
-            System.out.println("DB에 입력된 적 없는 경우. 새로 등록 진행");
             String placeAddress = "";
             if(placeRoadAddress=="" || placeRoadAddress==null){ //도로명주소가 없는 경우
                 placeAddress = placeJibunAddress;

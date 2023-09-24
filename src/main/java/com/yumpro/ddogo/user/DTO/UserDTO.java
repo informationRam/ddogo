@@ -10,7 +10,6 @@ import java.util.Date;
 @Setter
 public class UserDTO {
 
-
     private String user_name;          //'회원 이름'
 
     private String user_id;            //'회원 아이디'
@@ -24,6 +23,5 @@ public class UserDTO {
     private String email;              //'회원 이메일'
 
     private String pwd;                //'비밀번호'
-
 
 }

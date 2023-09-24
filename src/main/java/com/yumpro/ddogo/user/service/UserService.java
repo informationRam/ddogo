@@ -3,6 +3,7 @@ package com.yumpro.ddogo.user.service;
 import com.yumpro.ddogo.common.entity.User;
 import com.yumpro.ddogo.user.DTO.UserDTO;
 import com.yumpro.ddogo.user.reprository.UserRepository;
+import com.yumpro.ddogo.user.security.Role;
 import com.yumpro.ddogo.user.validation.UserCreateForm;
 
 import com.yumpro.ddogo.user.validation.UserModifyForm;
@@ -24,6 +25,7 @@ public class UserService {
     //회원가입처리
     public void userJoin(UserCreateForm userCreateForm){
         User user = new User();
+
         System.out.println("userjoin서비스진입!");
         user.setUser_name(userCreateForm.getUser_name());
         user.setUserId(userCreateForm.getUser_id());
@@ -33,6 +35,7 @@ public class UserService {
         user.setEmail(userCreateForm.getEmail());
         user.setPwd(userCreateForm.getPwd1());
         user.setPwd(PasswordEncoder.encode(userCreateForm.getPwd1()));
+        user.setRole(Role.USER);
         userRepository.save(user);
     }
 
@@ -51,7 +54,6 @@ public class UserService {
         boolean emailDuplicate = userRepository.existsByEmail(email);
         return emailDuplicate;
     }
-
 
     //정보 수정시 사용
     @Transactional(readOnly = true)
@@ -120,7 +122,7 @@ public class UserService {
             user.setPwd(PasswordEncoder.encode(userModifyForm.getPwd1()));
             userRepository.save(user);
     }
-//회원탈퇴
+    //회원탈퇴
     public void userDelete(User user){
         userRepository.delete(user);
     }

@@ -9,11 +9,14 @@ import com.yumpro.ddogo.qna.service.QnaService;
 import com.yumpro.ddogo.admin.service.UserListService;
 import com.yumpro.ddogo.qna.validation.QnaAddForm;
 import com.yumpro.ddogo.qna.validation.QnaSolveAddForm;
+import com.yumpro.ddogo.user.security.Role;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -83,7 +86,16 @@ public class QnaController {
         int totalCount = qnaService.getQnaListCount(map); // 전체 데이터 수를 가져오는 메서드를 추가해야 합니다.
         int totalPages = (int) Math.ceil((double) totalCount / limit);
         int notSolvedCnt=dashboardService.notSolvedCnt();
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userRole=null;
+        if (authentication.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
+            userRole="admin";
+        }else{
+            userRole="user";
+        }
         //3.Model
+        model.addAttribute("userRole",userRole);
         model.addAttribute("notSolvedCnt",notSolvedCnt);
         model.addAttribute("totalCnt",totalCount);
         model.addAttribute("currentPage", currentPage);
@@ -103,7 +115,15 @@ public class QnaController {
     @GetMapping("/add")
     public String qnaAdd(QnaAddForm qnaAddForm,Model model,Principal principal){
         int notSolvedCnt=dashboardService.notSolvedCnt();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userRole=null;
+        if (authentication.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
+            userRole="admin";
+        }else{
+            userRole="user";
+        }
         //3.Model
+        model.addAttribute("userRole",userRole);
         model.addAttribute("notSolvedCnt",notSolvedCnt);
         model.addAttribute("userId",principal.getName());
         return "qna/qna_add";
@@ -135,37 +155,44 @@ public class QnaController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/detail/{id}")
     public String qnaDetailGet(@PathVariable int id,@RequestParam(value="inputPwd", required = false) String inputPwd,RedirectAttributes redirectAttributes,Model model){
-        redirectAttributes.addFlashAttribute("error", "문의글 상세보기는 비밀번호 후 이용해주세요");
+        redirectAttributes.addFlashAttribute("error", "문의글 상세보기는 비밀번호 인증 후 이용해주세요");
         int notSolvedCnt=dashboardService.notSolvedCnt();
         //3.Model
         model.addAttribute("notSolvedCnt",notSolvedCnt);
         return"redirect:/qna/list";
     }
 
+
+
+
+
     //문의글 상세 보기 (비밀번호 확인 / 관리자는 free)
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/detail/{id}")
     public String qnaDetail(@PathVariable int id, @RequestParam(value="inputPwd", required = false) String inputPwd, Model model, Principal principal, QnaSolveAddForm qnaSolveAddForm,RedirectAttributes redirectAttributes){
+        // 현재 사용자의 인증 정보를 가져옴
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if(inputPwd==null){
-            redirectAttributes.addFlashAttribute("error", "문의글 상세보기는 비밀번호 후 이용해주세요");
+            redirectAttributes.addFlashAttribute("error", "문의글 상세보기는 비밀번호 인증 후 이용해주세요");
             return "redirect:/qna/list";
         }
 
         Qna qna = qnaService.getQnaById(id);
 
-        if(!principal.getName().equals("admin")){
+        // 현재 사용자의 권한 중 하나라도 "ROLE_ADMIN"이 아니라면
+        if (!authentication.getAuthorities().stream()
+                .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
             if(!qna.getQnaPwd().equals(inputPwd)){
-                redirectAttributes.addFlashAttribute("error", "문의글 상세보기는 비밀번호 후 이용해주세요");
+                redirectAttributes.addFlashAttribute("error", "문의글 상세보기는 비밀번호가 일치할 경우에만 가능합니다");
                 return "redirect:/qna/list";
             }
         }
 
         QnaSolve qnaSolve = qnaService.getQnaSolveByQna(qna);
 
-        String userId=principal.getName();
         String userRole=null;
-        if(userId.equals("admin")){
+        if (authentication.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
             userRole="admin";
         }else{
             userRole="user";
@@ -192,13 +219,17 @@ public class QnaController {
         //아이디로 질문 가져오기
         Qna qna = qnaService.getQnaById(id);
         QnaSolve qnaSolve = qnaService.getQnaSolveByQna(qna);
+        // 현재 사용자의 인증 정보를 가져옴
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if ( !principal.getName().equals("admin") ) {
+        // 현재 사용자의 권한 중 하나라도 "ROLE_ADMIN"이 아니라면
+        if (!authentication.getAuthorities().stream()
+                .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"권한이 없습니다.");
         }
         String userId=principal.getName();
         String userRole=null;
-        if(userId.equals("admin")){
+        if (authentication.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
             userRole="admin";
         }else{
             userRole="user";
@@ -243,8 +274,12 @@ public class QnaController {
 
         Qna qna = qnaService.getQnaById(id);
         QnaSolve qnaSolve = qnaService.getQnaSolveByQna(qna);
+        // 현재 사용자의 인증 정보를 가져옴
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if(!principal.getName().equals("admin")){
+        // 현재 사용자의 권한 중 하나라도 "ROLE_ADMIN"이 아니라면
+        if (!authentication.getAuthorities().stream()
+                .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
             redirectAttributes.addFlashAttribute("error", "문의 답글은 관리자만 수정할 수 있습니다");
             int notSolvedCnt=dashboardService.notSolvedCnt();
             //3.Model
@@ -255,7 +290,15 @@ public class QnaController {
         qnaSolveAddForm.setQnaSolveTitle(qnaSolve.getQnaSolveTitle());
         qnaSolveAddForm.setQnaSolveContent(qnaSolve.getQnaSolveContent());
         int notSolvedCnt=dashboardService.notSolvedCnt();
+
+        String userRole=null;
+        if (authentication.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
+            userRole="admin";
+        }else{
+            userRole="user";
+        }
         //3.Model
+        model.addAttribute("userRole",userRole);
         model.addAttribute("notSolvedCnt",notSolvedCnt);
         model.addAttribute("qna",qna);
         model.addAttribute("userId",principal.getName());
@@ -267,7 +310,13 @@ public class QnaController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/solve/modify/{id}")
     public String qnaSolveMofiy(@PathVariable int id,@Valid QnaSolveAddForm qnaSolveAddForm,BindingResult bindingResult,Model model,Principal principal,RedirectAttributes redirectAttributes){
-        if(!principal.getName().equals("admin")){
+        // 현재 사용자의 인증 정보를 가져옴
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+
+        // 현재 사용자의 권한 중 하나라도 "ROLE_ADMIN"이 아니라면
+        if (!authentication.getAuthorities().stream()
+                .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
             redirectAttributes.addFlashAttribute("error", "답변 수정은 관리자만 가능합니다");
             int notSolvedCnt=dashboardService.notSolvedCnt();
             //3.Model
@@ -309,7 +358,12 @@ public class QnaController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/solve/delete/{id}")
     public String qnaSolveDelete(@PathVariable("id") Integer id,Principal principal,RedirectAttributes redirectAttributes,Model model){
-        if(!principal.getName().equals("admin")){
+        // 현재 사용자의 인증 정보를 가져옴
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        // 현재 사용자의 권한 중 하나라도 "ROLE_ADMIN"이 아니라면
+        if (!authentication.getAuthorities().stream()
+                .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
             redirectAttributes.addFlashAttribute("error", "답글 삭제는 관리자만 가능합니다");
             int notSolvedCnt=dashboardService.notSolvedCnt();
             //3.Model
@@ -337,7 +391,15 @@ public class QnaController {
         QnaAddForm.setQna_title(qna.getQnaTitle());
         QnaAddForm.setQna_content(qna.getQnaContent());
         int notSolvedCnt=dashboardService.notSolvedCnt();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userRole=null;
+        if (authentication.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
+            userRole="admin";
+        }else{
+            userRole="user";
+        }
         //3.Model
+        model.addAttribute("userRole",userRole);
         model.addAttribute("notSolvedCnt",notSolvedCnt);
         model.addAttribute("qna",qna);
         model.addAttribute("userId",principal.getName());
@@ -360,7 +422,15 @@ public class QnaController {
         }
         if(bindingResult.hasErrors()){  //유효성검사시 에러가 발생하면
             int notSolvedCnt=dashboardService.notSolvedCnt();
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String userRole=null;
+            if (authentication.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
+                userRole="admin";
+            }else{
+                userRole="user";
+            }
             //3.Model
+            model.addAttribute("userRole",userRole);
             model.addAttribute("notSolvedCnt",notSolvedCnt);
             model.addAttribute("qna",qna);
             model.addAttribute("userId",principal.getName());
@@ -370,7 +440,15 @@ public class QnaController {
         if(!qnaAddForm.getQna_pwd().equals(qna.getQnaPwd())){
             bindingResult.rejectValue("qna_pwd","qnaPwdInCorrect","문의 비밀번호가 일치하지 않습니다");
             int notSolvedCnt=dashboardService.notSolvedCnt();
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String userRole=null;
+            if (authentication.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
+                userRole="admin";
+            }else{
+                userRole="user";
+            }
             //3.Model
+            model.addAttribute("userRole",userRole);
             model.addAttribute("notSolvedCnt",notSolvedCnt);
             model.addAttribute("qna",qna);
             model.addAttribute("userId",principal.getName());
@@ -385,7 +463,10 @@ public class QnaController {
         Qna qna1 = qnaService.getQnaById(id);
         QnaSolve qnaSolve = qnaService.getQnaSolveByQna(qna1);
         String userRole=null;
-        if(principal.getName().equals("admin")){
+        // 현재 사용자의 인증 정보를 가져옴
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
             userRole="admin";
         }else{
             userRole="user";

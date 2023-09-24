@@ -1,6 +1,6 @@
 <html layout:decorate="~{layout}" xmlns:th="http://www.thymeleaf.org">
 <div layout:fragment="content" class="container my-3">
-    <link rel="stylesheet" href="/css/user/login.css" />
+    <link rel="stylesheet" href="/css/user/login.css"/>
     <div class="container" id="container">
         <div class="form-container sign-up-container">
             <form id="join" class="my-2" th:object="${userCreateForm}" th:action="@{/user/join}" method="post">
@@ -14,17 +14,20 @@
                 <!-- 성별 -->
                 <div class="gender-container">
                     <div class="radio-group">
-                        <input type="radio" class="btn-check" th:field="*{gender}" value="M" id="genderMale" autocomplete="off">
+                        <input type="radio" class="btn-check" th:field="*{gender}" value="M" id="genderMale"
+                               autocomplete="off">
                         <label class="btn btn-light" for="genderMale" style="width: 131px;">남자</label>
                     </div>
                     <div class="radio-group">
-                        <input type="radio" class="btn-check" th:field="*{gender}" value="F" id="genderFemale" autocomplete="off">
+                        <input type="radio" class="btn-check" th:field="*{gender}" value="F" id="genderFemale"
+                               autocomplete="off">
                         <label class="btn btn-light" for="genderFemale" style="width: 131px;">여자</label>
                     </div>
                 </div>
                 <!-- 생일 -->
                 <input type="date" th:field="*{birth}" th:format="'yyyy-MM-dd'">
                 <input type="password" th:field="*{pwd1}" placeholder="비밀번호">
+                <span class="password-requirements">비밀번호 8자리 이상(숫자, 문자, 특수문자 각각 1개 이상 포함)</span>
                 <input type="password" th:field="*{pwd2}" placeholder="비밀번호확인">
                 <button type="submit" id="toSignUp">Sign Up</button>
             </form>
@@ -44,7 +47,8 @@
                         사용자ID 또는 비밀번호를 확인해주세요.
                     </div>
                 </div>
-                <a class="nav-link my-2" sec:authorize="isAnonymous()" th:href="@{/user/pwdsearchfrom}">Forgot your password?</a>
+                <a class="nav-link my-2" sec:authorize="isAnonymous()" th:href="@{/user/pwdsearchfrom}">Forgot your
+                    password?</a>
                 <button type="submit">Log in</button>
             </form>
         </div>
@@ -66,18 +70,18 @@
     <script src="/js/user/user.js"/>
 </div>
 <script layout:fragment="script">
-const signUpButton = document.getElementById('signUp');
-const signInButton = document.getElementById('signIn');
-const container = document.getElementById('container');
+    const signUpButton = document.getElementById('signUp');
+    const signInButton = document.getElementById('signIn');
+    const container = document.getElementById('container');
 
-signUpButton.addEventListener('click', () => {
-  container.classList.add("right-panel-active");
+    signUpButton.addEventListener('click', () => {
+      container.classList.add("right-panel-active");
 
-});
+    });
 
-signInButton.addEventListener('click', () => {
-  container.classList.remove("right-panel-active");
+    signInButton.addEventListener('click', () => {
+      container.classList.remove("right-panel-active");
 
-});
+    });
 </script>
 </html>
