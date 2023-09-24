@@ -135,12 +135,14 @@ public class MymapController {
         model.addAttribute("hotplList", hotplPage.getContent()); // 현재 페이지의 맛집 목록
 
         // 페이지네이션 관련 정보를 따로 저장
-        model.addAttribute("currentPage", hotplPage.getNumber() + 1); // 0부터 시작하는 값을 1부터 시작하는 값으로 변경
+        model.addAttribute("currentPage", hotplPage.getNumber()); // 0부터 시작하는 값을 1부터 시작하는 값으로 변경
         model.addAttribute("totalPages", hotplPage.getTotalPages());
+
+        // HTML로 렌더링된 페이지를 반환
         return "myMap/kakaoMapT";
     }
 
-    // JSON 데이터를 반환할 엔드포인트 =>
+    // JSON 데이터를 반환할 엔드포인트
     @GetMapping("/hotplaces/{user_id}")
     @ResponseBody
     public List<MyMapDTO> myMapHotplList(@PathVariable("user_id") String user_id,
