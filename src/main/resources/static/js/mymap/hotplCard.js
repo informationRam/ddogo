@@ -1,4 +1,4 @@
-//<!-- 카테고리별 카드 출력 -->
+// 카테고리별 카드 출력, 검색기능
 
 document.addEventListener("DOMContentLoaded", function () {
 

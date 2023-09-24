@@ -1,4 +1,4 @@
-// modalFunctions.js
+// reviewModal.js
 
 document.addEventListener("DOMContentLoaded", function () {
 

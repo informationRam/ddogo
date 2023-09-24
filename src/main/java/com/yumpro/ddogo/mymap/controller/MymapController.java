@@ -44,46 +44,46 @@ public class MymapController {
         System.out.println("mapNo:"+mapNo);
         if (reviewDTO != null) {
             return ResponseEntity.ok(reviewDTO);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+            } else {
+                return ResponseEntity.notFound().build();
+            }
 
     }
 
-        // 모달 후기수정
-        @PostMapping(value="/updateReview/{mapNo}",
-                consumes ="application/json",
-                produces={MediaType.TEXT_PLAIN_VALUE})
-        public ResponseEntity<String> updateReviewAndMemo(@PathVariable Integer mapNo,
-                                                          @RequestBody ReviewUpdateDTO request) {
-            try {
+    // 모달 후기수정
+    @PostMapping(value="/updateReview/{mapNo}",
+            consumes ="application/json",
+            produces={MediaType.TEXT_PLAIN_VALUE})
+    public ResponseEntity<String> updateReviewAndMemo(@PathVariable Integer mapNo,
+                                                      @RequestBody ReviewUpdateDTO request) {
+        try {
 
-                // mapNo를 DTO에 설정
-                request.setMapNo(mapNo);
-                // 여기서 emoReviewDTO 객체에 클라이언트로부터 받은 데이터가 매핑됩니다.
-                // 클라이언트로부터 받은 후기 내용을 감정 분석 서비스로 분석
-                double emoResult = emoService.emoAnal(request.getReview());
+            // mapNo를 DTO에 설정
+            request.setMapNo(mapNo);
+            // 여기서 emoReviewDTO 객체에 클라이언트로부터 받은 데이터가 매핑됩니다.
+            // 클라이언트로부터 받은 후기 내용을 감정 분석 서비스로 분석
+            double emoResult = emoService.emoAnal(request.getReview());
 
-                // 감정 분석 결과를 DTO에 설정
-                request.setEmo_result(emoResult);
+            // 감정 분석 결과를 DTO에 설정
+            request.setEmo_result(emoResult);
 
-                // Review 필드가 누락되었을 때 처리
-                if (request.getReview() == null || request.getReview().isEmpty()) {
-                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("후기는 필수 입력 항목입니다.");
-                }
-
-                // 컨트롤러 메서드에서 memo와 recomm 저장
-                request.setMemo(request.getMemo());
-                request.setRecomm(request.getRecomm());
-
-                // 서비스를 사용하여 후기정보 업데이트
-                reviewService.updateReview(request);
-
-                return ResponseEntity.ok("후기가 성공적으로 수행되었습니다.");
-            } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("후기 업로드중 오류가 발생했습니다.");
+            // Review 필드가 누락되었을 때 처리
+            if (request.getReview() == null || request.getReview().isEmpty()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("후기는 필수 입력 항목입니다.");
             }
+
+            // 컨트롤러 메서드에서 memo와 recomm 저장
+            request.setMemo(request.getMemo());
+            request.setRecomm(request.getRecomm());
+
+            // 서비스를 사용하여 후기정보 업데이트
+            reviewService.updateReview(request);
+
+            return ResponseEntity.ok("후기가 성공적으로 수행되었습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("후기 업로드중 오류가 발생했습니다.");
         }
+    }
 
     //회원 맛집 목록 삭제
     @GetMapping("/delete/{mapNo}")
