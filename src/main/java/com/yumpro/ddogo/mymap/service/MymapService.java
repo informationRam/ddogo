@@ -37,18 +37,3 @@ public class MymapService {
     }
 }
 
-/*
-    //회원별 저장한 맛집 리스트 조회 - repository버전
-    public List<MyMapDTO> getSavedHotplaces(int userNo){
-      List<MyMapDTO> myHotplList = mymapRepository.findHotplacesByUserNo(userNo);
-      return myHotplList;
-    }
-*/
-
-
-// 전체 db test용
-//    public List<MymapMarkerDTO> getLatLngNames(){
-//        List<MymapMarkerDTO> mymapMarkerDTOS = mymapHotplRepository.findLatLngNames();
-//        return mymapMarkerDTOS;
-//    }
-

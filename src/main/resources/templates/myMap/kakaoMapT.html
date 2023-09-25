@@ -56,11 +56,6 @@
                         <i th:if="${myhotpl.hotplaceCateNo == 2}" class="fa-solid fa-mug-hot fa-l" style="color: #c82f09;  margin-left: 5px;"></i>
                         </h5>
                     </div>
-                    <!-- <div class="recommOrNot"  style="position: absolute; top: 10px; right: 10px;">
-                    &lt;!&ndash; 찜 확인 아이콘 &ndash;&gt;
-                    <img th:if="${myhotpl.recomm == 'Y'}" src="/static/image/bookmark-heart-fill.svg" style="color: #c82f09; margin-left: 5px;">
-                    <img th:if="${myhotpl.recomm == 'N'}" src="/static/image/bookmark-heart.svg" style="color: #c82f09; margin-left: 5px;">
-                    </div>-->
 
                     <p class="card-text text-muted mb-0" style="font-size: 0.8em;" th:text="${myhotpl.address}"></p>
                     <!-- 감정결과 박스 -->
@@ -71,16 +66,11 @@
                     <div class="d-flex justify-content-end">
                         <button type="button" class="btn btn-outline-danger btn-sm btn-update-review mx-1" data-bs-toggle="modal" data-bs-target="#myModal" th:attr="data-review-no=${myhotpl.mapNo}, data-hotplace-no=${myhotpl.hotplaceNo}">내 후기</button>
                         <a th:href="@{'/mymap/delete/'+${myhotpl.mapNo}}" class="btn btn-outline-secondary btn-sm btn-delete mx-1" data-toggle="modal" data-target="#deleteModal" th:attr="data-map-id=${myhotpl.mapNo}" onclick="return false;">삭제</a>
-                        <!--   <a class="btn btn-outline-secondary btn-delete" onclick="return false;"
-                        data-toggle="modal" data-target="#deleteModal">삭제</a>-->
-                        <!-- 모달 열기 버튼 -->
-<!--                      &lt;!&ndash; 찜 확인 아이콘 &ndash;&gt;-->
-<!--                      <i th:if="${myhotpl.recomm == 'N'}" class="bi bi-bookmark-heart-fill" style="color: #c82f09; margin-left: 5px;"></i>-->
-<!--                      <i th:if="${myhotpl.recomm == 'Y'}" class="bi bi-bookmark-heart" style="color: #c82f09; margin-left: 5px;"></i>-->
+
                     </div>
                 </div> <!-- card-body -->
             </div> <!-- card my-2 -->
-        </div>  <!-- cardBox : 스크롤 내려도 고정되게 구현필요 -->
+        </div>  <!-- cardBox -->
 
         <!-- 후기 조회&수정 모달 -->
         <div class="modal fade" id="myModal" tabindex="-1" aria-hidden="true">

@@ -8,8 +8,7 @@ import org.springframework.data.repository.query.Param;
 @Mapper
 public interface ReviewMapper {
 
-    // 수정 쿼리를 호출하는 메서드
-   // void updateEmoReview(@Param("reviewNo") Integer reviewNo, @Param("review") String review);
+   // 모달 맛집 리뷰 수정
     void updateReview(ReviewUpdateDTO request);
 
     // mapNo를 기반으로 후기 정보 조회
