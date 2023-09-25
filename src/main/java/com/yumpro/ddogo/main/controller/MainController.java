@@ -38,7 +38,7 @@ public class MainController {
         model.addAttribute("eatjjim",eatjjim);
 
         //월별 베스트
-        Map<String, List<String>> sigunguMap = mainService.getsidogungu();
+      /*  Map<String, List<String>> sigunguMap = mainService.getsidogungu();
         JSONObject obj = new JSONObject();
         response.setContentType("text/html; charset=UTF-8");
         PrintWriter out = response.getWriter();
@@ -55,7 +55,7 @@ public class MainController {
         String jsonStr = obj.toString();
         model.addAttribute(jsonStr);
         model.addAttribute("sigunguMap", sigunguMap);
-        System.out.println("sigunguMap=" + sigunguMap);
+        System.out.println("sigunguMap=" + sigunguMap);*/
 
         return "index";
 
@@ -73,11 +73,12 @@ public class MainController {
     }
 
 
-    // 초기 데이터를 가져오는 엔드포인트
+    // 월별베스트 초기 데이터를 가져오는 엔드포인트
     @GetMapping(value = "initialData", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Map<String, List<String>> getInitialData() throws Exception {
         Map<String, List<String>> sigunguMap = mainService.getsidogungu();
+        System.out.println("sigunguMap="+sigunguMap);
         return sigunguMap;
     }
 

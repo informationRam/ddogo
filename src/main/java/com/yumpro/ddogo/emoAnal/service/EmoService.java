@@ -56,12 +56,15 @@ public class EmoService {
 
                 String jsonString = response.toString(); // json응답을 문자열로 바꾸기
                 JSONObject result2 = new JSONObject(jsonString);
+                System.out.println("jsonString"+jsonString);
+                System.out.println("result2"+result2);
 
                 // document객체 추출
                 JSONObject document = result2.getJSONObject("document");
 
-                // document로부터 감정과 신뢰도 추출
+                // document로부터 감정 추출
                 JSONObject confidence = document.getJSONObject("confidence"); //감정
+                String sentiment = document.getString("sentiment");
                 float negativeConfidence = (float) confidence.getDouble("negative"); //긍정
                 float neutralConfidence = (float) confidence.getDouble("neutral"); //부정
                 float positiveConfidence = (float) confidence.getDouble("positive"); //중립
@@ -69,6 +72,7 @@ public class EmoService {
 
                 //데이터 콘솔창 출력
                 System.out.println("confidence="+confidence);
+                System.out.println("Document Sentiment: " + sentiment);
                 System.out.println("Negative Confidence: " + negativeConfidence);
                 System.out.println("Neutral Confidence: " + neutralConfidence);
                 System.out.println("Positive Confidence: " + positiveConfidence);

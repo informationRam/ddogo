@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     var selectedSido = this.value; // 선택한 시/도 값을 가져옴
                     var gugunArr = response[selectedSido];
 
-                    // 구군 목록 초기화
+                    // 시군구 목록 초기화
                     gugunSelect.innerHTML = '<option value="">선택하세요</option>';
                     if (gugunArr) {
                         for (var i = 0; i < gugunArr.length; i++) {
@@ -48,8 +48,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
                 });
 
-                // 초기 시/도 선택
-                sidoSelect.dispatchEvent(new Event("change"));
+
             } catch (error) {
                 console.error("JSON 파싱 오류:", error);
             }
