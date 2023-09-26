@@ -21,7 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.security.Principal;
 
 @Controller
-@RequestMapping("/notice")
+@RequestMapping("notice")
 @RequiredArgsConstructor
 public class NoticeController {
 
@@ -43,7 +43,7 @@ public class NoticeController {
         model.addAttribute("userRole",userRole);
         model.addAttribute("noticeform", noticeform);
         model.addAttribute("noticePage", noticePage);
-        return "/notice/noticeList_Form";
+        return "notice/noticeList_Form";
     }
 
     // 공지사항 상세페이지
@@ -61,7 +61,7 @@ public class NoticeController {
         //3.Model
         model.addAttribute("userRole",userRole);
         model.addAttribute("notice", notice);
-        return "/notice/noticeDetail_Form";
+        return "notice/noticeDetail_Form";
     }
 
     // 공지사항 작성 form
@@ -77,7 +77,7 @@ public class NoticeController {
         }
         //3.Model
         model.addAttribute("userRole",userRole);
-        return "/notice/noticeadd_Form";
+        return "notice/noticeadd_Form";
     }
 
     // 공지사항 작성 (add)
@@ -87,7 +87,7 @@ public class NoticeController {
         model.addAttribute("noticeform", noticeform);
         User user = userService.getUser(principal.getName());
         if (bindingResult.hasErrors()) {          //유효성검사시 에러가 발생하면
-            return "/notice/noticeadd_Form";    //noticeadd_Form.html문서로 이동
+            return "notice/noticeadd_Form";    //noticeadd_Form.html문서로 이동
         }
 
         if (!user.getUserId().equals("admin")) {
@@ -113,7 +113,7 @@ public class NoticeController {
         model.addAttribute("userRole",userRole);
         model.addAttribute("noticeform", noticeform);
         model.addAttribute("notiNo", notiNo);
-        return "/notice/noticeModify_Form";
+        return "notice/noticeModify_Form";
     }
 
     //공지사항 수정등록
@@ -130,7 +130,7 @@ public class NoticeController {
         Notice notice = noticeService.getNotice(notiNo);
         noticeService.modify(notice, noticeform);
         System.out.println("수정 ㅇㅋ");
-        return "redirect:/notice/detail/" + notiNo; // 수정 후 공지사항 상세페이지로 리다이렉트
+        return "redirect:notice/detail/" + notiNo; // 수정 후 공지사항 상세페이지로 리다이렉트
     }
     // 공지사항 삭제처리
     @GetMapping("/delete/{notiNo}")

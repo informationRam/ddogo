@@ -43,7 +43,7 @@ public class UserController {
     @GetMapping("/joinForm")
     public String joinForm(UserCreateForm userCreateForm, Model model) {
         model.addAttribute("userCreateForm", userCreateForm);
-        return "/user/joinForm";
+        return "user/joinForm";
     }
 
     //회원가입처리 후 로그인페이지로 이동
@@ -51,26 +51,26 @@ public class UserController {
     public String userJoin(@Valid UserCreateForm userCreateForm, BindingResult bindingResult, Model model) {
 
         if (bindingResult.hasErrors()) {
-            return "/user/joinForm";
+            return "user/joinForm";
         }
 
         // 아이디 중복 여부체크
         if (userService.checkUserIdDuplication(userCreateForm.getUser_id())) {
             bindingResult.rejectValue("user_id", "User_idInCorrect", "이미 사용중인 아이디입니다.");
             model.addAttribute("userCreateForm", userCreateForm);
-            return "/user/loginForm";
+            return "user/joinForm";
         }
 
         // 이메일 중복 여부체크
         if (userService.checkEmailDuplication(userCreateForm.getEmail())) {
             bindingResult.rejectValue("email", "EmailInCorrect", "이미 사용중인 이메일 입니다.");
-            return "/user/joinForm";
+            return "user/joinForm";
         }
 
         // 비밀번호, 비밀번호 확인 동일 체크
         if (!userCreateForm.getPwd1().equals(userCreateForm.getPwd2())) {
             bindingResult.rejectValue("pwd2", "pwdInCorrect", "비밀번호 확인 값이 다릅니다.");
-            return "/user/joinForm";
+            return "user/loginForm";
         } else {
             userService.userJoin(userCreateForm);
             return "redirect:/user/login";
@@ -81,7 +81,7 @@ public class UserController {
     @GetMapping("/login")
     public String loginForm(LoginVaildation loginVaildation, Model model, UserCreateForm userCreateForm) {
         model.addAttribute("userCreateForm", userCreateForm);
-        return "/user/loginForm";
+        return "user/loginForm"; // "user/loginForm"으로 수정
     }
 
     //로그인 처리
@@ -98,7 +98,7 @@ public class UserController {
     //id 찾기 form
     @GetMapping("/searchidform")
     public String searchidform() {
-        return "/user/searchid_Form";
+        return "user/searchid_Form";
     }
 
     //id 찾기 GET 요청
@@ -136,7 +136,7 @@ public class UserController {
     // 비밀번호 찾기 폼 pwdsearch_Form
     @GetMapping("/pwdsearchfrom")
     public String pwdsearchForm() {
-        return "/user/pwdsearch_Form";
+        return "user/pwdsearch_Form";
     }
 
     // 비밀번호 찾기
@@ -166,7 +166,8 @@ public class UserController {
         User user = userService.getUser(principal.getName());
         UserModifyForm userModifyForm = userService.touserModifyForm(user); // 인증을위한 userModifyForm값으로 변경
         model.addAttribute("userModifyForm", userModifyForm);
-        return "/user/userModifyForm";
+
+        return "user/userModifyForm";
     }
 
     // 정보수정 실행
@@ -179,7 +180,7 @@ public class UserController {
         model.addAttribute("userModifyForm", userModifyForm);
 
         if (bindingResult.hasErrors()) {
-            return "/user/userModifyForm";
+            return "user/userModifyForm";
         }
         //이메일 중복여부체크
         if (userService.checkEmailDuplication(user, userModifyForm)) {
@@ -189,14 +190,14 @@ public class UserController {
         //비밀번호, 비밀번호 확인 동일 체크
         if (!userModifyForm.getPwd1().equals(userModifyForm.getPwd2())) {
             bindingResult.rejectValue("pwd2", "pwdInCorrect", "비밀번호와 비밀번호확인이 불일치합니다.");
-            return "/user/userModifyForm";
+            return "user/userModifyForm";
         }
         try {
             userService.userModify(user, userModifyForm);
         } catch (DataIntegrityViolationException e) {
             e.printStackTrace();
             bindingResult.reject("modifyFailed", "정보를 확인해주세요.");
-            return "/user/userModifyForm";
+            return "user/userModifyForm";
         }
         return "redirect:/";
     }

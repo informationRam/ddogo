@@ -159,7 +159,7 @@ public class QnaController {
         int notSolvedCnt=dashboardService.notSolvedCnt();
         //3.Model
         model.addAttribute("notSolvedCnt",notSolvedCnt);
-        return"redirect:/qna/list";
+        return"redirect:qna/list";
     }
 
 
@@ -175,7 +175,7 @@ public class QnaController {
 
         if(inputPwd==null){
             redirectAttributes.addFlashAttribute("error", "문의글 상세보기는 비밀번호 인증 후 이용해주세요");
-            return "redirect:/qna/list";
+            return "redirect:qna/list";
         }
 
         Qna qna = qnaService.getQnaById(id);
@@ -185,7 +185,7 @@ public class QnaController {
                 .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
             if(!qna.getQnaPwd().equals(inputPwd)){
                 redirectAttributes.addFlashAttribute("error", "문의글 상세보기는 비밀번호가 일치할 경우에만 가능합니다");
-                return "redirect:/qna/list";
+                return "redirect:qna/list";
             }
         }
 
@@ -284,7 +284,7 @@ public class QnaController {
             int notSolvedCnt=dashboardService.notSolvedCnt();
             //3.Model
             model.addAttribute("notSolvedCnt",notSolvedCnt);
-            return "redirect:/qna/list";
+            return "redirect:qna/list";
         }
 
         qnaSolveAddForm.setQnaSolveTitle(qnaSolve.getQnaSolveTitle());
@@ -321,7 +321,7 @@ public class QnaController {
             int notSolvedCnt=dashboardService.notSolvedCnt();
             //3.Model
             model.addAttribute("notSolvedCnt",notSolvedCnt);
-            return "redirect:/qna/list";
+            return "redirect:qna/list";
         }
 
         if(bindingResult.hasErrors()){  //유효성검사시 에러가 발생하면
@@ -368,7 +368,7 @@ public class QnaController {
             int notSolvedCnt=dashboardService.notSolvedCnt();
             //3.Model
             model.addAttribute("notSolvedCnt",notSolvedCnt);
-            return "redirect:/qna/list";
+            return "redirect:qna/list";
         }
 
         Qna qna=qnaService.getQnaById(id);
@@ -376,7 +376,7 @@ public class QnaController {
 
         qnaService.delete(qnaSolve,qna);
 
-        return "redirect:/qna/list";
+        return "redirect:qna/list";
     }
 
     //문의사항 수정폼
@@ -386,7 +386,7 @@ public class QnaController {
         Qna qna = qnaService.getQnaById(id);
         if ( !qna.getUser().getUserId().equals(principal.getName()) ) {
             redirectAttributes.addFlashAttribute("error", "작성자 본인 이외의 사용자에게는 수정 권한이 없습니다");
-            return "redirect:/qna/list";
+            return "redirect:qna/list";
         }
         QnaAddForm.setQna_title(qna.getQnaTitle());
         QnaAddForm.setQna_content(qna.getQnaContent());
@@ -491,12 +491,12 @@ public class QnaController {
 
         if ( !qna.getUser().getUserId().equals(principal.getName()) ) {
             redirectAttributes.addFlashAttribute("error", "작성자 본인 이외의 사용자에게는 삭제 권한이 없습니다");
-            return "redirect:/qna/list";
+            return "redirect:qna/list";
         }
 
         qnaService.qnaDelete(qna);
 
-        return "redirect:/qna/list";
+        return "redirect:qna/list";
     }
 
     @GetMapping("/error")

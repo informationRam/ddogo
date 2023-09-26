@@ -41,7 +41,7 @@ public class SearchMapController {
         //로그인한 유저 정보 가져오기
         User user = userService.getUser(principal.getName());
         if(!placeCateCode.equals("FD6") && !placeCateCode.equals("CE7")) { //음식점도 아니고 카페도 아닌 경우
-            return "redirect:/search/cantSave";
+            return "redirect:search/cantSave";
         }
         //DB에 저장된 데이터가 있는지 확인
         Hotplace hotplace = hotplaceRepository.findByLatAndLng(markerLat, markerLng);
@@ -146,6 +146,6 @@ public class SearchMapController {
     /*저장할 수 없다 페이지*/
     @GetMapping("/search/cantSave")
     public String cantSave(){
-        return "/searchmap/cantSave";
+        return "searchmap/cantSave";
     }
 }
