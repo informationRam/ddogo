@@ -419,6 +419,7 @@ public class QnaController {
         }
         if(qna.getQnaSolved()=='Y'){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"수정권한이 없습니다.");
+
         }
         if(bindingResult.hasErrors()){  //유효성검사시 에러가 발생하면
             int notSolvedCnt=dashboardService.notSolvedCnt();
