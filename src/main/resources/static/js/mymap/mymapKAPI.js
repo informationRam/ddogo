@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // 데이터 속성에서 userId 값을 읽어옴
     var userIdElement = document.getElementById('userIdContainer');
     var userId = userIdElement.getAttribute('data-user-id');
-    console.log('UserId:', userId);
+    console.log('UserId?:', userId);
 
      // 기존 지도 초기화 및 데이터 로드
         initializeMap();

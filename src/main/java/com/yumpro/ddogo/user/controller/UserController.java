@@ -3,6 +3,7 @@ package com.yumpro.ddogo.user.controller;
 import com.yumpro.ddogo.common.entity.User;
 import com.yumpro.ddogo.mail.service.EmailService;
 
+import com.yumpro.ddogo.user.service.UserSecurityService;
 import com.yumpro.ddogo.user.service.UserService;
 import com.yumpro.ddogo.user.validation.LoginVaildation;
 import com.yumpro.ddogo.user.validation.UserCreateForm;
@@ -36,8 +37,8 @@ public class UserController {
     private final UserService userService;
     // 메일발송 서비스
     private final EmailService emailService;
-    //세션값 담기(1)
-    private final HttpSession session;
+
+    private final UserSecurityService userSecurityService;
 
     //회원가입 폼
     @GetMapping("/joinForm")
@@ -87,7 +88,6 @@ public class UserController {
     //로그인 처리
     @PostMapping("/login")
     public String login(@Valid LoginVaildation loginVaildation, BindingResult bindingResult, Model model, HttpSession session, Principal principal) {
-        System.out.println("?durlf?");
         if (bindingResult.hasErrors()) {
             return "user/loginForm";
         } else {
@@ -213,4 +213,5 @@ public class UserController {
         userService.userDelete(user);
         return "redirect:/user/logout";    //목록으로이동
     }
+
 }

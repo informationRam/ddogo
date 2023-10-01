@@ -43,7 +43,6 @@ public class MainService {
         paramMap.put("sido", sido);
         paramMap.put("gugun", gugugn);
         paramMap.put("hotplace_cate_no", hotplace_cate_no);
-
         return mainRepository.monthBest(paramMap);
     }
 

@@ -12,47 +12,58 @@
 		]]>
     </select>-->
 
-    <!--오늘 전국 베스트 찜(음식점)-->
+    <!--이번달 전국 베스트 찜(음식점)-->
     <select id="allBestEatJjim" resultType="com.yumpro.ddogo.main.dto.BestJjimDTO">
         <![CDATA[
-        with ReviewAverages as (
-        select hotplace_no, avg(emo_result) as avg_emo_result
-        from emoreview
-        group by hotplace_no
-        )
-        select h.hotplace_name, h.hotplace_no, count(m.map_no) as jjim,
-               format(ra.avg_emo_result,2) as avg_emo_result,h.address
-        from hotplace h
-        left join mymap m on h.hotplace_no = m.hotplace_no
-        left join ReviewAverages ra on h.hotplace_no = ra.hotplace_no
-        where datediff(m.recom_date, now()) = 0
-          and m.recom = 'Y'
-          and h.hotplace_cate_no = 1
-        group by h.hotplace_name, h.hotplace_no, ra.avg_emo_result
-        order by jjim desc,ra.avg_emo_result desc
-        limit 5
+        WITH ReviewAverages AS (
+    SELECT hotplace_no, AVG(emo_result) AS avg_emo_result
+    FROM emoreview
+    GROUP BY hotplace_no
+)
+SELECT
+    h.hotplace_name,
+    h.hotplace_no,
+    COUNT(m.map_no) AS jjim,
+    FORMAT(ra.avg_emo_result, 2) AS avg_emo_result,
+    h.address
+FROM
+    hotplace h
+LEFT JOIN mymap m ON h.hotplace_no = m.hotplace_no
+LEFT JOIN ReviewAverages ra ON h.hotplace_no = ra.hotplace_no
+WHERE
+    DATE_FORMAT(m.recom_date, '%Y-%m') = DATE_FORMAT(NOW(), '%Y-%m') -- 이번 달 데이터 필터링
+    AND m.recom = 'Y'
+    AND h.hotplace_cate_no = 1
+GROUP BY
+    h.hotplace_name,
+    h.hotplace_no,
+    ra.avg_emo_result
+ORDER BY
+    jjim DESC,
+    ra.avg_emo_result DESC
+LIMIT 5
 		]]>
     </select>
 
-    <!--오늘 전국 베스트 찜(카페)-->
+    <!--이번달 전국 베스트 찜(카페)-->
     <select id="allBestCafeJjim" resultType="com.yumpro.ddogo.main.dto.BestJjimDTO">
         <![CDATA[
-        with ReviewAverages as (
-        select hotplace_no, avg(emo_result) as avg_emo_result
-        from emoreview
-        group by hotplace_no
-        )
-        select h.hotplace_name, h.hotplace_no, count(m.map_no) as jjim,
-               format(ra.avg_emo_result,2) as avg_emo_result,h.address
-        from hotplace h
-        left join mymap m on h.hotplace_no = m.hotplace_no
-        left join ReviewAverages ra on h.hotplace_no = ra.hotplace_no
-        where datediff(m.recom_date, now()) = 0
-          and m.recom = 'Y'
-          and h.hotplace_cate_no = 2
-        group by h.hotplace_name, h.hotplace_no, ra.avg_emo_result
-        order by jjim desc,ra.avg_emo_result desc
-        limit 5
+        WITH ReviewAverages AS (
+    SELECT hotplace_no, AVG(emo_result) AS avg_emo_result
+    FROM emoreview
+    GROUP BY hotplace_no
+    )
+    SELECT h.hotplace_name, h.hotplace_no, COUNT(m.map_no) AS jjim,
+           FORMAT(ra.avg_emo_result, 2) AS avg_emo_result, h.address
+    FROM hotplace h
+    LEFT JOIN mymap m ON h.hotplace_no = m.hotplace_no
+    LEFT JOIN ReviewAverages ra ON h.hotplace_no = ra.hotplace_no
+    WHERE MONTH(m.recom_date) = MONTH(CURDATE()) -- Filter by the current month
+      AND m.recom = 'Y'
+      AND h.hotplace_cate_no = 2
+    GROUP BY h.hotplace_name, h.hotplace_no, ra.avg_emo_result
+    ORDER BY jjim DESC, ra.avg_emo_result DESC
+    LIMIT 5
 		]]>
     </select>
 

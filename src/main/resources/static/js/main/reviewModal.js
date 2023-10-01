@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function () {
    document.querySelectorAll('.heading').forEach(function (element) {
        element.addEventListener("click", function () {
            var hotplace_no = this.getAttribute('data-hotplace-no');
-           var url = '/review/' + hotplace_no;
+           var url = 'review/' + hotplace_no;
 
            var xhr = new XMLHttpRequest();
            xhr.open('GET', url, true);

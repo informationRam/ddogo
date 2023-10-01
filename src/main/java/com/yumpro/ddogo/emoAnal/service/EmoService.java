@@ -20,8 +20,8 @@ public class EmoService {
             String url = "https://naveropenapi.apigw.ntruss.com/sentiment-analysis/v1/analyze";
 
             // API 키 정보
-            String apiKeyId = "edivdod8s8";
-            String apiKey = "yDRlMYWzUFAW0LpcrsABRLikhHqMNtHof3pCasuI";
+            String apiKeyId = "4h3486jns5";
+            String apiKey = "SRbpmPxejwwPmeSWnKXCey0oWdBfI0kQQOqAHn5M";
 
             // 요청 데이터 생성
             JSONObject data = new JSONObject();
