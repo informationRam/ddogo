@@ -1,0 +1,56 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{|${userRole == 'admin' ? 'qna/qnabar' : 'layout_for_main_notice_qna'}|}">
+<div layout:fragment="content" th:class="${userRole == 'admin'} ? '' : 'container my-5'">
+    <!-- 공지사항 제목 -->
+    <div>
+        <h4 class="border-bottom py-2" th:text="${notice.notiTitle}"></h4>
+    </div>
+    <!-- 내용 -->
+    <div class="card my-3">
+        <div class="card-body">
+            <div class="card-text" style="white-space:pre-line;" th:text="${notice.notiContent}"></div>
+            <!-- 관리자 && 작성일 -->
+            <div class="mt-3 d-flex justify-content-end">
+                <div class="badge bg-light text-dark p-2 text-start mb-2">
+                    <div>
+                        <p id="Writer" style="margin-bottom: 0px;">관리자</p>
+                    </div>
+                </div>
+                <!-- 작성일 -->
+                <div th:text="${#temporals.format(notice.notiDate,'yyyy-MM-dd HH:mm')}"/>
+            </div>
+            <div class="row">
+                <div class="col-md-1 text-left">
+                    <button class="btn btn-sm btn-outline-warning" onclick="history.back()">목록보기</button>
+                </div>
+                <div class="col-md-6 text-right">
+                    <div sec:authorize="hasRole('ROLE_ADMIN')">
+                        <a th:href="@{|/notice/modify/${notice.notiNo}|}"
+                           class="btn btn-sm btn-outline-secondary"
+                           sec:authorize="isAuthenticated()"
+                           th:text="수정"></a>
+                        <a href="javascript:void(0);" th:data-uri="@{|/notice/delete/${notice.notiNo}|}"
+                           class="delete btn btn-sm btn-outline-secondary"
+                           sec:authorize="isAuthenticated()"
+                           th:text="삭제"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- javascript부분 -- ----------------------------->
+    <script layout:fragment="script">
+        //(질문,답변)삭제버튼클릭시 호출
+        const delElements = document.getElementsByClassName("delete");
+        Array.from(delElements).forEach(function(element){
+
+            element.addEventListener("click",function(){
+                if(confirm("삭제하시겠습니까??")){//확인버튼을 클릭하면
+                    location.href=this.dataset.uri;
+                };
+            });
+        });
+
+    </script>
+</div>
+</html>

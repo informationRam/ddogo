@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="searchmap">
+    <select id="findHistory" resultType="int" parameterType="map">
+        <![CDATA[
+        select map_no
+        from mymap
+        where user_no=#{user_no} and hotplace_no=#{hotplace_no}
+        ]]>
+    </select>
+</mapper>

@@ -1,0 +1,94 @@
+:root {
+  --gap: 20px;
+}
+
+.container-fluid  {
+    display: flex;
+/*       flex-basis: 0;*/
+    flex-direction: row;
+  /* position: relative;  이거하면 화면 작아질때 카드 줄어듬*/
+    flex-wrap: nowrap;
+}
+
+#listContainer {
+    width: 380px; /* .listContainer의 가로 사이즈 고정 */
+    height: 93vh;
+    overflow-y: auto; /* 내용이 넘칠 경우 스크롤 표시 */
+    padding: 20px; /* 영역 간격 설정 (원하는 값으로 조정) */
+    border: 1px solid #ddd; /* 경계선 설정 (선택 사항) */
+    height: 80%
+    position: sticky;
+    top:0; /*화면 상단에 고정*/
+}
+#listContainer::-webkit-scrollbar {/*스크롤바 안보이게*/
+    display: none;
+}
+#myMapContents{
+    flex-grow: 1; /* .mapContainer의 가로 넓이 가변으로 설정 */
+    position: relative;
+    padding: 0 20px;
+    height: 93vh;
+}
+
+ /* 임시용 감정 출력 영역 */
+.square {
+    width: 50px; /* 원하는 너비 조절 */
+    height: 50px; /* 원하는 높이 조절 */
+    display: flex;
+    text-align: center; /* 내용 가운데 정렬 */
+    line-height: 30px; /* 텍스트 수직 가운데 정렬 */
+    background-color: lightpink; /* 배경색 지정 (원하는 색상으로 변경 가능) */
+    border: 1px solid pink; /* 테두리 스타일 및 색상 지정 */
+    border-radius: 4px; /* 모서   리 둥글게 만듭니다. */
+    margin-left: 10px; /* 왼쪽 여백 조절 */
+    font-size: 20px; /* 원하는 폰트 크기로 설정합니다. */
+    font-weight: bold; /* 원하는 폰트 굵기로 설정합니다. */
+}
+
+.card {
+    transition: box-shadow 0.3s, transform 0.3s;
+    transform: scale(1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    display: flex;
+}
+
+.card:hover {
+    transform: scale(1.05); /* 마우스 오버 시 크기 확대 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
+    cursor: pointer; /* 마우스 커서를 포인터로 변경 */
+}
+
+.modal{
+    display: none;
+}
+
+@font-face {
+    font-family: 'MalangMalangR'; /* 폰트 패밀리 이름 설정 */
+    src: url('/css/mymap/MALANGMALANGR.TTF') format('truetype'); /* 폰트 파일 경로 설정 */
+    font-weight: normal;
+    font-style: normal;
+}
+
+    /* 모든 HTML 요소에 폰트를 적용합니다. */
+html, body, p, h1, h2, h3, h4, h5, h6, a, span, div {
+    font-family: 'MalangMalangR', sans-serif;
+}
+.mapBox{
+    position: relative;
+}
+.myBtnGroup{
+    position: absolute;
+    top: 0;
+    right: 0;
+    right: 0;
+    margin: 20px;
+    z-index: 100;
+}
+.useInfo {
+    text-align: center;
+    background-color: #FFD9DC;
+    padding: 10px;
+    border-radius: 10px;
+}
+.qna-pagination{display:flex;padding-left:0;list-style:none;justify-content : center;}.qna-page-link{position:relative;display:block;color:#FF0841;text-decoration:none;background-color:#fff;border:1px solid #dee2e6;transition:color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out}@media (prefers-reduced-motion:reduce){.qna-page-link{transition:none}}.qna-page-link:hover{z-index:2;color:#df1040;background-color:#e9ecef;border-color:#dee2e6}.qna-page-link:focus{z-index:3;color:#df1040;background-color:#e9ecef;outline:0;box-shadow:0 0 0 .25rem rgba(13,110,253,.25)}.qna-page-item:not(:first-child) .qna-page-link{margin-left:-1px}.qna-page-item.active .qna-page-link{z-index:3;color:#fff;background-color:#FF0841;border-color:#FF0841}.qna-page-item.disabled .qna-page-link{color:#6c757d;pointer-events:none;background-color:#fff;border-color:#dee2e6}.qna-page-link{padding:.375rem .75rem}.qna-page-item:first-child .qna-page-link{border-top-left-radius:.25rem;border-bottom-left-radius:.25rem}.qna-page-item:last-child .qna-page-link{border-top-right-radius:.25rem;border-bottom-right-radius:.25rem}
+.qna-page-link{position:relative;display:block;color:#FF0841;text-decoration:none;background-color:#fff;border:1px solid #dee2e6;transition:color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out}@media (prefers-reduced-motion:reduce){.qna-page-link{transition:none}}.qna-page-link:hover{z-index:2;color:#df1040;background-color:#e9ecef;border-color:#dee2e6}.qna-page-link:focus{z-index:3;color:#df1040;background-color:#e9ecef;outline:0;box-shadow:0 0 0 .25rem rgba(13,110,253,.25)}.qna-page-item:not(:first-child) .qna-page-link{margin-left:-1px}.qna-page-item.active .qna-page-link{z-index:3;color:#fff;background-color:#FF0841;border-color:#FF0841}.qna-page-item.disabled .qna-page-link{color:#6c757d;pointer-events:none;background-color:#fff;border-color:#dee2e6}.qna-page-link{padding:.375rem .75rem}.qna-page-item:first-child .qna-page-link{border-top-left-radius:.25rem;border-bottom-left-radius:.25rem}.qna-page-item:last-child .qna-page-link{border-top-right-radius:.25rem;border-bottom-right-radius:.25rem}.qna-pagination-lg .qna-page-link{padding:.75rem 1.5rem;font-size:1.25rem}.qna-pagination-lg .qna-page-item:first-child .qna-page-link{border-top-left-radius:.3rem;border-bottom-left-radius:.3rem}.qna-pagination-lg .qna-page-item:last-child .qna-page-link{border-top-right-radius:.3rem;border-bottom-right-radius:.3rem}.qna-pagination-sm .qna-page-link{padding:.25rem .5rem;font-size:.875rem}.qna-pagination-sm .qna-page-item:first-child .qna-page-link{border-top-left-radius:.2rem;border-bottom-left-radius:.2rem}.qna-pagination-sm .qna-page-item:last-child .qna-page-link{border-top-right-radius:.2rem;border-bottom-right-radius:.2rem}

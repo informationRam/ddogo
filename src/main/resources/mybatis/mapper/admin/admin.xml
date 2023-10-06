@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="admin">
+
+    <select id="getUserTotal" resultType="int">
+        <![CDATA[
+        select count(user_no)
+        from user
+      ]]>
+    </select>
+
+    <select id="getRecentUser" resultType="int">
+        <![CDATA[
+        select count(user_no)
+        from user
+        where timestampdiff(month,join_date,now())<1
+      ]]>
+    </select>
+
+    <select id="hotplaceRank" resultType="com.yumpro.ddogo.admin.domain.RankingDTO">
+        <![CDATA[
+SELECT
+    MAX(hp.hotplace_no) AS hotplace_no,
+    hp.sido,
+    hp.gugun,
+    hp.hotplace_name,
+    hc.hotplace_cate_name,
+    SUM(CASE WHEN mm.recom = 'Y' THEN 1 ELSE 0 END) AS recom_count,
+    round(AVG(COALESCE(er.emo_result, 0)),3) AS emo_result
+FROM
+    ddogo.hotplace hp
+JOIN
+    ddogo.hotplace_cate hc ON hp.hotplace_cate_no = hc.hotplace_cate_no
+LEFT JOIN
+    ddogo.mymap mm ON hp.hotplace_no = mm.hotplace_no
+LEFT JOIN
+    ddogo.emoreview er ON mm.map_no = er.map_no AND mm.hotplace_no = er.hotplace_no
+WHERE
+   (SELECT COUNT(mm1.map_no)
+    FROM ddogo.mymap mm1
+    JOIN ddogo.hotplace hp1 ON mm1.hotplace_no = hp1.hotplace_no
+    WHERE hp1.hotplace_no = hp.hotplace_no) > 0
+GROUP BY
+    hp.sido, hp.gugun, hp.hotplace_name, hc.hotplace_cate_name
+      ]]>
+    </select>
+    <select id="newPlaceCnt" resultType="int">
+        <![CDATA[
+        select COUNT(hp.hotplace_no)
+        from hotplace hp
+        where exists ( select 1 from mymap mm where mm.hotplace_no = hp.hotplace_no and timestampdiff(month, mm.recom_date,now()) <1)
+      ]]>
+    </select>
+
+    <select id="hotplaceTotal" resultType="int">
+        <![CDATA[
+        select COUNT(hotplace_no)
+        from hotplace
+      ]]>
+    </select>
+
+    <select id="emoAvg" resultType="double">
+        <![CDATA[
+        select round(avg(emo_result),2)
+        from emoreview
+      ]]>
+    </select>
+
+    <select id="RecentEmoAvg" resultType="double">
+        <![CDATA[
+        select round(avg(er.emo_result),2)
+        from emoreview er
+        where exists (select 1 from mymap mm where mm.map_no = er.map_no and timestampdiff(month, mm.recom_date,now()) <1)
+      ]]>
+    </select>
+
+    <select id="nowActiveUser" resultType="int">
+        <![CDATA[
+        select count(distinct user_no)
+        from ddogo.mymap
+        where month(recom_date) = month(curdate())
+        and year(recom_date) = year(curdate());
+      ]]>
+    </select>
+
+    <select id="localHotplaceCnt" resultType="com.yumpro.ddogo.admin.domain.LocalHotplaceDTO">
+        <![CDATA[
+        select sido, count(hotplace_no) as hotplaceCnt
+        from ddogo.hotplace
+        group by sido
+        ]]>
+    </select>
+
+    <select id="userList" resultType="com.yumpro.ddogo.admin.domain.UserDTO" parameterType="map">
+        select
+        user_no, user_name, user_id, BIRTH, gender, join_date, email
+        from user
+        where 1=1
+        <!-- 검색어(search)에 대한 조건 추가 -->
+        <if test="search != null and search != '' and searchCategory != null and searchCategory != ''">
+            and ${searchCategory} like concat('%', #{search}, '%')
+        </if>
+        <!-- 정렬 필드(sortField)에 따른 정렬 -->
+        order by
+        <choose>
+            <when test="sortField == 'user_no'">
+                user_no
+            </when>
+            <when test="sortField == 'user_name'">
+                user_name
+            </when>
+            <when test="sortField == 'user_id'">
+                user_id
+            </when>
+            <when test="sortField == 'BIRTH'">
+                BIRTH
+            </when>
+            <when test="sortField == 'join_date'">
+                join_date
+            </when>
+            <when test="sortField == 'email'">
+                email
+            </when>
+            <when test="sortField == 'gender'">
+                gender
+            </when>
+            <otherwise>
+                user_no
+            </otherwise>
+            </choose>
+        <choose>
+            <when test="sortOrder == 'asc'">
+                asc
+            </when>
+            <otherwise>
+                desc
+            </otherwise>
+        </choose>
+            <!-- 페이지네이션 -->
+        <if test="limit != null and offset != null">
+            limit #{limit} offset #{offset}
+        </if>
+    </select>
+
+    <select id="userListCnt" parameterType="map" resultType="int">
+        SELECT
+        count(user_no)
+        FROM
+        user
+        WHERE 1=1
+        <!-- 검색어(search)에 대한 조건 추가 -->
+        <if test="search != null and search != '' and searchCategory != null and searchCategory != ''">
+            AND ${searchCategory} LIKE CONCAT('%', #{search}, '%')
+        </if>
+    </select>
+
+    <select id="notSolvedCnt" resultType="int">
+        select count(qna_no)
+        from ddogo.qna
+        where qna_solved='N'
+    </select>
+
+</mapper>

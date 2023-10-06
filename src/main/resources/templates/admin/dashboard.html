@@ -1,0 +1,143 @@
+<html layout:decorate="~{admin/bar}">
+<div layout:fragment="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card mb-3 bd-red right-ddo" style="max-width: 30rem;">
+                    <div class="card-header bd-red">회원수</div>
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="'총 '+${userTotal}+'명'"></h5>
+                        <p class="card-text" th:text="'이번달 신규 가입자수: ' + ${recentUser} + '명'"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card mb-3 bd-yellow right-ddo" style="max-width: 30rem;">
+                    <div class="card-header bd-yellow">등록된 맛집 수</div>
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="'총 '+${hotplaceTotal}+'곳'"></h5>
+                        <p class="card-text" th:text="'이번달 신규 맛집수: ' + ${newPlaceCnt} + '곳'"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card mb-3 bd-green right-ddo" style="max-width: 30rem;">
+                    <div class="card-header bd-green">감정 평균</div>
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="'긍정 '+${emoAvg}+'%'"></h5>
+                        <p class="card-text" th:text="'이번달 감정 평균: 긍정 ' + ${RecentEmoAvg} + '%'"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card mb-3 bd-blue right-ddo" style="max-width: 30rem;">
+                    <div class="card-header bd-blue">이번달 액티브 유저 수</div>
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="'총'+${nowActiveUser}+'명'"></h5>
+                        <p class="card-text" th:text=" '이번달 회원 활성화 정도: ' + ${activeParcent} + '%'"></p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <span class="me-2"><i class="bi bi-bar-chart-fill"></i></span>
+                        지역별 맛집 수
+                    </div>
+                    <div class="card-body">
+                        <canvas class="chart local" width="400" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <span class="me-2"><i class="bi bi-bar-chart-fill"></i></span>
+                        월별 액티브 유저수
+                    </div>
+                    <div class="card-body">
+                        <select id="yearDropdown" onchange="goToYear()"></select>
+                        <canvas class="chart month" width="400" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 mb-3">
+                <div class="card">
+                    <div class="card-header">
+                        <span><i class="bi bi-table me-2"></i></span> 맛집 리스트
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table
+                                    id="example"
+                                    class="table table-striped data-table"
+                                    style="width: 100%"
+                            >
+                                <thead>
+                                <tr>
+                                    <th>PK</th>
+                                    <th>시/도</th>
+                                    <th>구/군</th>
+                                    <th>상호명</th>
+                                    <th>카테고리</th>
+                                    <th>추천수</th>
+                                    <th>감정후기</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="hotplace, loop : ${hotplaceRanking}">
+                                    <td th:text="${hotplace.hotplace_no}"></td>
+                                    <td th:text="${hotplace.sido}"></td>
+                                    <td th:text="${hotplace.gugun}"></td>
+                                    <td th:text="${hotplace.hotplace_name}"></td>
+                                    <td th:text="${hotplace.hotplace_cate_name}"></td>
+                                    <td th:text="${hotplace.recom_count}"></td>
+                                    <td th:text="${hotplace.emo_result}"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- activeUserList 데이터를 JSON 형식으로 변환하여 스크립트 태그 내에 변수로 설정
+        var activeUserMapData = /*[[${activeUserMap}]]*/ {};
+        var monthMapData = /*[[${monthMap}]]*/ {};
+    -->
+    <script th:inline="javascript">
+
+        $(document).ready(function() {
+            var currentYear = new Date().getFullYear();
+            for(var year = 2023; year-1 <= currentYear; year++) {
+                $("#yearDropdown").append('<option value="' + year + '">' + year + '</option>');
+            }
+
+            // 현재 URL에서 연도를 추출
+            var urlYear = window.location.pathname.split("/").pop();
+
+            // 연도가 있다면, 그 연도를 드롭다운에서 선택
+            if (urlYear && !isNaN(urlYear)) {
+                $("#yearDropdown").val(urlYear);
+            }
+        });
+
+                function goToYear() {
+                    var selectedYear = document.getElementById("yearDropdown").value;
+                    location.href = "/admin/" + selectedYear;
+                }
+
+                var activeUser = /*[[${activeUser}]]*/ {};
+                var localHotplaceCnt = /*[[${localHotplaceCnt}]]*/ [];
+    </script>
+</div>
+</html>

@@ -1,0 +1,102 @@
+<html layout:decorate="~{layout}" xmlns:th="http://www.thymeleaf.org">
+<div layout:fragment="content" class="container my-3">
+    <link rel="stylesheet" href="/css/user/join.css"/>
+    <div class="container" id="container">
+        <div class="form-container sign-up-container" style="display: block;">
+            <form id="join" class="my-2" th:object="${userCreateForm}" th:action="@{/user/join}" method="post">
+                <h1>Create Account</h1>
+                <span>or use your email for registration</span>
+                <!--오류시 보여주는 문구--
+              <div th:replace="~{form_errors::formErrorsFragment}"></div>-->
+                <!-- 이름 -->
+                <input type="text" th:field="*{user_name}" placeholder="이름">
+                <span th:if="${#fields.hasErrors('user_name')}" th:errors="*{user_name}" class="error-message text-danger"></span>
+                <!-- 아이디 -->
+                <!-- <input type="text" name="user_id" id="user_id" placeholder="아이디">-->
+                <input type="text" th:field="*{user_id}" placeholder="아이디">
+                <span th:if="${#fields.hasErrors('user_id')}" th:errors="*{user_id}" class="error-message text-danger"></span>
+                <!-- 이메일 -->
+                <input type="email" th:field="*{email}" placeholder="ex)eeee@naver.com">
+                <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="error-message text-danger"></span>
+                <!-- 성별 -->
+                <div class="gender-container">
+                    <div class="radio-group">
+                        <input type="radio" class="btn-check" th:field="*{gender}" value="M" id="genderMale"
+                               autocomplete="off">
+                        <label class="btn btn-light" for="genderMale" style="width: 131px;">남자</label>
+                    </div>
+                    <div class="radio-group">
+                        <input type="radio" class="btn-check" th:field="*{gender}" value="F" id="genderFemale"
+                               autocomplete="off">
+                        <label class="btn btn-light" for="genderFemale" style="width: 131px;">여자</label>
+                    </div>
+                </div>
+                <span th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}" class="error-message text-danger"></span>
+                <!-- 생일 -->
+                <input type="date" th:field="*{birth}" th:format="'yyyy-MM-dd'">
+                <span th:if="${#fields.hasErrors('birth')}" th:errors="*{birth}" class="error-message text-danger"></span>
+                <!-- 비밀번호 -->
+                <input type="password" th:field="*{pwd1}" placeholder="비밀번호">
+                <span class="password-requirements">비밀번호 8자리 이상(숫자, 문자, 특수문자 각각 1개 이상 포함)</span>
+                <span th:if="${#fields.hasErrors('pwd1')}" th:errors="*{pwd1}" class="error-message text-danger"></span>
+                <input type="password" th:field="*{pwd2}" placeholder="비밀번호확인">
+                <span th:if="${#fields.hasErrors('pwd2')}" th:errors="*{pwd2}" class="error-message text-danger"></span>
+                <button type="submit">Sign Up</button>
+            </form>
+        </div>
+        <!-- 로그인 -->
+        <div class="form-container sign-in-container">
+            <form id="login" class="my-2" th:object="${loginVaildation}" th:action="@{/user/login}" method="post">
+                <h1>Log in</h1>
+                <span>or use your account</span>
+                <!-- Id 입력 -->
+                <input type="text" name="user_id" id="user_id" placeholder="아이디">
+                <!-- 패스워드 입력 -->
+                <input type="password" name="pwd" id="pwd" placeholder="비밀번호">
+                <!-- 오류시 보여주는 문구 -->
+                <div th:if="${param.error}">
+                    <div class="alert alert-danger">
+                        사용자ID 또는 비밀번호를 확인해주세요.
+                    </div>
+                </div>
+                <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/pwdsearchfrom}">Forgot your
+                    password?</a>
+                <button type="submit">Log in</button>
+            </form>
+        </div>
+        <div class="overlay-container">
+            <div class="overlay">
+                <div class="overlay-panel overlay-left">
+                    <h1>Welcome!</h1>
+                    <p>To keep connected with us please login with your personal info</p>
+                    <button class="ghost" id="signIn">Log in</button>
+                </div>
+                <div class="overlay-panel overlay-right">
+                    <h1>Hello, Friend!</h1>
+                    <p>Log in and start exploring good restaurants with us!</p>
+                    <button class="ghost" id="signUp">Sign Up</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script layout:fragment="script">
+    const signUpButton = document.getElementById('signUp');
+    const signInButton = document.getElementById('signIn');
+    const container = document.getElementById('container');
+
+    // 페이지가 로드될 때 Sign Up 패널을 먼저 표시
+    container.classList.add("right-panel-active");
+
+    signUpButton.addEventListener('click', () => {
+        container.classList.add("right-panel-active");
+    });
+
+    signInButton.addEventListener('click', () => {
+        container.classList.remove("right-panel-active");
+    });
+
+</script>
+
+</html>
